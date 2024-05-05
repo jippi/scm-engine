@@ -236,9 +236,9 @@ They can be accessed exactly as shown in this list.
 #### Project
 
 > [!NOTE]
-> See the [GitLab GraphQL `Project` resource](https://docs.gitlab.com/ee/api/graphql/reference/#project) for more details about the fields.
+> See the GitLab GraphQL [`Project`](https://docs.gitlab.com/ee/api/graphql/reference/#project), [`Group`](https://docs.gitlab.com/ee/api/graphql/reference/#group), [`MergeRequest`](https://docs.gitlab.com/ee/api/graphql/reference/#mergerequest), [`Label`](https://docs.gitlab.com/ee/api/graphql/reference/#label), and [`Commit`](https://docs.gitlab.com/ee/api/graphql/reference/#commit) GraphQL resource for more details about the fields.
 >
-> Note that we use [`snake_case`](https://en.wikipedia.org/wiki/Snake_case) for fields instead of [`camelCase`](https://en.wikipedia.org/wiki/Camel_case)
+> _Note that we use [`snake_case`](https://en.wikipedia.org/wiki/Snake_case) for fields instead of [`camelCase`](https://en.wikipedia.org/wiki/Camel_case)_
 
 * `project.archived` (boolean)
 * `project.created_at` (time)
