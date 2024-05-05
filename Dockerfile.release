@@ -3,6 +3,8 @@
 
 FROM ubuntu
 
-ENTRYPOINT ["/usr/local/bin/scm-engine"]
-
 COPY ["scm-engine", "/usr/local/bin/scm-engine"]
+
+CMD []
+
+ENTRYPOINT ["/usr/local/bin/scm-engine"]
