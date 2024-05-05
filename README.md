@@ -94,6 +94,9 @@ These keys are shared between the `conditional` and `generate` label strategy. (
 
 #### `label.script` (required)
 
+> [!TIP]
+> See the [SCM engine expr-lang documentation](#expr-lang-information) for more information about [functions](#functions) and [attributes](#attributes) available.
+
 The `script` field is an [expr-lang](https://expr-lang.org/) expression, a safe, fast, and intuitive expression evaluator.
 
 Depending on the `label.strategy` used, the behavior of the script changes, read more about this below.
@@ -303,6 +306,16 @@ They can be accessed exactly as shown in this list.
 * `merge_request.updated_at` (time)
 
 ### Functions
+
+### merge_request.modified_files(str...)
+
+Returns wether any of the provided files patterns have been modified in the Merge Request.
+
+The file patterns use the [`.gitignore` format](https://git-scm.com/docs/gitignore#_pattern_format).
+
+```expr
+merge_request.modified_files("*.go", "docs/")
+```
 
 #### duration(str)
 
