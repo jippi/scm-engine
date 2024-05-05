@@ -27,17 +27,19 @@ func NewValue[T comparable](t T, valid bool) Value[T] {
 // ValueFrom creates a new Value that will always be valid.
 func ValueFrom[T comparable](t T) Value[T] {
 	var zero T
+
 	return NewValue(t, t != zero)
 }
 
 // ValueFromPtr creates a new Value that will be null if t is nil.
-func ValueFromPtr[T comparable](t *T) Value[T] {
+func ValueFromPtr[T comparable](input *T) Value[T] {
 	var zero T
-	if t == nil {
+
+	if input == nil {
 		return NewValue(zero, false)
 	}
 
-	return NewValue(*t, *t != zero)
+	return NewValue(*input, *input != zero)
 }
 
 // MarshalJSON implements yaml.Marshaler.
@@ -68,5 +70,6 @@ func (t *Value[T]) UnmarshalYAML(value *yaml.Node) error {
 	}
 
 	t.Valid = true
+
 	return nil
 }

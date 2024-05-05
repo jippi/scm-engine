@@ -26,18 +26,19 @@ func (client *MergeRequestClient) Update(ctx context.Context, opt *scm.UpdateMer
 		return nil, err
 	}
 
-	u := fmt.Sprintf("projects/%s/merge_requests/%s", go_gitlab.PathEscape(project), state.MergeRequestIDFromContext(ctx))
+	endpoint := fmt.Sprintf("projects/%s/merge_requests/%s", go_gitlab.PathEscape(project), state.MergeRequestIDFromContext(ctx))
 
 	options := []go_gitlab.RequestOptionFunc{
 		go_gitlab.WithContext(ctx),
 	}
 
-	req, err := client.client.wrapped.NewRequest(http.MethodPut, u, opt, options)
+	req, err := client.client.wrapped.NewRequest(http.MethodPut, endpoint, opt, options)
 	if err != nil {
 		return nil, err
 	}
 
 	m := new(go_gitlab.MergeRequest)
+
 	resp, err := client.client.wrapped.Do(req, m)
 	if err != nil {
 		return convertResponse(resp), err

@@ -27,18 +27,18 @@ type Label struct {
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/labels.html#create-a-new-label
 type CreateLabelOptions struct {
-	Name        *string          `url:"name,omitempty" json:"name,omitempty"`
-	Color       *string          `url:"color,omitempty" json:"color,omitempty"`
-	Description *string          `url:"description,omitempty" json:"description,omitempty"`
-	Priority    types.Value[int] `url:"priority,omitempty" json:"priority"`
+	Name        *string          `json:"name,omitempty"        url:"name,omitempty"`
+	Color       *string          `json:"color,omitempty"       url:"color,omitempty"`
+	Description *string          `json:"description,omitempty" url:"description,omitempty"`
+	Priority    types.Value[int] `json:"priority"              url:"priority,omitempty"`
 }
 
 type UpdateLabelOptions struct {
-	Name        *string          `url:"name,omitempty" json:"name,omitempty"`
-	NewName     *string          `url:"new_name,omitempty" json:"new_name,omitempty"`
-	Color       *string          `url:"color,omitempty" json:"color,omitempty"`
-	Description *string          `url:"description,omitempty" json:"description,omitempty"`
-	Priority    types.Value[int] `url:"priority,omitempty" json:"priority"`
+	Name        *string          `json:"name,omitempty"        url:"name,omitempty"`
+	NewName     *string          `json:"new_name,omitempty"    url:"new_name,omitempty"`
+	Color       *string          `json:"color,omitempty"       url:"color,omitempty"`
+	Description *string          `json:"description,omitempty" url:"description,omitempty"`
+	Priority    types.Value[int] `json:"priority"              url:"priority,omitempty"`
 }
 
 // LabelOptions is a custom type with specific marshaling characteristics.
@@ -50,21 +50,21 @@ type LabelOptions []string
 // GitLab API docs:
 // https://docs.gitlab.com/ee/api/merge_requests.html#update-mr
 type UpdateMergeRequestOptions struct {
-	Title              *string       `url:"title,omitempty" json:"title,omitempty"`
-	Description        *string       `url:"description,omitempty" json:"description,omitempty"`
-	TargetBranch       *string       `url:"target_branch,omitempty" json:"target_branch,omitempty"`
-	AssigneeID         *int          `url:"assignee_id,omitempty" json:"assignee_id,omitempty"`
-	AssigneeIDs        *[]int        `url:"assignee_ids,omitempty" json:"assignee_ids,omitempty"`
-	ReviewerIDs        *[]int        `url:"reviewer_ids,omitempty" json:"reviewer_ids,omitempty"`
-	Labels             *LabelOptions `url:"labels,comma,omitempty" json:"labels,omitempty"`
-	AddLabels          *LabelOptions `url:"add_labels,comma,omitempty" json:"add_labels,omitempty"`
-	RemoveLabels       *LabelOptions `url:"remove_labels,comma,omitempty" json:"remove_labels,omitempty"`
-	MilestoneID        *int          `url:"milestone_id,omitempty" json:"milestone_id,omitempty"`
-	StateEvent         *string       `url:"state_event,omitempty" json:"state_event,omitempty"`
-	RemoveSourceBranch *bool         `url:"remove_source_branch,omitempty" json:"remove_source_branch,omitempty"`
-	Squash             *bool         `url:"squash,omitempty" json:"squash,omitempty"`
-	DiscussionLocked   *bool         `url:"discussion_locked,omitempty" json:"discussion_locked,omitempty"`
-	AllowCollaboration *bool         `url:"allow_collaboration,omitempty" json:"allow_collaboration,omitempty"`
+	Title              *string       `json:"title,omitempty"                url:"title,omitempty"`
+	Description        *string       `json:"description,omitempty"          url:"description,omitempty"`
+	TargetBranch       *string       `json:"target_branch,omitempty"        url:"target_branch,omitempty"`
+	AssigneeID         *int          `json:"assignee_id,omitempty"          url:"assignee_id,omitempty"`
+	AssigneeIDs        *[]int        `json:"assignee_ids,omitempty"         url:"assignee_ids,omitempty"`
+	ReviewerIDs        *[]int        `json:"reviewer_ids,omitempty"         url:"reviewer_ids,omitempty"`
+	Labels             *LabelOptions `json:"labels,omitempty"               url:"labels,comma,omitempty"`
+	AddLabels          *LabelOptions `json:"add_labels,omitempty"           url:"add_labels,comma,omitempty"`
+	RemoveLabels       *LabelOptions `json:"remove_labels,omitempty"        url:"remove_labels,comma,omitempty"`
+	MilestoneID        *int          `json:"milestone_id,omitempty"         url:"milestone_id,omitempty"`
+	StateEvent         *string       `json:"state_event,omitempty"          url:"state_event,omitempty"`
+	RemoveSourceBranch *bool         `json:"remove_source_branch,omitempty" url:"remove_source_branch,omitempty"`
+	Squash             *bool         `json:"squash,omitempty"               url:"squash,omitempty"`
+	DiscussionLocked   *bool         `json:"discussion_locked,omitempty"    url:"discussion_locked,omitempty"`
+	AllowCollaboration *bool         `json:"allow_collaboration,omitempty"  url:"allow_collaboration,omitempty"`
 }
 
 // ListLabelsOptions represents the available ListLabels() options.
@@ -72,25 +72,25 @@ type UpdateMergeRequestOptions struct {
 // GitLab API docs: https://docs.gitlab.com/ee/api/labels.html#list-labels
 type ListLabelsOptions struct {
 	ListOptions
-	WithCounts            *bool   `url:"with_counts,omitempty" json:"with_counts,omitempty"`
-	IncludeAncestorGroups *bool   `url:"include_ancestor_groups,omitempty" json:"include_ancestor_groups,omitempty"`
-	Search                *string `url:"search,omitempty" json:"search,omitempty"`
+	WithCounts            *bool   `json:"with_counts,omitempty"             url:"with_counts,omitempty"`
+	IncludeAncestorGroups *bool   `json:"include_ancestor_groups,omitempty" url:"include_ancestor_groups,omitempty"`
+	Search                *string `json:"search,omitempty"                  url:"search,omitempty"`
 }
 
 // ListOptions specifies the optional parameters to various List methods that
 // support pagination.
 type ListOptions struct {
 	// For offset-based paginated result sets, page of results to retrieve.
-	Page int `url:"page,omitempty" json:"page,omitempty"`
+	Page int `json:"page,omitempty" url:"page,omitempty"`
 	// For offset-based and keyset-based paginated result sets, the number of results to include per page.
-	PerPage int `url:"per_page,omitempty" json:"per_page,omitempty"`
+	PerPage int `json:"per_page,omitempty" url:"per_page,omitempty"`
 
 	// For keyset-based paginated result sets, name of the column by which to order
-	OrderBy string `url:"order_by,omitempty" json:"order_by,omitempty"`
+	OrderBy string `json:"order_by,omitempty" url:"order_by,omitempty"`
 	// For keyset-based paginated result sets, the value must be `"keyset"`
-	Pagination string `url:"pagination,omitempty" json:"pagination,omitempty"`
+	Pagination string `json:"pagination,omitempty" url:"pagination,omitempty"`
 	// For keyset-based paginated result sets, sort order (`"asc"`` or `"desc"`)
-	Sort string `url:"sort,omitempty" json:"sort,omitempty"`
+	Sort string `json:"sort,omitempty" url:"sort,omitempty"`
 }
 
 // Response is a GitLab API response. This wraps the standard http.Response

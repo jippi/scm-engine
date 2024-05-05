@@ -18,7 +18,7 @@ func NewContext(project, mr string) context.Context {
 }
 
 func ProjectIDFromContext(ctx context.Context) string {
-	return ctx.Value(projectID).(string)
+	return ctx.Value(projectID).(string) //nolint:forcetypeassert
 }
 
 func ContextWithProjectID(ctx context.Context, value string) context.Context {
@@ -26,7 +26,7 @@ func ContextWithProjectID(ctx context.Context, value string) context.Context {
 }
 
 func MergeRequestIDFromContext(ctx context.Context) string {
-	return ctx.Value(mergeRequestID).(string)
+	return ctx.Value(mergeRequestID).(string) //nolint:forcetypeassert
 }
 
 func ContextWithMergeRequestID(ctx context.Context, id string) context.Context {

@@ -1,7 +1,7 @@
 package gitlab
 
 import (
-	"fmt"
+	"errors"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -9,41 +9,41 @@ import (
 )
 
 type ContextMergeRequest struct {
-	ApprovalsLeft                 int                           `expr:"approvals_left" graphql:"approvalsLeft"`
-	ApprovalsRequired             int                           `expr:"approvals_required" graphql:"approvalsRequired"`
+	ApprovalsLeft                 int                           `expr:"approvals_left"                     graphql:"approvalsLeft"`
+	ApprovalsRequired             int                           `expr:"approvals_required"                 graphql:"approvalsRequired"`
 	Approved                      bool                          `expr:"approved"`
-	AutoMergeEnabled              bool                          `expr:"auto_merge_enabled" graphql:"autoMergeEnabled"`
-	AutoMergeStrategy             string                        `expr:"auto_merge_strategy" graphql:"autoMergeStrategy"`
-	Conflicts                     bool                          `expr:"conflicts" graphql:"conflicts"`
-	CreatedAt                     time.Time                     `expr:"created_at" graphql:"createdAt"`
+	AutoMergeEnabled              bool                          `expr:"auto_merge_enabled"                 graphql:"autoMergeEnabled"`
+	AutoMergeStrategy             string                        `expr:"auto_merge_strategy"                graphql:"autoMergeStrategy"`
+	Conflicts                     bool                          `expr:"conflicts"                          graphql:"conflicts"`
+	CreatedAt                     time.Time                     `expr:"created_at"                         graphql:"createdAt"`
 	Description                   string                        `expr:"description"`
 	DiffStats                     []ContextMergeRequestDiffStat `expr:"diff_stats"`
-	DivergedFromTargetBranch      bool                          `expr:"diverged_from_target_branch" graphql:"divergedFromTargetBranch"`
+	DivergedFromTargetBranch      bool                          `expr:"diverged_from_target_branch"        graphql:"divergedFromTargetBranch"`
 	Draft                         bool                          `expr:"draft"`
-	FirstCommit                   *ContextCommit                `expr:"first_commit" graphql:"-"`
-	ID                            string                        `expr:"id" graphql:"id"`
-	IID                           string                        `expr:"iid" graphql:"iid"`
-	Labels                        []ContextLabel                `expr:"labels" graphql:"-"`
-	LastCommit                    *ContextCommit                `expr:"last_commit" graphql:"-"`
-	Mergeable                     bool                          `expr:"mergeable" graphql:"mergeable"`
-	MergedAt                      *time.Time                    `expr:"merged_at" graphql:"mergedAt"`
-	MergeStatusEnum               string                        `expr:"merge_status_enum" graphql:"mergeStatusEnum"`
-	SourceBranch                  string                        `expr:"source_branch" graphql:"sourceBranch"`
-	SourceBranchExists            bool                          `expr:"source_branch_exists" graphql:"sourceBranchExists"`
-	SourceBranchProtected         bool                          `expr:"source_branch_protected" graphql:"sourceBranchProtected"`
-	Squash                        bool                          `expr:"squash" graphql:"squash"`
-	SquashOnMerge                 bool                          `expr:"squash_on_merge" graphql:"squashOnMerge"`
+	FirstCommit                   *ContextCommit                `expr:"first_commit"                       graphql:"-"`
+	ID                            string                        `expr:"id"                                 graphql:"id"`
+	IID                           string                        `expr:"iid"                                graphql:"iid"`
+	Labels                        []ContextLabel                `expr:"labels"                             graphql:"-"`
+	LastCommit                    *ContextCommit                `expr:"last_commit"                        graphql:"-"`
+	Mergeable                     bool                          `expr:"mergeable"                          graphql:"mergeable"`
+	MergedAt                      *time.Time                    `expr:"merged_at"                          graphql:"mergedAt"`
+	MergeStatusEnum               string                        `expr:"merge_status_enum"                  graphql:"mergeStatusEnum"`
+	SourceBranch                  string                        `expr:"source_branch"                      graphql:"sourceBranch"`
+	SourceBranchExists            bool                          `expr:"source_branch_exists"               graphql:"sourceBranchExists"`
+	SourceBranchProtected         bool                          `expr:"source_branch_protected"            graphql:"sourceBranchProtected"`
+	Squash                        bool                          `expr:"squash"                             graphql:"squash"`
+	SquashOnMerge                 bool                          `expr:"squash_on_merge"                    graphql:"squashOnMerge"`
 	State                         string                        `expr:"state"`
-	TargetBranch                  string                        `expr:"target_branch" graphql:"targetBranch"`
-	TargetBranchExists            bool                          `expr:"target_branch_exists" graphql:"targetBranchExists"`
+	TargetBranch                  string                        `expr:"target_branch"                      graphql:"targetBranch"`
+	TargetBranchExists            bool                          `expr:"target_branch_exists"               graphql:"targetBranchExists"`
 	TimeBetweenFirstAndLastCommit time.Duration                 `expr:"time_between_first_and_last_commit" graphql:"-"`
-	TimeSinceFirstCommit          time.Duration                 `expr:"time_since_first_commit" graphql:"-"`
-	TimeSinceLastCommit           time.Duration                 `expr:"time_since_last_commit" graphql:"-"`
+	TimeSinceFirstCommit          time.Duration                 `expr:"time_since_first_commit"            graphql:"-"`
+	TimeSinceLastCommit           time.Duration                 `expr:"time_since_last_commit"             graphql:"-"`
 	Title                         string                        `expr:"title"`
-	UpdatedAt                     time.Time                     `expr:"updated_at" graphql:"updatedAt"`
+	UpdatedAt                     time.Time                     `expr:"updated_at"                         graphql:"updatedAt"`
 
 	// Internal state
-	ResponseLabels       *ContextLabelNodes  `expr:"-" graphql:"labels(first: 200)" json:"-" yaml:"-"`
+	ResponseLabels       *ContextLabelNodes  `expr:"-" graphql:"labels(first: 200)"             json:"-" yaml:"-"`
 	ResponseFirstCommits *ContextCommitsNode `expr:"-" graphql:"first_commit: commits(first:1)"`
 	ResponseLastCommits  *ContextCommitsNode `expr:"-" graphql:"last_commit: commits(last:1)"`
 }
@@ -104,10 +104,10 @@ func buildPatternRegex(pattern string) (*regexp.Regexp, error) {
 	// Handle specific edge cases first
 	switch {
 	case strings.Contains(pattern, "***"):
-		return nil, fmt.Errorf("pattern cannot contain three consecutive asterisks")
+		return nil, errors.New("pattern cannot contain three consecutive asterisks")
 
 	case pattern == "":
-		return nil, fmt.Errorf("empty pattern")
+		return nil, errors.New("empty pattern")
 
 	// "/" doesn't match anything
 	case pattern == "/":
@@ -139,8 +139,9 @@ func buildPatternRegex(pattern string) (*regexp.Regexp, error) {
 	lastSegIndex := len(segs) - 1
 	needSlash := false
 
-	var re strings.Builder
-	re.WriteString(`\A`)
+	var regexString strings.Builder
+
+	regexString.WriteString(`\A`)
 
 	for i, seg := range segs {
 		switch seg {
@@ -148,77 +149,82 @@ func buildPatternRegex(pattern string) (*regexp.Regexp, error) {
 			switch {
 			// If the pattern is just "**" we match everything
 			case i == 0 && i == lastSegIndex:
-				re.WriteString(`.+`)
+				regexString.WriteString(`.+`)
 
 			// If the pattern starts with "**" we match any leading path segment
 			case i == 0:
-				re.WriteString(`(?:.+` + sep + `)?`)
+				regexString.WriteString(`(?:.+` + sep + `)?`)
+
 				needSlash = false
 
 			// If the pattern ends with "**" we match any trailing path segment
 			case i == lastSegIndex:
-				re.WriteString(sep + `.*`)
+				regexString.WriteString(sep + `.*`)
 
 			// If the pattern contains "**" we match zero or more path segments
 			default:
-				re.WriteString(`(?:` + sep + `.+)?`)
+				regexString.WriteString(`(?:` + sep + `.+)?`)
+
 				needSlash = true
 			}
 
 		case "*":
 			if needSlash {
-				re.WriteString(sep)
+				regexString.WriteString(sep)
 			}
 
 			// Regular wildcard - match any characters except the separator
-			re.WriteString(`[^` + sep + `]+`)
+			regexString.WriteString(`[^` + sep + `]+`)
+
 			needSlash = true
 
 		default:
 			if needSlash {
-				re.WriteString(sep)
+				regexString.WriteString(sep)
 			}
 
 			escape := false
-			for _, ch := range seg {
+
+			for _, char := range seg {
 				if escape {
 					escape = false
-					re.WriteString(regexp.QuoteMeta(string(ch)))
+
+					regexString.WriteString(regexp.QuoteMeta(string(char)))
 
 					continue
 				}
 
 				// Other pathspec implementations handle character classes here (e.g.
 				// [AaBb]), but CODEOWNERS doesn't support that so we don't need to
-				switch ch {
+				switch char {
 				case '\\':
 					escape = true
 
 				// Multi-character wildcard
 				case '*':
-					re.WriteString(`[^` + sep + `]*`)
+					regexString.WriteString(`[^` + sep + `]*`)
 
 				// Single-character wildcard
 				case '?':
-					re.WriteString(`[^` + sep + `]`)
+					regexString.WriteString(`[^` + sep + `]`)
 
 				// Regular character
 				default:
-					re.WriteString(regexp.QuoteMeta(string(ch)))
+					regexString.WriteString(regexp.QuoteMeta(string(char)))
 				}
 			}
 
 			if i == lastSegIndex {
 				// As there's no trailing slash (that'd hit the '**' case), we
 				// need to match descendent paths
-				re.WriteString(`(?:` + sep + `.*)?`)
+				regexString.WriteString(`(?:` + sep + `.*)?`)
 			}
 
 			needSlash = true
 		}
 	}
 
-	re.WriteString(`\z`)
+	regexString.WriteString(`\z`)
 
-	return regexp.Compile(re.String())
+	return regexp.Compile(regexString.String())
 }

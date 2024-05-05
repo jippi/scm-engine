@@ -1,7 +1,6 @@
 package colors
 
 import (
-	"fmt"
 	"log"
 	"strings"
 )
@@ -121,15 +120,15 @@ var colors = map[string]string{
 	"gray-900":   "#232426",
 }
 
-func Replace(in string) string {
-	if strings.HasPrefix(in, "$") {
-		v, ok := colors[strings.TrimPrefix(in, "$")]
+func Replace(color string) string {
+	if strings.HasPrefix(color, "$") {
+		v, ok := colors[strings.TrimPrefix(color, "$")]
 		if !ok {
-			log.Fatal(fmt.Errorf("Unknown color: %q", in))
+			log.Fatalf("Unknown color: %q", color)
 		}
 
 		return v
 	}
 
-	return in
+	return color
 }

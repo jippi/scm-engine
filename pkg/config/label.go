@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 
@@ -186,7 +187,7 @@ func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, e
 	switch outputValue := output.(type) {
 	case bool:
 		if p.Strategy != ConditionalLabel {
-			return nil, fmt.Errorf("Script returned an unexpected boolean; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("Script returned an unexpected boolean; Did you forget the 'type: computed' on your label?")
 		}
 
 		result = append(result, p.resultForLabel(p.Name, outputValue))
@@ -194,7 +195,7 @@ func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, e
 	// When using 'uniq' function, the result is a correct []string slice
 	case []string:
 		if p.Strategy != GenerateLabels {
-			return nil, fmt.Errorf("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
 		}
 
 		for _, label := range outputValue {
@@ -204,7 +205,7 @@ func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, e
 	// In some cases the slice can be of 'any' type, thats fine, as long as the underlying type is 'string'
 	case []any:
 		if p.Strategy != GenerateLabels {
-			return nil, fmt.Errorf("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
 		}
 
 		for _, label := range outputValue {

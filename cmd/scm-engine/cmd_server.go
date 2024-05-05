@@ -12,49 +12,50 @@ import (
 
 func serverCmd(cCtx *cli.Context) error {
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /mr", func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Content-Type") != "application/json" {
+
+	mux.HandleFunc("POST /mr", func(writer http.ResponseWriter, reader *http.Request) {
+		if reader.Header.Get("Content-Type") != "application/json" {
 			slog.Warn("not json")
 
-			w.WriteHeader(http.StatusInternalServerError)
+			writer.WriteHeader(http.StatusInternalServerError)
 
 			return
 		}
 
 		var evt gitlab.MergeRequestEventPayload
-		if err := json.NewDecoder(r.Body).Decode(&evt); err != nil {
+		if err := json.NewDecoder(reader.Body).Decode(&evt); err != nil {
 			slog.Error("failed to decode json request body: %w", err)
 
-			w.WriteHeader(http.StatusInternalServerError)
+			writer.WriteHeader(http.StatusInternalServerError)
 
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		writer.WriteHeader(http.StatusOK)
 	})
 
-	mux.HandleFunc("POST /push", func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Content-Type") != "application/json" {
+	mux.HandleFunc("POST /push", func(writer http.ResponseWriter, reader *http.Request) {
+		if reader.Header.Get("Content-Type") != "application/json" {
 			slog.Warn("not json")
 
-			w.WriteHeader(http.StatusInternalServerError)
+			writer.WriteHeader(http.StatusInternalServerError)
 
 			return
 		}
 
 		var evt gitlab.PushEventPayload
-		if err := json.NewDecoder(r.Body).Decode(&evt); err != nil {
+		if err := json.NewDecoder(reader.Body).Decode(&evt); err != nil {
 			slog.Error("failed to decode json request body: %w", err)
 
-			w.WriteHeader(http.StatusInternalServerError)
+			writer.WriteHeader(http.StatusInternalServerError)
 
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		writer.WriteHeader(http.StatusOK)
 	})
 
-	log.Fatal(http.ListenAndServe("0.0.0.0:3000", mux))
+	log.Fatal(http.ListenAndServe("0.0.0.0:3000", mux)) //nolint:gosec
 
 	return nil
 }

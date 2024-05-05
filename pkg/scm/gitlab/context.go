@@ -15,8 +15,8 @@ var _ scm.EvalContext = (*Context)(nil)
 type Context struct {
 	scm.EvalContextualizer
 
-	Project      *ContextProject      `expr:"project" graphql:"project(fullPath: $project_id)"`
-	Group        *ContextGroup        `expr:"group" graphql:"-"`
+	Project      *ContextProject      `expr:"project"       graphql:"project(fullPath: $project_id)"`
+	Group        *ContextGroup        `expr:"group"         graphql:"-"`
 	MergeRequest *ContextMergeRequest `expr:"merge_request" graphql:"-"`
 }
 
@@ -45,7 +45,7 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 	}
 
 	if evalContext.Project.MergeRequest == nil {
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 
 	// Move project labels into a un-nested expr exposed field

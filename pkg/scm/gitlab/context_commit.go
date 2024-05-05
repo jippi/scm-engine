@@ -3,8 +3,8 @@ package gitlab
 import "time"
 
 type ContextCommit struct {
-	AuthorEmail   string    `graphql:"authorEmail" expr:"author_email"`
-	CommittedDate time.Time `graphql:"committedDate" expr:"committed_date"`
+	AuthorEmail   string    `expr:"author_email"   graphql:"authorEmail"`
+	CommittedDate time.Time `expr:"committed_date" graphql:"committedDate"`
 }
 
 type ContextCommitsNode struct {

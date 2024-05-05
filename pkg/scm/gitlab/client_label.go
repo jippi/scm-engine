@@ -34,9 +34,10 @@ func (client *LabelClient) List(ctx context.Context) ([]*scm.Label, error) {
 
 	for {
 		fmt.Println("Reading labels page", opts.Page)
+
 		labels, resp, err := client.list(ctx, opts)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		results = append(results, labels...)
@@ -57,24 +58,25 @@ func (client *LabelClient) list(ctx context.Context, opt *scm.ListLabelsOptions)
 		return nil, nil, err
 	}
 
-	u := fmt.Sprintf("projects/%s/labels", go_gitlab.PathEscape(project))
+	endpoint := fmt.Sprintf("projects/%s/labels", go_gitlab.PathEscape(project))
 
 	options := []go_gitlab.RequestOptionFunc{
 		go_gitlab.WithContext(ctx),
 	}
 
-	req, err := client.client.wrapped.NewRequest(http.MethodGet, u, opt, options)
+	req, err := client.client.wrapped.NewRequest(http.MethodGet, endpoint, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var l []*scm.Label
-	resp, err := client.client.wrapped.Do(req, &l)
+	var labels []*scm.Label
+
+	resp, err := client.client.wrapped.Do(req, &labels)
 	if err != nil {
 		return nil, convertResponse(resp), err
 	}
 
-	return l, convertResponse(resp), nil
+	return labels, convertResponse(resp), nil
 }
 
 func (client *LabelClient) Create(ctx context.Context, opt *scm.CreateLabelOptions) (*scm.Label, *scm.Response, error) {
@@ -82,24 +84,26 @@ func (client *LabelClient) Create(ctx context.Context, opt *scm.CreateLabelOptio
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/labels", go_gitlab.PathEscape(project))
+
+	endpoint := fmt.Sprintf("projects/%s/labels", go_gitlab.PathEscape(project))
 
 	options := []go_gitlab.RequestOptionFunc{
 		go_gitlab.WithContext(ctx),
 	}
 
-	req, err := client.client.wrapped.NewRequest(http.MethodPost, u, opt, options)
+	req, err := client.client.wrapped.NewRequest(http.MethodPost, endpoint, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	l := new(scm.Label)
-	resp, err := client.client.wrapped.Do(req, l)
+	label := new(scm.Label)
+
+	resp, err := client.client.wrapped.Do(req, label)
 	if err != nil {
 		return nil, convertResponse(resp), err
 	}
 
-	return l, convertResponse(resp), nil
+	return label, convertResponse(resp), nil
 }
 
 func (client *LabelClient) Update(ctx context.Context, opt *scm.UpdateLabelOptions) (*scm.Label, *scm.Response, error) {
@@ -107,22 +111,24 @@ func (client *LabelClient) Update(ctx context.Context, opt *scm.UpdateLabelOptio
 	if err != nil {
 		return nil, nil, err
 	}
-	u := fmt.Sprintf("projects/%s/labels", go_gitlab.PathEscape(project))
+
+	endpoint := fmt.Sprintf("projects/%s/labels", go_gitlab.PathEscape(project))
 
 	options := []go_gitlab.RequestOptionFunc{
 		go_gitlab.WithContext(ctx),
 	}
 
-	req, err := client.client.wrapped.NewRequest(http.MethodPut, u, opt, options)
+	req, err := client.client.wrapped.NewRequest(http.MethodPut, endpoint, opt, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	l := new(scm.Label)
-	resp, err := client.client.wrapped.Do(req, l)
+	label := new(scm.Label)
+
+	resp, err := client.client.wrapped.Do(req, label)
 	if err != nil {
 		return nil, convertResponse(resp), err
 	}
 
-	return l, convertResponse(resp), nil
+	return label, convertResponse(resp), nil
 }

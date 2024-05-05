@@ -10,7 +10,7 @@ import (
 
 // Helper function to accept and format both the project ID or name as project
 // identifier for all API calls.
-func ParseID(id interface{}) (string, error) {
+func ParseID(id interface{}) (string, error) { //nolint:varnamelen
 	switch v := id.(type) {
 	case int:
 		return strconv.Itoa(v), nil

@@ -1,0 +1,8 @@
+# syntax=docker/dockerfile:1
+# See https://hub.docker.com/r/docker/dockerfile
+
+FROM ubuntu
+
+ENTRYPOINT ["/usr/local/bin/scm-engine"]
+
+COPY ["scm-engine", "/usr/local/bin/scm-engine"]

@@ -2,7 +2,7 @@ package config
 
 import (
 	"bytes"
-	"fmt"
+	"errors"
 	"io"
 	"os"
 	"os/exec"
@@ -18,7 +18,7 @@ import (
 func LoadFileFromStandardLocation() (*Config, error) {
 	path := findFileAtStandardLocation()
 	if path == "" {
-		return nil, fmt.Errorf("could not find GITLAB_LABELS file at any of the standard locations")
+		return nil, errors.New("could not find GITLAB_LABELS file at any of the standard locations")
 	}
 
 	return LoadFile(path)
@@ -34,10 +34,6 @@ func LoadFile(path string) (*Config, error) {
 	return ParseFile(f)
 }
 
-// findFileAtStandardLocation loops through the standard locations for
-// GITLAB_LABELS files (./, .github/, docs/), and returns the first place a
-// GITLAB_LABELS file is found. If run from a git repository, all paths are
-// relative to the repository root.
 func findFileAtStandardLocation() string {
 	pathPrefix := ""
 
@@ -46,7 +42,7 @@ func findFileAtStandardLocation() string {
 		pathPrefix = repoRoot
 	}
 
-	for _, path := range []string{".gitlabber.yml", ".gitlab/gitlabber.yml"} {
+	for _, path := range []string{".scm-engine.yml", ".gitlab/scm-engine.yml", ".github/scm-engine.yml"} {
 		fullPath := filepath.Join(pathPrefix, path)
 
 		if fileExists(fullPath) {

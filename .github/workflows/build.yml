@@ -1,0 +1,115 @@
+name: build
+
+on:
+  push:
+    branches:
+      - "main"
+
+  pull_request:
+    paths:
+      - "go.*"
+      - "**/*.go"
+      - "Taskfile.yml"
+      - "Dockerfile.release"
+      - ".github/workflows/*.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  # ------------------------------
+
+  govulncheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: run govulncheck
+        run: govulncheck ./...
+
+  # ------------------------------
+
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: dgryski/semgrep-go
+          path: rules
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: semgrep
+        run: semgrep scan --error --enable-nosem -f ./rules .
+
+  # ------------------------------
+
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_CLI_EXPERIMENTAL: "enabled"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: setup-snapcraft
+        # FIXME: the mkdirs are a hack for https://github.com/goreleaser/goreleaser/issues/1715
+        run: |
+          sudo apt-get update
+          sudo apt-get -yq --no-install-suggests --no-install-recommends install snapcraft
+          mkdir -p $HOME/.cache/snapcraft/download
+          mkdir -p $HOME/.cache/snapcraft/stage-packages
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - uses: sigstore/cosign-installer@v3.5.0
+
+      - uses: anchore/sbom-action/download-syft@v0.15.11
+
+      - name: setup-validate-krew-manifest
+        run: go install sigs.k8s.io/krew/cmd/validate-krew-manifest@latest
+
+      - name: setup-tparse
+        run: go install github.com/mfridman/tparse@latest
+
+      - name: setup
+        run: |
+          task setup
+          task build
+
+      - name: test
+        run: ./scripts/test.sh
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - run: ./scm-engine
+
+      - run: git diff

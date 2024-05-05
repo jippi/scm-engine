@@ -59,28 +59,28 @@ func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) 
 	return res, nil
 }
 
-func graphqlBaseURL(u *url.URL) string {
+func graphqlBaseURL(inputURL *url.URL) string {
 	var buf strings.Builder
-	if u.Scheme != "" {
-		buf.WriteString(u.Scheme)
+	if inputURL.Scheme != "" {
+		buf.WriteString(inputURL.Scheme)
 		buf.WriteByte(':')
 	}
 
-	if u.Scheme != "" || u.Host != "" || u.User != nil {
-		if u.OmitHost && u.Host == "" && u.User == nil {
+	if inputURL.Scheme != "" || inputURL.Host != "" || inputURL.User != nil {
+		if inputURL.OmitHost && inputURL.Host == "" && inputURL.User == nil {
 			// omit empty host
 		} else {
-			if u.Host != "" || u.Path != "" || u.User != nil {
+			if inputURL.Host != "" || inputURL.Path != "" || inputURL.User != nil {
 				buf.WriteString("//")
 			}
 
-			if ui := u.User; ui != nil {
+			if ui := inputURL.User; ui != nil {
 				buf.WriteString(ui.String())
 				buf.WriteByte('@')
 			}
 
-			if h := u.Host; h != "" {
-				buf.WriteString(u.Host)
+			if h := inputURL.Host; h != "" {
+				buf.WriteString(inputURL.Host)
 			}
 		}
 	}

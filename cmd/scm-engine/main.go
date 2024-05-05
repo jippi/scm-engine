@@ -107,10 +107,12 @@ func main() {
 	origHelpPrinterCustom := cli.HelpPrinterCustom
 	cli.HelpPrinterCustom = func(out io.Writer, templ string, data interface{}, customFuncs map[string]interface{}) {
 		origHelpPrinterCustom(out, templ, data, customFuncs)
+
 		if data != app {
 			origHelpPrinterCustom(app.Writer, globalOptionsTemplate, app, nil)
 		}
 	}
+
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
@@ -138,6 +140,7 @@ func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
 	}
 
 	fmt.Println("Creating evaluation context")
+
 	evalContext, err := client.EvalContext(ctx)
 	if err != nil {
 		return err
@@ -148,6 +151,7 @@ func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
 	}
 
 	fmt.Println("Evaluating context")
+
 	matches, err := cfg.Evaluate(evalContext)
 	if err != nil {
 		panic(err)
@@ -160,23 +164,29 @@ func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
 	// }
 
 	fmt.Println("Sync labels")
+
 	if err := sync(ctx, client, remoteLabels, matches); err != nil {
 		panic(err)
 	}
+
 	fmt.Println("Done!")
 
 	fmt.Println("Updating MR")
+
 	if err := apply(ctx, client, matches); err != nil {
 		panic(err)
 	}
+
 	fmt.Println("Done!")
 
 	return nil
 }
 
 func apply(ctx context.Context, client scm.Client, remoteLabels []scm.EvaluationResult) error {
-	var add scm.LabelOptions
-	var remove scm.LabelOptions
+	var (
+		add    scm.LabelOptions
+		remove scm.LabelOptions
+	)
 
 	for _, e := range remoteLabels {
 		if e.Matched {
@@ -206,17 +216,18 @@ func sync(ctx context.Context, client scm.Client, remote []*scm.Label, required 
 	}
 
 	// Create
-	for _, r := range required {
-		if _, ok := remoteLabels[r.Name]; ok {
+	for _, label := range required {
+		if _, ok := remoteLabels[label.Name]; ok {
 			continue
 		}
 
-		fmt.Print("Creating label ", r.Name, ": ")
+		fmt.Print("Creating label ", label.Name, ": ")
+
 		_, resp, err := client.Labels().Create(ctx, &scm.CreateLabelOptions{
-			Name:        &r.Name,
-			Color:       &r.Color,
-			Description: &r.Description,
-			Priority:    r.Priority,
+			Name:        &label.Name,        //nolint:gosec
+			Color:       &label.Color,       //nolint:gosec
+			Description: &label.Description, //nolint:gosec
+			Priority:    label.Priority,
 		})
 		if err != nil {
 			// Label already exists
@@ -233,22 +244,23 @@ func sync(ctx context.Context, client scm.Client, remote []*scm.Label, required 
 	}
 
 	// Update
-	for _, r := range required {
-		e, ok := remoteLabels[r.Name]
+	for _, label := range required {
+		e, ok := remoteLabels[label.Name]
 		if !ok {
 			continue
 		}
 
-		if r.EqualLabel(e) {
+		if label.EqualLabel(e) {
 			continue
 		}
 
-		fmt.Print("Updating label ", r.Name, ": ")
+		fmt.Print("Updating label ", label.Name, ": ")
+
 		_, _, err := client.Labels().Update(ctx, &scm.UpdateLabelOptions{
-			Name:        &r.Name,
-			Color:       &r.Color,
-			Description: &r.Description,
-			Priority:    r.Priority,
+			Name:        &label.Name,        //nolint:gosec
+			Color:       &label.Color,       //nolint:gosec
+			Description: &label.Description, //nolint:gosec
+			Priority:    label.Priority,
 		})
 		if err != nil {
 			return err
