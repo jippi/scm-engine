@@ -123,8 +123,8 @@ Using scm-engine within a GitLab CI pipeline is straight forward.
 1. Create a [CI/CD Variable](https://docs.gitlab.com/ee/ci/variables/#for-a-group)
     1. Name must be `SCM_ENGINE_TOKEN`
     1. Value must a [Project Access Token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html)
-        1. With `api` scope.
-        1. With `developer` or `maintainer` role access so it can edit Merge Requests.
+        1. Must have `api` scope.
+        1. Must have `developer` or `maintainer` role access so it can edit Merge Requests.
     1. `Mask` **should** be checked.
     1. `Protected` **should NOT** be checked.
     1. `Expand variable reference` **should NOT** be checked.
