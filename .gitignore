@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+
+dist/
+bin/
+coverage.txt
+scm-engine
+scm-engine.exe
+.task/
+.idea/
+.direnv
+
+manpages/
+completions/
+3rd-party/
