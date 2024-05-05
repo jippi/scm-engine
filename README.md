@@ -120,7 +120,12 @@ go install github.com/jippi/scm-engine/cmd@latest
 Using scm-engine within a GitLab CI pipeline is straight forward.
 
 1. Add a `.scm-engine.yml` file in the root of your project.
-1. Create a [CI/CD Variable](https://docs.gitlab.com/ee/ci/variables/#for-a-group) named `SCM_ENGINE_TOKEN` with a value containing a [Project Access Token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) with `api` scope.
+1. Create a [CI/CD Variable](https://docs.gitlab.com/ee/ci/variables/#for-a-group)
+    1. Name must be `SCM_ENGINE_TOKEN`
+    1. Value must a [Project Access Token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) with `api` scope.
+    1. `Mask` **should** be checked.
+    1. `Protected` **should NOT** be checked.
+    1. `Expand variable reference` **should NOT** be checked.
 1. Setup a CI job using the `scm-engine` Docker image that will run when a pipeline is created from a Merge Request Event.
 
     ```yaml
