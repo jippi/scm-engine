@@ -110,7 +110,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - run: ./scm-engine
-        continue-on-error: true
+      - run: ./scm-engine -h
 
       - run: git diff
