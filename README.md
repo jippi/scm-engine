@@ -48,7 +48,20 @@ TODO
 
 ### GitLab-CI pipeline
 
-1. Set a `SCM_ENGINE_TOKEN` pipeline secret with a [Project Access Token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) with `api` scope.
+Using scm-engine within a GitLab CI pipeline is straight forward.
+
+1. Add a `.scm-engine.yml` file in the root of your project.
+1. Create a [CI/CD Variable](https://docs.gitlab.com/ee/ci/variables/#for-a-group) named `SCM_ENGINE_TOKEN` with a value containing a [Project Access Token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) with `api` scope.
+1. Setup a CI job using the `scm-engine` Docker image that will run when a pipeline is created from a Merge Request Event.
+
+    ```yaml
+    run::cli:
+      image: ghcr.io/jippi/scm-engine:latest
+      rules:
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      script:
+        - scm-engine evaluate
+    ```
 
 ## Commands
 
