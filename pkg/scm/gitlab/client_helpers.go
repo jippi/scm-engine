@@ -25,6 +25,10 @@ func ParseID(id interface{}) (string, error) { //nolint:varnamelen
 
 // Convert a GitLab native response to a SCM agnostic one
 func convertResponse(upstream *go_gitlab.Response) *scm.Response {
+	if upstream == nil {
+		return nil
+	}
+
 	return &scm.Response{
 		Response: upstream.Response,
 		// Fields used for offset-based pagination.

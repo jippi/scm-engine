@@ -4,7 +4,3 @@
 FROM ubuntu
 
 COPY ["scm-engine", "/usr/local/bin/scm-engine"]
-
-CMD []
-
-ENTRYPOINT ["/usr/local/bin/scm-engine"]
