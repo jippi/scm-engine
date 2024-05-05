@@ -24,8 +24,6 @@ func serverCmd(cCtx *cli.Context) error {
 
 		var evt gitlab.MergeRequestEventPayload
 		if err := json.NewDecoder(reader.Body).Decode(&evt); err != nil {
-			slog.Error("failed to decode json request body: %w", err)
-
 			writer.WriteHeader(http.StatusInternalServerError)
 
 			return
@@ -45,8 +43,6 @@ func serverCmd(cCtx *cli.Context) error {
 
 		var evt gitlab.PushEventPayload
 		if err := json.NewDecoder(reader.Body).Decode(&evt); err != nil {
-			slog.Error("failed to decode json request body: %w", err)
-
 			writer.WriteHeader(http.StatusInternalServerError)
 
 			return
