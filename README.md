@@ -293,9 +293,12 @@ They can be accessed exactly as shown in this list.
 * `merge_request.state` (string)
 * `merge_request.target_branch` (string)
 * `merge_request.target_branch_exists` (string)
-* `merge_request.time_between_first_and_last_commit` (duration) (SCM Engine) The `duration()` between the first and last commit in the Merge Request.
-* `merge_request.time_since_first_commit` (duration) (SCM Engine) The `duration()` between now and the first commit in the Merge Request.
-* `merge_request.time_since_last_commit` (duration) (SCM Engine) The `duration()` between now and the last commit in the Merge Request.
+* `merge_request.time_between_first_and_last_commit` (duration) - SCM Engine -
+  The `duration()` between the first and last commit in the Merge Request.
+* `merge_request.time_since_first_commit` (duration) - SCM Engine -
+  The `duration()` between `now()` and the first commit in the Merge Request.
+* `merge_request.time_since_last_commit` (duration) - SCM Engine -
+  The `duration()` between `now()` and the last commit in the Merge Request.
 * `merge_request.title` (string)
 * `merge_request.updated_at` (time)
 
