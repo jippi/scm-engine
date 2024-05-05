@@ -1,6 +1,6 @@
-package main
+package cmd
 
-var globalOptionsTemplate = `{{if .VisibleFlags}}
+var GlobalOptionsTemplate = `{{if .VisibleFlags}}
 GLOBAL OPTIONS:
    {{range $index, $option := .VisibleFlags}}{{if $index}}
    {{end}}{{$option}}{{end}}

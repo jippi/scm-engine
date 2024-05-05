@@ -15,7 +15,6 @@ type ContextProject struct {
 	Labels            []ContextLabel `expr:"labels"              graphql:"-"`
 	LastActivityAt    time.Time      `expr:"last_activity_at"    graphql:"lastActivityAt"`
 	CreatedAt         time.Time      `expr:"created_at"          graphql:"createdAt"`
-	UpdatedAt         time.Time      `expr:"updated_at"          graphql:"updatedAt"`
 
 	// Internal state
 	MergeRequest   *ContextMergeRequest `expr:"-" graphql:"mergeRequest(iid: $mr_id)"`

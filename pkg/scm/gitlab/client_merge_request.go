@@ -40,9 +40,6 @@ func (client *MergeRequestClient) Update(ctx context.Context, opt *scm.UpdateMer
 	m := new(go_gitlab.MergeRequest)
 
 	resp, err := client.client.wrapped.Do(req, m)
-	if err != nil {
-		return convertResponse(resp), err
-	}
 
-	return convertResponse(resp), nil
+	return convertResponse(resp), err
 }

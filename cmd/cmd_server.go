@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func serverCmd(cCtx *cli.Context) error {
+func Server(_ *cli.Context) error { //nolint:unparam
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /mr", func(writer http.ResponseWriter, reader *http.Request) {

@@ -287,7 +287,6 @@ They can be accessed exactly as shown in this list.
 - `project.name` (string)
 - `project.path` (string)
 - `project.topics[]` (array of string)
-- `project.updated_at` (time)
 - `project.visibility` (string)
 
 #### project.labels

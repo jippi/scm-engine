@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func evaluateCmd(cCtx *cli.Context) error {
+func Evaluate(cCtx *cli.Context) error {
 	ctx := state.ContextWithProjectID(cCtx.Context, cCtx.String(FlagSCMProject))
 
 	switch {
