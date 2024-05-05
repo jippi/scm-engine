@@ -225,7 +225,7 @@ The `skip_if` field must be a valid [Expr-lang](https://expr-lang.org/) expressi
 
 ### Attributes
 
-> [!INFO]
+> [!NOTE]
 > Missing an attribute? The `pkg/scm/gitlab/context_*` files are what is used to query GitLab, adding the missing `field` to the right `struct` should make it accessible.
 > Please open an issue or Pull Request if something is missing.
 
@@ -235,7 +235,7 @@ They can be accessed exactly as shown in this list.
 
 #### Project
 
-> [!INFO]
+> [!NOTE]
 > See the [GitLab GraphQL `Project` resource](https://docs.gitlab.com/ee/api/graphql/reference/#project) for more details about the fields.
 >
 > Note that we use [`snake_case`](https://en.wikipedia.org/wiki/Snake_case) for fields instead of [`camelCase`](https://en.wikipedia.org/wiki/Camel_case)
