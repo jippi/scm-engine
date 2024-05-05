@@ -97,7 +97,7 @@ label:
     # Generate list of labels via script
   - strategy: generate
     # With a description (optional)
-    description: "Modified this letsgo service directory"
+    description: "Modified this service directory"
     # With the color $pink
     color: "$pink"
     # From this script, returning a list of labels
@@ -213,7 +213,7 @@ label:
     #
     # depending on what directories are having files changed in a Merge Request.
   - strategy: generate
-    description: "Modified this letsgo service directory"
+    description: "Modified this service directory"
     color: "$pink"
     script: >
       map(merge_request.diff_stats, { .path })   // Generate a list of all file paths that was changed in the Merge Request

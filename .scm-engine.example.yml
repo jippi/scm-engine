@@ -74,7 +74,7 @@ label:
   # =>
   # service/vault
   - strategy: generate
-    description: "Modified this letsgo service directory"
+    description: "Modified this a service directory"
     color: "$pink"
     script: >
       map(merge_request.diff_stats, { .path })
@@ -85,16 +85,16 @@ label:
 
   # generate labels for commands
   #
-  # internal/app/letsgo/subcommands/aws/login/login.go
+  # internal/app/my-command/subcommands/aws/login/login.go
   # =>
   # command/aws/login
   - strategy: generate
-    description: "Modified this letsgo command"
+    description: "Modified this my-command command"
     color: "$purple"
     script: >
       map(merge_request.diff_stats, { .path })
-      | filter({ hasPrefix(#, "internal/app/letsgo/subcommands/") })
+      | filter({ hasPrefix(#, "internal/app/my-command/subcommands/") })
       | map({ filepath_dir(#) })
-      | map({ trimPrefix(#, "internal/app/letsgo/subcommands/") })
+      | map({ trimPrefix(#, "internal/app/my-command/subcommands/") })
       | map({ string("command/" + #) })
       | uniq()
