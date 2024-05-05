@@ -44,6 +44,12 @@
 
 TODO
 
+## Usage
+
+### GitLab-CI pipeline
+
+1. Set a `SCM_ENGINE_TOKEN` pipeline secret with a [Project Access Token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) with `api` scope.
+
 ## Commands
 
 ### `evaluate`
