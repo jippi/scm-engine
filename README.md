@@ -137,6 +137,8 @@ Using scm-engine within a GitLab CI pipeline is straight forward.
         - scm-engine evaluate
     ```
 
+1. Done! Every Merge Request change should now re-run scm-engine and apply your label rules
+
 ## Commands
 
 ### `evaluate`
