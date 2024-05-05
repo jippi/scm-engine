@@ -9,7 +9,7 @@ require (
 	github.com/guregu/null/v5 v5.0.0
 	github.com/hasura/go-graphql-client v0.12.1
 	github.com/urfave/cli/v2 v2.27.2
-	github.com/xanzy/go-gitlab v0.103.0
+	github.com/xanzy/go-gitlab v0.104.0
 	github.com/xhit/go-str2duration/v2 v2.1.0
 	golang.org/x/oauth2 v0.6.0
 	gopkg.in/yaml.v3 v3.0.1
