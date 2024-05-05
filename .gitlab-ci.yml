@@ -1,0 +1,7 @@
+run::cli:
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golang:1.22.2
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  script:
+    - go mod tidy
+    - go run ./cmd/scm-engine/ evaluate
