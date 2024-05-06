@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/hasura/go-graphql-client"
-	"github.com/jippi/gitlab-labeller/pkg/scm"
-	"github.com/jippi/gitlab-labeller/pkg/state"
+	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/state"
 	"golang.org/x/oauth2"
 )
 

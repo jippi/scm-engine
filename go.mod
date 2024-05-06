@@ -1,4 +1,4 @@
-module github.com/jippi/gitlab-labeller
+module github.com/jippi/scm-engine
 
 go 1.22.2
 

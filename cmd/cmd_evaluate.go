@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/jippi/gitlab-labeller/pkg/config"
-	"github.com/jippi/gitlab-labeller/pkg/scm/gitlab"
-	"github.com/jippi/gitlab-labeller/pkg/state"
+	"github.com/jippi/scm-engine/pkg/config"
+	"github.com/jippi/scm-engine/pkg/scm/gitlab"
+	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/urfave/cli/v2"
 )
 

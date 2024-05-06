@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/jippi/gitlab-labeller/pkg/config"
-	"github.com/jippi/gitlab-labeller/pkg/scm"
-	"github.com/jippi/gitlab-labeller/pkg/state"
+	"github.com/jippi/scm-engine/pkg/config"
+	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/state"
 )
 
 func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr string) error {

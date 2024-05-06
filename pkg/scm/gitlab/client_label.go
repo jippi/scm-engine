@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/jippi/gitlab-labeller/pkg/scm"
-	"github.com/jippi/gitlab-labeller/pkg/state"
+	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/state"
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 

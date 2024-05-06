@@ -7,10 +7,10 @@ import (
 
 	"github.com/expr-lang/expr"
 	"github.com/expr-lang/expr/vm"
-	"github.com/jippi/gitlab-labeller/pkg/colors"
-	"github.com/jippi/gitlab-labeller/pkg/scm"
-	"github.com/jippi/gitlab-labeller/pkg/stdlib"
-	"github.com/jippi/gitlab-labeller/pkg/types"
+	"github.com/jippi/scm-engine/pkg/colors"
+	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/stdlib"
+	"github.com/jippi/scm-engine/pkg/types"
 )
 
 // labelType is a custom type for our enum
