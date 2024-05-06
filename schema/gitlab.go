@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/99designs/gqlgen/api"
@@ -200,6 +201,8 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				modelProperty.AddAttribute(fieldProperty)
 			}
 
+			slices.SortFunc(modelProperty.Attributes, sortSlice)
+
 			field.Tag = tags.String()
 		}
 
@@ -241,18 +244,6 @@ type Property struct {
 	Parent *Property
 }
 
-// Describe outputs a string with the most important attributes for this property.
-//
-// Useful for debugging and previewing the Property tree while developing
-func (p *Property) Describe() string {
-	out := []string{}
-
-	out = append(out, fmt.Sprintf("type: %s", p.Type))
-	out = append(out, fmt.Sprintf("optional: %v", p.Optional))
-
-	return strings.Join(out, ", ")
-}
-
 func (p *Property) AddAttribute(attrs ...*Property) {
 	for _, attr := range attrs {
 		if attr == nil {
@@ -263,32 +254,6 @@ func (p *Property) AddAttribute(attrs ...*Property) {
 
 		p.Attributes = append(p.Attributes, attr)
 	}
-}
-
-// RequiredAttributes returns all attributes that are _required_
-func (p Property) RequiredAttributes() []*Property {
-	var properties []*Property
-
-	for _, attr := range p.Attributes {
-		if !attr.Optional {
-			properties = append(properties, attr)
-		}
-	}
-
-	return properties
-}
-
-// OptionalAttributes returns all attributes that are _optional_
-func (p Property) OptionalAttributes() []*Property {
-	var attributes []*Property
-
-	for _, attr := range p.Attributes {
-		if attr.Optional {
-			attributes = append(attributes, attr)
-		}
-	}
-
-	return attributes
 }
 
 // getHierarchy returns a slice representing all ancestors of this Property
