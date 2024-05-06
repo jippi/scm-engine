@@ -1,7 +1,7 @@
 {{- define "attributes" -}}
 {{- range .Attributes -}}
 {{ if .IsCustomType -}}{{- template "attributes" . }}{{- else }}
-- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}){{- end -}}
+- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}) {{ .Description }}{{- end -}}
 {{- end }}
 {{- end -}}
 

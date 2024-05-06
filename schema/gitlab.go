@@ -69,6 +69,7 @@ func nest(props []*Property) {
 			for _, nested := range PropMap[field.Type].Attributes {
 				field.AddAttribute(&Property{
 					Name:         nested.Name,
+					Description:  nested.Description,
 					Optional:     nested.Optional,
 					Type:         nested.Type,
 					IsSlice:      nested.IsSlice,
@@ -142,8 +143,9 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 		modelName = strcase.ToSnake(modelName)
 
 		modelProperty := &Property{
-			Name: modelName,
-			Type: "model",
+			Name:        modelName,
+			Type:        "model",
+			Description: model.Description,
 		}
 
 		for _, field := range model.Fields {
@@ -169,8 +171,9 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				fieldType := field.Type.String()
 
 				fieldProperty := &Property{
-					Name:     exprTags.Name,
-					Optional: field.Omittable || strings.HasPrefix(fieldType, "*"),
+					Name:        exprTags.Name,
+					Optional:    field.Omittable || strings.HasPrefix(fieldType, "*"),
+					Description: field.Description,
 				}
 
 				fieldProperty.IsSlice = strings.HasPrefix(fieldType, "[]")
@@ -192,7 +195,7 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 					fieldType = "duration"
 				}
 
-				fieldProperty.Type = fieldType
+				fieldProperty.Type = strings.TrimPrefix(fieldType, "*")
 
 				modelProperty.AddAttribute(fieldProperty)
 			}
@@ -215,7 +218,8 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 // or a single attribute (with no child nodes)
 type Property struct {
 	// Name of the property (e.g. "merge_request")
-	Name string
+	Name        string
+	Description string
 
 	// Is the property optional?
 	Optional bool
