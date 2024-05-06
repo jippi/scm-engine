@@ -7,26 +7,14 @@ import (
 
 	"github.com/jippi/gitlab-labeller/pkg/config"
 	"github.com/jippi/gitlab-labeller/pkg/scm"
-	"github.com/jippi/gitlab-labeller/pkg/scm/gitlab"
 	"github.com/jippi/gitlab-labeller/pkg/state"
-	"github.com/urfave/cli/v2"
 )
 
-func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
+func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr string) error {
 	ctx = state.ContextWithMergeRequestID(ctx, mr)
 
 	// for mr := 900; mr <= 1000; mr++ {
 	fmt.Println("Processing MR", mr)
-
-	cfg, err := config.LoadFile(cCtx.String(FlagConfigFile))
-	if err != nil {
-		return err
-	}
-
-	client, err := gitlab.NewClient(cCtx.String(FlagAPIToken), cCtx.String(FlagSCMBaseURL))
-	if err != nil {
-		return err
-	}
 
 	remoteLabels, err := client.Labels().List(ctx)
 	if err != nil {

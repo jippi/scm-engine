@@ -14,6 +14,8 @@ var _ scm.LabelClient = (*LabelClient)(nil)
 
 type LabelClient struct {
 	client *Client
+
+	cache []*scm.Label
 }
 
 func NewLabelClient(client *Client) *LabelClient {
@@ -21,6 +23,11 @@ func NewLabelClient(client *Client) *LabelClient {
 }
 
 func (client *LabelClient) List(ctx context.Context) ([]*scm.Label, error) {
+	// Check cache
+	if len(client.cache) != 0 {
+		return client.cache, nil
+	}
+
 	var results []*scm.Label
 
 	// Load all existing labels
@@ -48,6 +55,9 @@ func (client *LabelClient) List(ctx context.Context) ([]*scm.Label, error) {
 
 		opts.ListOptions.Page = resp.NextPage
 	}
+
+	// Store cache
+	client.cache = results
 
 	return results, nil
 }
@@ -80,6 +90,9 @@ func (client *LabelClient) list(ctx context.Context, opt *scm.ListLabelsOptions)
 }
 
 func (client *LabelClient) Create(ctx context.Context, opt *scm.CreateLabelOptions) (*scm.Label, *scm.Response, error) {
+	// Invalidate cache
+	client.cache = nil
+
 	project, err := ParseID(state.ProjectIDFromContext(ctx))
 	if err != nil {
 		return nil, nil, err
@@ -107,6 +120,9 @@ func (client *LabelClient) Create(ctx context.Context, opt *scm.CreateLabelOptio
 }
 
 func (client *LabelClient) Update(ctx context.Context, opt *scm.UpdateLabelOptions) (*scm.Label, *scm.Response, error) {
+	// Invalidate cache
+	client.cache = nil
+
 	project, err := ParseID(state.ProjectIDFromContext(ctx))
 	if err != nil {
 		return nil, nil, err
