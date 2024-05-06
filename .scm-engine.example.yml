@@ -39,13 +39,13 @@ label:
     color: "$red"
     description: "The Merge Request did NOT modify Go test files"
     priority: 999
-    script: not merge_request.modified_files("*_test.go")
+    script: not merge_request.modified_files("*_test.go") && merge_request.modified_files("*.go")
 
   - name: go::tests::OK
     color: "$green"
     description: "The Merge Request modified Go test files"
     priority: 999
-    script: merge_request.modified_files("*_test.go")
+    script: merge_request.modified_files("*_test.go") && merge_request.modified_files("*.go")
 
   - name: status::age::abandoned
     color: "$red"

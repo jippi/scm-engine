@@ -16,6 +16,7 @@ tasks:
     desc: Install dependencies
     cmds:
       - go mod tidy
+      - go generate ./...
 
   build:
     desc: Build the binary
@@ -70,6 +71,7 @@ tasks:
       NEXT:
         sh: svu n
     cmds:
+      - task: setup
       - git tag {{.NEXT}}
       - echo {{.NEXT}}
       - git push origin --tags

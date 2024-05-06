@@ -5,48 +5,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 )
-
-type ContextMergeRequest struct {
-	ApprovalsLeft                 int                           `expr:"approvals_left"                     graphql:"approvalsLeft"`
-	ApprovalsRequired             int                           `expr:"approvals_required"                 graphql:"approvalsRequired"`
-	Approved                      bool                          `expr:"approved"`
-	AutoMergeEnabled              bool                          `expr:"auto_merge_enabled"                 graphql:"autoMergeEnabled"`
-	AutoMergeStrategy             string                        `expr:"auto_merge_strategy"                graphql:"autoMergeStrategy"`
-	Conflicts                     bool                          `expr:"conflicts"                          graphql:"conflicts"`
-	CreatedAt                     time.Time                     `expr:"created_at"                         graphql:"createdAt"`
-	Description                   string                        `expr:"description"`
-	DiffStats                     []ContextMergeRequestDiffStat `expr:"diff_stats"`
-	DivergedFromTargetBranch      bool                          `expr:"diverged_from_target_branch"        graphql:"divergedFromTargetBranch"`
-	Draft                         bool                          `expr:"draft"`
-	FirstCommit                   *ContextCommit                `expr:"first_commit"                       graphql:"-"`
-	ID                            string                        `expr:"id"                                 graphql:"id"`
-	IID                           string                        `expr:"iid"                                graphql:"iid"`
-	Labels                        []ContextLabel                `expr:"labels"                             graphql:"-"`
-	LastCommit                    *ContextCommit                `expr:"last_commit"                        graphql:"-"`
-	Mergeable                     bool                          `expr:"mergeable"                          graphql:"mergeable"`
-	MergedAt                      *time.Time                    `expr:"merged_at"                          graphql:"mergedAt"`
-	MergeStatusEnum               string                        `expr:"merge_status_enum"                  graphql:"mergeStatusEnum"`
-	SourceBranch                  string                        `expr:"source_branch"                      graphql:"sourceBranch"`
-	SourceBranchExists            bool                          `expr:"source_branch_exists"               graphql:"sourceBranchExists"`
-	SourceBranchProtected         bool                          `expr:"source_branch_protected"            graphql:"sourceBranchProtected"`
-	Squash                        bool                          `expr:"squash"                             graphql:"squash"`
-	SquashOnMerge                 bool                          `expr:"squash_on_merge"                    graphql:"squashOnMerge"`
-	State                         string                        `expr:"state"`
-	TargetBranch                  string                        `expr:"target_branch"                      graphql:"targetBranch"`
-	TargetBranchExists            bool                          `expr:"target_branch_exists"               graphql:"targetBranchExists"`
-	TimeBetweenFirstAndLastCommit time.Duration                 `expr:"time_between_first_and_last_commit" graphql:"-"`
-	TimeSinceFirstCommit          time.Duration                 `expr:"time_since_first_commit"            graphql:"-"`
-	TimeSinceLastCommit           time.Duration                 `expr:"time_since_last_commit"             graphql:"-"`
-	Title                         string                        `expr:"title"`
-	UpdatedAt                     time.Time                     `expr:"updated_at"                         graphql:"updatedAt"`
-
-	// Internal state
-	ResponseLabels       *ContextLabelNodes  `expr:"-" graphql:"labels(first: 200)"             json:"-" yaml:"-"`
-	ResponseFirstCommits *ContextCommitsNode `expr:"-" graphql:"first_commit: commits(first:1)"`
-	ResponseLastCommits  *ContextCommitsNode `expr:"-" graphql:"last_commit: commits(last:1)"`
-}
 
 // Partially lifted from https://github.com/hmarr/codeowners/blob/main/match.go
 func (e ContextMergeRequest) ModifiedFiles(patterns ...string) bool {

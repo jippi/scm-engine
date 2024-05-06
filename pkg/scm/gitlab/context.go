@@ -5,20 +5,12 @@ import (
 	"time"
 
 	"github.com/hasura/go-graphql-client"
-	"github.com/jippi/gitlab-labeller/pkg/scm"
-	"github.com/jippi/gitlab-labeller/pkg/state"
+	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/state"
 	"golang.org/x/oauth2"
 )
 
 var _ scm.EvalContext = (*Context)(nil)
-
-type Context struct {
-	scm.EvalContextualizer
-
-	Project      *ContextProject      `expr:"project"       graphql:"project(fullPath: $project_id)"`
-	Group        *ContextGroup        `expr:"group"         graphql:"-"`
-	MergeRequest *ContextMergeRequest `expr:"merge_request" graphql:"-"`
-}
 
 func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 	httpClient := oauth2.NewClient(
@@ -63,21 +55,26 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 	evalContext.Project.ResponseGroup = nil
 
 	if len(evalContext.MergeRequest.ResponseFirstCommits.Nodes) > 0 {
-		evalContext.MergeRequest.FirstCommit = evalContext.MergeRequest.ResponseFirstCommits.Nodes[0]
-		evalContext.MergeRequest.TimeSinceFirstCommit = time.Since(evalContext.MergeRequest.FirstCommit.CommittedDate)
+		evalContext.MergeRequest.FirstCommit = &evalContext.MergeRequest.ResponseFirstCommits.Nodes[0]
+
+		tmp := time.Since(evalContext.MergeRequest.FirstCommit.CommittedDate)
+		evalContext.MergeRequest.TimeSinceFirstCommit = &tmp
 	}
 
 	evalContext.MergeRequest.ResponseFirstCommits = nil
 
 	if len(evalContext.MergeRequest.ResponseLastCommits.Nodes) > 0 {
-		evalContext.MergeRequest.LastCommit = evalContext.MergeRequest.ResponseLastCommits.Nodes[0]
-		evalContext.MergeRequest.TimeSinceLastCommit = time.Since(evalContext.MergeRequest.LastCommit.CommittedDate)
+		evalContext.MergeRequest.LastCommit = &evalContext.MergeRequest.ResponseLastCommits.Nodes[0]
+
+		tmp := time.Since(evalContext.MergeRequest.LastCommit.CommittedDate)
+		evalContext.MergeRequest.TimeSinceLastCommit = &tmp
 	}
 
 	evalContext.MergeRequest.ResponseLastCommits = nil
 
 	if evalContext.MergeRequest.FirstCommit != nil && evalContext.MergeRequest.LastCommit != nil {
-		evalContext.MergeRequest.TimeBetweenFirstAndLastCommit = evalContext.MergeRequest.FirstCommit.CommittedDate.Sub(evalContext.MergeRequest.LastCommit.CommittedDate).Round(time.Hour)
+		tmp := evalContext.MergeRequest.FirstCommit.CommittedDate.Sub(evalContext.MergeRequest.LastCommit.CommittedDate).Round(time.Hour)
+		evalContext.MergeRequest.TimeBetweenFirstAndLastCommit = &tmp
 	}
 
 	return evalContext, nil

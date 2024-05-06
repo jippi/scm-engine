@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jippi/gitlab-labeller/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/scm"
 )
 
 type Config struct {

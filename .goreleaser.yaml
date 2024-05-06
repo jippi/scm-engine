@@ -7,7 +7,7 @@ env:
 
 before:
   hooks:
-    - go mod tidy
+    - task setup
     # - ./scripts/completions.sh
     # - ./scripts/manpages.sh
 

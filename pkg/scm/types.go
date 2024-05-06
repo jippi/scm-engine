@@ -3,7 +3,7 @@ package scm
 import (
 	"net/http"
 
-	"github.com/jippi/gitlab-labeller/pkg/types"
+	"github.com/jippi/scm-engine/pkg/types"
 )
 
 // Label represents a GitLab label.

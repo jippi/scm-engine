@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/jippi/gitlab-labeller/cmd"
+	"github.com/jippi/scm-engine/cmd"
 	"github.com/urfave/cli/v2"
 )
 

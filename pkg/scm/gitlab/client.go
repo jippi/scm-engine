@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/jippi/gitlab-labeller/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/scm"
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 
