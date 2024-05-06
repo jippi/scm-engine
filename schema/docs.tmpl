@@ -1,0 +1,9 @@
+{{- define "attributes" -}}
+{{- range .Attributes -}}
+{{ if .IsCustomType -}}{{- template "attributes" . }}{{- else }}
+- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}){{- end -}}
+{{- end }}
+{{- end -}}
+
+### Attributes
+{{ template "attributes" . -}}

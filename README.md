@@ -370,104 +370,63 @@ The following attributes are available in `script` fields.
 
 They can be accessed exactly as shown in this list.
 
-#### project
-
-> [!NOTE]
-> See the [GitLab GraphQL `Project` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#project) for more details about the fields.
-
-- `project.archived` (boolean)
-- `project.created_at` (time)
-- `project.description` (string)
-- `project.full_path` (string)
 - `project.id` (string)
-- `project.last_activity_at` (time)
-- `project.name_with_namespace` (string)
 - `project.name` (string)
+- `project.name_with_namespace` (string)
+- `project.description` (string)
 - `project.path` (string)
-- `project.topics[]` (array of string)
+- `project.full_path` (string)
+- `project.archived` (bool)
+- `project.topics` ([]string)
 - `project.visibility` (string)
-
-#### project.labels
-
-> [!NOTE]
-> See the [GitLab GraphQL `Label` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#label) for more details about the fields.
-
-- `project.labels[].color` (string)
-- `project.labels[].description` (string)
 - `project.labels[].id` (string)
 - `project.labels[].title` (string)
-
-#### group
-
-> See the [GitLab GraphQL `Group` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#group) for more details about the fields.
-
-- `group.description` (string)
+- `project.labels[].color` (string)
+- `project.labels[].description` (string)
+- `project.last_activity_at` (time)
+- `project.created_at` (time)
 - `group.id` (string)
 - `group.name` (string)
-
-#### merge_request
-
-> See the [GitLab GraphQL `MergeRequest` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#mergerequest) for more details about the fields.
-
+- `group.description` (string)
 - `merge_request.approvals_left` (int)
 - `merge_request.approvals_required` (int)
-- `merge_request.approved` (boolean)
-- `merge_request.auto_merge_enabled` (int)
+- `merge_request.approved` (bool)
+- `merge_request.auto_merge_enabled` (bool)
 - `merge_request.auto_merge_strategy` (string)
 - `merge_request.conflicts` (bool)
 - `merge_request.created_at` (time)
 - `merge_request.description` (string)
-- `merge_request.diverged_from_target_branch` (bool)
-- `merge_request.draft` (boolean)
-- `merge_request.id` (string)
-- `merge_request.iid` (string)
-- `merge_request.merge_status_enum` (string)
-- `merge_request.mergeable` (boolean)
-- `merge_request.merged_at` (optional, time)
-- `merge_request.source_branch_exists` (boolean)
-- `merge_request.source_branch_protected` (boolean)
-- `merge_request.source_branch` (string)
-- `merge_request.squash_on_merge` (boolean)
-- `merge_request.squash` (boolean)
-- `merge_request.state` (string)
-- `merge_request.target_branch_exists` (string)
-- `merge_request.target_branch` (string)
-- `merge_request.time_between_first_and_last_commit` (duration) - SCM Engine - The `duration()` between the first and last commit in the Merge Request.
-- `merge_request.time_since_first_commit` (duration) - SCM Engine - The `duration()` between `now()` and the first commit in the Merge Request.
-- `merge_request.time_since_last_commit` (duration) - SCM Engine - The `duration()` between `now()` and the last commit in the Merge Request.
-- `merge_request.title` (string)
-- `merge_request.updated_at` (time)
-
-#### merge_request.diff_stats
-
-> See the [GitLab GraphQL `DiffStats` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#diffstats) for more details about the fields.
-
+- `merge_request.diff_stats[].path` (string)
 - `merge_request.diff_stats[].additions` (int)
 - `merge_request.diff_stats[].deletions` (int)
-- `merge_request.diff_stats[].path` (string)
-
-#### merge_request.first_commit
-
-> See the [GitLab GraphQL `Commit` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#commit) for more details about the fields.
-
+- `merge_request.diverged_from_target_branch` (bool)
+- `merge_request.draft` (bool)
 - `merge_request.first_commit.author_email` (string)
-- `merge_request.first_commit.committed_date` (string)
-
-#### merge_request.last_commit
-
-> See the [GitLab GraphQL `Commit` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#commit) for more details about the fields.
-
-- `merge_request.last_commit.author_email` (string)
-- `merge_request.last_commit.committed_date` (string)
-
-#### merge_request.labels
-
-> See the [GitLab GraphQL `Label` GraphQL resource](https://docs.gitlab.com/ee/api/graphql/reference/#label) for more details about the fields.
-
-- `merge_request.labels[].color` (string)
-- `merge_request.labels[].description` (string)
+- `merge_request.first_commit.committed_date` (time)
+- `merge_request.id` (string)
+- `merge_request.iid` (string)
 - `merge_request.labels[].id` (string)
 - `merge_request.labels[].title` (string)
+- `merge_request.labels[].color` (string)
+- `merge_request.labels[].description` (string)
+- `merge_request.last_commit.author_email` (string)
+- `merge_request.last_commit.committed_date` (time)
+- `merge_request.mergeable` (bool)
+- `merge_request.merged_at` (optional time)
+- `merge_request.merge_status_enum` (string)
+- `merge_request.source_branch` (string)
+- `merge_request.source_branch_exists` (bool)
+- `merge_request.source_branch_protected` (bool)
+- `merge_request.squash` (bool)
+- `merge_request.squash_on_merge` (bool)
+- `merge_request.state` (string)
+- `merge_request.target_branch` (string)
+- `merge_request.target_branch_exists` (bool)
+- `merge_request.time_between_first_and_last_commit` (optional duration)
+- `merge_request.time_since_first_commit` (optional duration)
+- `merge_request.time_since_last_commit` (optional duration)
+- `merge_request.title` (string)
+- `merge_request.updated_at` (time)
 
 ### Functions
 
