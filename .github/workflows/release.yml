@@ -59,6 +59,9 @@ jobs:
         with:
           install-only: true
 
+      - name: setup
+        run: task setup
+
       - name: goreleaser-release
         env:
           AUR_KEY: "${{ secrets.AUR_KEY }}"
