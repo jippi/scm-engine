@@ -40,7 +40,9 @@ func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
 		return err
 	}
 
-	if evalContext == nil {
+	if evalContext == nil || !evalContext.IsValid() {
+		fmt.Println("Evaluating context is empty, does the Merge Request exists?")
+
 		return nil
 	}
 
@@ -48,7 +50,7 @@ func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
 
 	matches, err := cfg.Evaluate(evalContext)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// spew.Dump(matches)
@@ -60,7 +62,7 @@ func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
 	fmt.Println("Sync labels")
 
 	if err := sync(ctx, client, remoteLabels, matches); err != nil {
-		panic(err)
+		return err
 	}
 
 	fmt.Println("Done!")
@@ -68,7 +70,7 @@ func ProcessMR(ctx context.Context, cCtx *cli.Context, mr string) error {
 	fmt.Println("Updating MR")
 
 	if err := apply(ctx, client, matches); err != nil {
-		panic(err)
+		return err
 	}
 
 	fmt.Println("Done!")

@@ -21,6 +21,7 @@ type MergeRequestClient interface {
 }
 
 type EvalContext interface {
+	IsValid() bool
 	_isEvalContext()
 }
 

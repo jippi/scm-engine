@@ -74,3 +74,7 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 
 	return evalContext, nil
 }
+
+func (c *Context) IsValid() bool {
+	return c != nil
+}
