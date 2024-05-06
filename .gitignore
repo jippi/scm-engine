@@ -9,8 +9,9 @@ bin/
 completions/
 coverage.txt
 dist/
+/schema/*/ignore
 manpages/
 scm-engine
 scm-engine.exe
-
+*.gen.go
 !.env.example
