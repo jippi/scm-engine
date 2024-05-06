@@ -40,7 +40,6 @@ func main() {
 				Usage:    "GitHub/GitLab API token",
 				Required: true,
 				EnvVars: []string{
-					"GITLAB_TOKEN",
 					"SCM_ENGINE_TOKEN",
 				},
 			},
