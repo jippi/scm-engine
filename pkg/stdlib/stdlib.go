@@ -11,7 +11,7 @@ var Functions = []expr.Option{
 	FilepathDir,
 
 	// some/deep/path/ok => some/deep
-	MaxPathDepth,
+	LimitPathDepthTo,
 
 	// slices.Sort + slices.Compact
 	Uniq,

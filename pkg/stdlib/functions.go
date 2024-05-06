@@ -76,21 +76,21 @@ var Duration = expr.Function(
 	str2duration.ParseDuration,
 )
 
-var MaxPathDepth = expr.Function(
-	"max_path_depth",
+var LimitPathDepthTo = expr.Function(
+	"limit_path_depth_to",
 	func(args ...any) (any, error) {
 		if len(args) != 2 {
-			return nil, errors.New("max_path_depth() expect exactly two arguments")
+			return nil, errors.New("limit_path_depth_to() expect exactly two arguments")
 		}
 
 		input, ok := args[0].(string)
 		if !ok {
-			return nil, errors.New("first input to max_path_depth() must be of type 'string'")
+			return nil, errors.New("first input to limit_path_depth_to() must be of type 'string'")
 		}
 
 		length, ok := args[1].(int)
 		if !ok {
-			return nil, errors.New("second input to max_path_depth() must be of type 'int'")
+			return nil, errors.New("second input to limit_path_depth_to() must be of type 'int'")
 		}
 
 		chunks := strings.Split(input, "/")

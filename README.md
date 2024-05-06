@@ -50,7 +50,7 @@
     - [`duration`](#duration)
     - [`uniq`](#uniq)
     - [`filepath_dir`](#filepath_dir)
-    - [`max_path_depth`](#max_path_depth)
+    - [`limit_path_depth_to`](#limit_path_depth_to)
 
 ## Installation
 
@@ -513,11 +513,11 @@ The returned path does not end in a separator unless it is the root directory.
 filepath_dir("example/directory/file.go") == "example/directory"
 ```
 
-#### `max_path_depth`
+#### `limit_path_depth_to`
 
-`max_path_depth` takes a path structure, and limits it to the configured maximum depth. Particularly useful when using `generated` labels from a directory structure, and want to to have a label naming scheme that only uses path of the path.
+`limit_path_depth_to` takes a path structure, and limits it to the configured maximum depth. Particularly useful when using `generated` labels from a directory structure, and want to to have a label naming scheme that only uses path of the path.
 
 ```expr
-max_path_depth("path1/path2/path3/path4", 2), == "path1/path2"
-max_path_depth("path1/path2", 3), == "path1/path2"
+limit_path_depth_to("path1/path2/path3/path4", 2), == "path1/path2"
+limit_path_depth_to("path1/path2", 3), == "path1/path2"
 ```
