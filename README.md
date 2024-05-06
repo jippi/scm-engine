@@ -359,7 +359,6 @@ They can be accessed exactly as shown in this list.
 
 - `group.description` (string) Description of the namespace
 - `group.emails_disabled` (optional bool) Indicates if a group has email notifications disabled
-- `group.emails_enabled` (optional bool) Indicates if a group has email notifications enabled
 - `group.full_name` (string) Full name of the namespace
 - `group.full_path` (string) Full path of the namespace
 - `group.id` (string) ID of the namespace

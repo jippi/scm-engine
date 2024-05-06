@@ -63,8 +63,6 @@ type ContextGroup {
   Description: String!
   "Indicates if a group has email notifications disabled"
   EmailsDisabled: Boolean
-  "Indicates if a group has email notifications enabled"
-  EmailsEnabled: Boolean
   "Full name of the namespace"
   FullName: String!
   "Full path of the namespace"
