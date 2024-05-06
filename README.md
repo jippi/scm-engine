@@ -38,11 +38,6 @@
 - [Expr-lang information](#expr-lang-information)
   - [Attributes](#attributes)
   - [Functions](#functions)
-    - [`merge_request.modified_files`](#merge_requestmodified_files)
-    - [`duration`](#duration)
-    - [`uniq`](#uniq)
-    - [`filepath_dir`](#filepath_dir)
-    - [`limit_path_depth_to`](#limit_path_depth_to)
 
 ## Installation
 
