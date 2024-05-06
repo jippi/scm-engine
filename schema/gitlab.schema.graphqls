@@ -1,9 +1,24 @@
+# @generated fields are constructed in Go, and do not come from the GraphQL endpoint.
 directive @generated on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# @internal is not exposed in expr scope, and is only available within Go code
+# this is often used when needing to grab data from GraphQL, but not wanting to expose
+# it directly (e.g. due to nesting)
 directive @internal on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# @expr changes the name of the field when its exposed to expr scope.
+# When omitted (and @internal is not used) we automatically convert the field
+# from "CamelCaseName" to "snake_case_name" in code generation step
 directive @expr(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# @graph changes the name (and query) of the field when sending it to the GraphQL server.
+# This case be used to impose limits in "connections" or providing filtering keys.
 directive @graphql(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
+# Add time.Time support
 scalar Time
+
+# Add time.Duration support
 scalar Duration
 
 type Context {
