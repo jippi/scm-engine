@@ -1,16 +1,16 @@
+.direnv
 .env
 .env.*
-!.env.example
-
-dist/
+.idea/
+.scm-engine.yml
+.task/
+3rd-party/
 bin/
+completions/
 coverage.txt
+dist/
+manpages/
 scm-engine
 scm-engine.exe
-.task/
-.idea/
-.direnv
 
-manpages/
-completions/
-3rd-party/
+!.env.example

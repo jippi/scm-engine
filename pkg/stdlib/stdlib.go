@@ -10,6 +10,9 @@ var Functions = []expr.Option{
 	// filepath.Dir
 	FilepathDir,
 
+	// some/deep/path/ok => some/deep
+	MaxPathDepth,
+
 	// slices.Sort + slices.Compact
 	Uniq,
 }

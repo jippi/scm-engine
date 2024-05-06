@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"slices"
+	"strings"
 
 	"github.com/expr-lang/expr"
 	"github.com/xhit/go-str2duration/v2"
@@ -73,4 +74,30 @@ var Duration = expr.Function(
 		return str2duration.ParseDuration(val)
 	},
 	str2duration.ParseDuration,
+)
+
+var MaxPathDepth = expr.Function(
+	"max_path_depth",
+	func(args ...any) (any, error) {
+		if len(args) != 2 {
+			return nil, errors.New("max_path_depth() expect exactly two arguments")
+		}
+
+		input, ok := args[0].(string)
+		if !ok {
+			return nil, errors.New("first input to max_path_depth() must be of type 'string'")
+		}
+
+		length, ok := args[1].(int)
+		if !ok {
+			return nil, errors.New("second input to max_path_depth() must be of type 'int'")
+		}
+
+		chunks := strings.Split(input, "/")
+		if len(chunks) <= length {
+			return input, nil
+		}
+
+		return strings.Join(chunks[0:length-1], "/"), nil
+	},
 )
