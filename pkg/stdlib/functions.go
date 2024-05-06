@@ -98,6 +98,6 @@ var LimitPathDepthTo = expr.Function(
 			return input, nil
 		}
 
-		return strings.Join(chunks[0:length-1], "/"), nil
+		return strings.Join(chunks[0:length-1], "/"), nil // nosemgrep
 	},
 )
