@@ -147,7 +147,7 @@ OPTIONS:
 
 GLOBAL OPTIONS:
    --config value     Path to the scm-engine config file (default: ".scm-engine.yml") [$SCM_ENGINE_CONFIG_FILE]
-   --api-token value  GitHub/GitLab API token [$GITLAB_TOKEN, $SCM_ENGINE_TOKEN]
+   --api-token value  GitHub/GitLab API token [$SCM_ENGINE_TOKEN]
    --project value    GitLab project (example: 'gitlab-org/gitlab') [$GITLAB_PROJECT, $CI_PROJECT_PATH]
    --base-url value   Base URL for the SCM instance (default: "https://gitlab.com/") [$GITLAB_BASEURL, $CI_SERVER_URL]
    --help, -h         show help
