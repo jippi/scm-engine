@@ -16,7 +16,6 @@ import (
 	"github.com/99designs/gqlgen/api"
 	"github.com/99designs/gqlgen/codegen/config"
 	"github.com/99designs/gqlgen/plugin/modelgen"
-	"github.com/Masterminds/sprig/v3"
 	"github.com/fatih/structtag"
 	"github.com/iancoleman/strcase"
 	"github.com/vektah/gqlparser/v2/ast"
@@ -55,8 +54,7 @@ func main() {
 	nest(Props)
 
 	var index bytes.Buffer
-	tmpl := template.New("index").Funcs(sprig.FuncMap())
-	tmpl = template.Must(tmpl.Parse(docs))
+	tmpl := template.Must(template.New("index").Parse(docs))
 
 	if err := tmpl.Execute(&index, Props[0]); err != nil {
 		panic(err)
