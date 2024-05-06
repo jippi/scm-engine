@@ -81,7 +81,7 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 }
 
 func main() {
-	cfg, err := config.LoadConfig(getRootPath() + "/schema/gitlab/gqlgen.yml")
+	cfg, err := config.LoadConfig(getRootPath() + "/schema/gitlab.gqlgen.yml")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "failed to load config", err.Error())
 

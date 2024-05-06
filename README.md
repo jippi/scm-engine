@@ -360,7 +360,7 @@ The `skip_if` field must be a valid [Expr-lang](https://expr-lang.org/) expressi
 ### Attributes
 
 > [!NOTE]
-> Missing an attribute? The `schema/gitlab/schema.graphqls` file are what is used to query GitLab, adding the missing `field` to the right `type` should make it accessible.
+> Missing an attribute? The `schema/gitlab.schema.graphqls` file are what is used to query GitLab, adding the missing `field` to the right `type` should make it accessible.
 > Please open an issue or Pull Request if something is missing.
 
 > [!IMPORTANT]

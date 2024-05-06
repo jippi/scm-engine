@@ -9,7 +9,7 @@ bin/
 completions/
 coverage.txt
 dist/
-/schema/*/ignore
+/schema/ignore
 manpages/
 scm-engine
 scm-engine.exe
