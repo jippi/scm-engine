@@ -1,0 +1,246 @@
+directive @generated on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+directive @internal on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+directive @expr(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+directive @graphql(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+scalar Time
+scalar Duration
+
+type Context {
+  "The project the Merge Request belongs to"
+  Project: ContextProject @graphql(key: "project(fullPath: $project_id)")
+
+  "The project group"
+  Group: ContextGroup @generated
+
+  "Information about the Merge Request"
+  MergeRequest: ContextMergeRequest @generated
+}
+
+type ContextProject {
+  #
+  # Native GraphQL fields - https://docs.gitlab.com/ee/api/graphql/reference/#project
+  #
+
+  "Indicates the archived status of the project"
+  Archived: Boolean!
+  "Timestamp of the project creation"
+  CreatedAt: Time!
+  "Short description of the project"
+  Description: String!
+  "Full path of the project"
+  FullPath: String!
+  "ID of the project"
+  ID: String!
+  "Indicates if Issues are enabled for the current user"
+  IssuesEnabled: Boolean!
+  "Timestamp of the project last activity"
+  LastActivityAt: Time!
+  "Name of the project (without namespace)"
+  Name: String!
+  "Full name of the project with its namespace"
+  NameWithNamespace: String!
+  "Path of the project"
+  Path: String!
+  "List of project topics"
+  Topics: [String!]
+  "Visibility of the project"
+  Visibility: String!
+
+  #
+  # Connections
+  #
+
+  Labels: [ContextLabel!] @generated
+  ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
+  MergeRequest: ContextMergeRequest @internal @graphql(key: "mergeRequest(iid: $mr_id)")
+  ResponseGroup: ContextGroup @internal @graphql(key: "group")
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#group
+type ContextGroup {
+  "Description of the namespace"
+  Description: String!
+  "Indicates if a group has email notifications disabled"
+  EmailsDisabled: Boolean
+  "Indicates if a group has email notifications enabled"
+  EmailsEnabled: Boolean
+  "Full name of the namespace"
+  FullName: String!
+  "Full path of the namespace"
+  FullPath: String!
+  "ID of the namespace"
+  ID: String!
+  "Indicates if a group is disabled from getting mentioned"
+  MentionsDisabled: Boolean
+  "Name of the namespace"
+  Name: String!
+  "Path of the namespace"
+  Path: String!
+  "Visibility of the namespace"
+  Visibility: String
+  "Web URL of the group"
+  WebURL: String!
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#mergerequest
+type ContextMergeRequest {
+  "Number of approvals left"
+  ApprovalsLeft: Int
+  "Number of approvals required"
+  ApprovalsRequired: Int
+  "Indicates if the merge request has all the required approvals"
+  Approved: Boolean!
+  "Indicates if auto merge is enabled for the merge request"
+  AutoMergeEnabled: Boolean!
+  "Selected auto merge strategy"
+  AutoMergeStrategy: String
+  "Number of commits in the merge request"
+  CommitCount: Int
+  "Indicates if the merge request has conflicts"
+  Conflicts: Boolean!
+  "Timestamp of when the merge request was created"
+  CreatedAt: Time!
+  "Description of the merge request (Markdown rendered as HTML for caching)"
+  Description: String
+  "Indicates if comments on the merge request are locked to members only"
+  DiscussionLocked: Boolean!
+  "Indicates if the source branch is behind the target branch"
+  DivergedFromTargetBranch: Boolean!
+  "Indicates if the merge request is a draft"
+  Draft: Boolean!
+  "Indicates if the project settings will lead to source branch deletion after merge"
+  ForceRemoveSourceBranch: Boolean
+  "Number of downvotes for the merge request"
+  Downvotes: Int!
+  "ID of the merge request"
+  ID: String!
+  "Internal ID of the merge request"
+  IID: String!
+  "Indicates if the merge has been set to auto-merge"
+  MergeWhenPipelineSucceeds: Boolean
+  "Indicates if the merge request is mergeable"
+  Mergeable: Boolean!
+  "Indicates if all discussions in the merge request have been resolved, allowing the merge request to be merged"
+  MergeableDiscussionsState: Boolean
+  "Timestamp of when the merge request was merged, null if not merged"
+  MergedAt: Time
+  "Merge status of the merge request"
+  MergeStatusEnum: String!
+  "Timestamp of when the merge request was prepared"
+  PreparedAt: Time
+  "Indicates if the merge request will be rebased"
+  ShouldBeRebased: Boolean!
+  "Indicates if the source branch of the merge request will be deleted after merge"
+  ShouldRemoveSourceBranch: Boolean
+  "Source branch of the merge request"
+  SourceBranch: String!
+  "Indicates if the source branch of the merge request exists"
+  SourceBranchExists: Boolean!
+  "Indicates if the source branch is protected"
+  SourceBranchProtected: Boolean!
+  "Indicates if the merge request is set to be squashed when merged. Project settings may override this value. Use squash_on_merge instead to take project squash options into account"
+  Squash: Boolean!
+  "Indicates if the merge request will be squashed when merged"
+  SquashOnMerge: Boolean!
+  "State of the merge request"
+  State: String!
+  "Target branch of the merge request"
+  TargetBranch: String!
+  "Indicates if the target branch of the merge request exists"
+  TargetBranchExists: Boolean!
+  "Title of the merge request"
+  Title: String!
+  "Timestamp of when the merge request was last updated"
+  UpdatedAt: Time!
+  "Number of upvotes for the merge request."
+  Upvotes: Int!
+  "Number of user discussions in the merge request"
+  UserDiscussionsCount: Int
+  "User notes count of the merge request"
+  UserNotesCount: Int
+
+  #
+  # Connections
+  #
+
+  DiffStats: [ContextDiffStat!]
+  Labels: [ContextLabel!] @generated
+  ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
+  ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
+  ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")
+
+  #
+  # scm-engine customs
+  #
+
+  FirstCommit: ContextCommit @generated()
+  LastCommit: ContextCommit @generated()
+  TimeBetweenFirstAndLastCommit: Duration @generated()
+  TimeSinceFirstCommit: Duration @generated()
+  TimeSinceLastCommit: Duration @generated()
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#commit
+type ContextCommit {
+  "Commit author’s email"
+  AuthorEmail: String
+  "Commit authors name"
+  AuthorName: String
+  "Timestamp of when the commit was authored"
+  AuthoredDate: Time
+  "Timestamp of when the commit was committed"
+  CommittedDate: Time
+  "Email of the committer"
+  CommitterEmail: String
+  "Name of the committer"
+  CommitterName: String
+  "Description of the commit message"
+  Description: String
+  "Full title of the commit message"
+  FullTitle: String
+  "ID (global ID) of the commit"
+  ID: String
+  "Raw commit message"
+  Message: String
+  "SHA1 ID of the commit"
+  SHA: String!
+  "Short SHA1 ID of the commit"
+  ShortID: String!
+  "Title of the commit message"
+  Title: String
+  "Web URL of the commit"
+  WebURL: String!
+}
+
+# Internal only, used to de-nest connections
+type ContextCommitsNode {
+  Nodes: [ContextCommit!] @internal
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#label
+type ContextLabel {
+  "Background color of the label"
+  Color: String!
+  "Description of the label (Markdown rendered as HTML for caching)"
+  Description: String!
+  "Label ID"
+  ID: String!
+  "Content of the label"
+  Title: String!
+}
+
+# Internal only, used to de-nest connections
+type ContextLabelNode {
+  Nodes: [ContextLabel!] @internal
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#diffstats
+type ContextDiffStat {
+  "Number of lines added to this file"
+  Additions: Int!
+  "Number of lines deleted from this file"
+  Deletions: Int!
+  "File path, relative to repository root"
+  Path: String!
+}

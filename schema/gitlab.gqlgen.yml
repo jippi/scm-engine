@@ -1,6 +1,6 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - "*.graphqls"
+  - "gitlab.schema.graphqls"
 
 # Where should the generated server code go?
 exec:
@@ -14,7 +14,7 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: ../../pkg/scm/gitlab/context.gen.go
+  filename: ../pkg/scm/gitlab/context.gen.go
   package: gitlab
 
 # Where should the resolver implementations go?
