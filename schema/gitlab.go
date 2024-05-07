@@ -66,7 +66,6 @@ func main() {
 
 func nest(props []*Property) {
 	for _, field := range props {
-
 		if field.IsCustomType {
 			for _, nested := range PropMap[field.Type].Attributes {
 				field.AddAttribute(&Property{
@@ -175,6 +174,7 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				fieldProperty := &Property{
 					Name:        exprTags.Name,
 					Optional:    field.Omittable || strings.HasPrefix(fieldType, "*"),
+					IsSlice:     strings.HasPrefix(fieldType, "[]"),
 					Description: field.Description,
 				}
 
@@ -196,7 +196,6 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				}
 
 				fieldProperty.Type = strings.TrimPrefix(fieldType, "*")
-				fieldProperty.IsSlice = strings.HasPrefix(fieldType, "[]") || fieldType == "label"
 
 				modelProperty.AddAttribute(fieldProperty)
 			} // end expr tag is set

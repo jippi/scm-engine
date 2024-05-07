@@ -471,6 +471,14 @@ The file patterns use the [`.gitignore` format](https://git-scm.com/docs/gitigno
 merge_request.modified_files("*.go", "docs/")
 ```
 
+#### `merge_request.has_label`
+
+Returns wether any of the provided label exist on the Merge Request.
+
+```expr
+merge_request.has_label("my-label-name")
+```
+
 #### `duration`
 
 Returns the [`time.Duration`](https://pkg.go.dev/time#Duration) value of the given string str.
