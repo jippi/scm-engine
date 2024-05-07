@@ -1,11 +1,7 @@
 name: build
 
 on:
-  push:
-    branches:
-      - "main"
-
-  pull_request:
+  pull_request_target:
     paths:
       - "go.*"
       - "**/*.go"
@@ -109,8 +105,8 @@ jobs:
       - name: Test scm-engine against test GitLab project
         run: ./scm-engine evaluate 1
         env:
-          SCM_ENGINE_CONFIG_FILE: ".scm-engine.example.yml"
           SCM_ENGINE_TOKEN: "${{ secrets.GITLAB_INTEGRATION_TEST_API_TOKEN }}"
+          SCM_ENGINE_CONFIG_FILE: ".scm-engine.example.yml"
           GITLAB_PROJECT: "jippi/scm-engine-schema-test"
           GITLAB_BASEURL: https://gitlab.com/
 
