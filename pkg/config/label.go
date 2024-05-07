@@ -23,8 +23,8 @@ const (
 
 type Labels []*Label
 
-func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResult, error) {
-	var results []scm.EvaluationLabelResult
+func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
+	var results []scm.EvaluationResult
 
 	// Evaluate labels
 	for _, label := range labels {
@@ -184,7 +184,7 @@ func (p *Label) ShouldSkip(evalContext scm.EvalContext) (bool, error) {
 	return runAndCheckBool(p.skipIfCompiled, evalContext)
 }
 
-func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResult, error) {
+func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
 	if err := p.initialize(evalContext); err != nil {
 		return nil, err
 	}
@@ -200,7 +200,7 @@ func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResu
 		return nil, err
 	}
 
-	var result []scm.EvaluationLabelResult
+	var result []scm.EvaluationResult
 
 	switch outputValue := output.(type) {
 	case bool:
@@ -243,8 +243,8 @@ func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResu
 	return result, nil
 }
 
-func (p Label) resultForLabel(name string, matched bool) scm.EvaluationLabelResult {
-	return scm.EvaluationLabelResult{
+func (p Label) resultForLabel(name string, matched bool) scm.EvaluationResult {
+	return scm.EvaluationResult{
 		Name:        name,
 		Matched:     matched,
 		Color:       p.Color,

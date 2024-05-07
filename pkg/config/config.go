@@ -9,7 +9,7 @@ type Config struct {
 	Actions Actions `yaml:"actions"`
 }
 
-func (c Config) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResult, []Action, error) {
+func (c Config) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, []Action, error) {
 	labels, err := c.Labels.Evaluate(evalContext)
 	if err != nil {
 		return nil, nil, err

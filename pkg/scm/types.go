@@ -115,7 +115,7 @@ type Response struct {
 	// LastLink     string
 }
 
-type EvaluationLabelResult struct {
+type EvaluationResult struct {
 	// Name of the label being generated.
 	//
 	// May only be used with [conditional] labelling type
@@ -149,7 +149,7 @@ type EvaluationActionResult struct {
 	Then []EvaluationActionStep
 }
 
-func (local EvaluationLabelResult) IsEqual(remote *Label) bool {
+func (local EvaluationResult) IsEqual(remote *Label) bool {
 	if local.Name != remote.Name {
 		return false
 	}

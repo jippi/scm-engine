@@ -104,7 +104,7 @@ func runActions(ctx context.Context, client scm.Client, update *scm.UpdateMergeR
 	return nil
 }
 
-func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, required []scm.EvaluationLabelResult) error {
+func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, required []scm.EvaluationResult) error {
 	fmt.Println("Going to sync", len(required), "required labels")
 
 	remoteLabels := map[string]*scm.Label{}
