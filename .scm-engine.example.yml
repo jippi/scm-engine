@@ -14,6 +14,13 @@ actions:
       - action: comment
         message: "As promised, we're closing the MR due to inactivity, bye bye"
 
+  - name: Approve MR if the 'break-glass-approve' label is configured
+    if: not merge_request.approved && merge_request.has_label("break-glass-approve")
+    then:
+      - action: approve
+      - action: comment
+        message: "Approving the MR since it has the 'break-glass-approve' label. Talk to ITGC about this!"
+
 label:
   - name: lang/go
     color: "$indigo"

@@ -35,10 +35,14 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 		update.DiscussionLocked = gitlab.Ptr(false)
 
 	case "approve":
-		c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.ApproveMergeRequestOptions{})
+		_, _, err := c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.ApproveMergeRequestOptions{})
+
+		return err
 
 	case "unapprove":
-		c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx))
+		_, err := c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx))
+
+		return err
 
 	case "comment":
 		msg, ok := step["message"]
@@ -55,9 +59,11 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 			return errors.New("step field 'message' must not be an empty string")
 		}
 
-		c.wrapped.Notes.CreateMergeRequestNote(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
+		_, _, err := c.wrapped.Notes.CreateMergeRequestNote(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
 			Body: gitlab.Ptr(msgString),
 		})
+
+		return err
 
 	default:
 		return fmt.Errorf("GitLab client does not know how to apply action %q", step["action"])
