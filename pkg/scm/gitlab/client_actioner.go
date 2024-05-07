@@ -34,6 +34,12 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 	case "discussion_unlocked":
 		update.DiscussionLocked = gitlab.Ptr(false)
 
+	case "approve":
+		c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.ApproveMergeRequestOptions{})
+
+	case "unapprove":
+		c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx))
+
 	case "comment":
 		msg, ok := step["message"]
 		if !ok {

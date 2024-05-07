@@ -1,12 +1,18 @@
 # See: https://getbootstrap.com/docs/5.3/customize/color/#all-colors
 
 actions:
+  - name: Warn that the ticket if older than 30 days
+    if: merge_request.time_since_last_commit > duration("30d") && not merge_request.has_label("do-not-close")
+    then:
+      - action: comment
+        message: "Hey, this MR is old, we will close it in 15 days if no activity has happened. If you want to disable this behavior, add the label 'do-not-close' on the MR."
+
   - name: Close ticket if older than 45 days
-    if: merge_request.time_since_last_commit > duration("45d")
+    if: merge_request.time_since_last_commit > duration("45d") && not merge_request.has_label("do-not-close")
     then:
       - action: close
       - action: comment
-        message: "This Merge Request is older than 45 days and will be closed"
+        message: "As promised, we're closing the MR due to inactivity, bye bye"
 
 label:
   - name: lang/go

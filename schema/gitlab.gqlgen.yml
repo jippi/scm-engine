@@ -88,3 +88,6 @@ models:
   Duration:
     model:
       - github.com/99designs/gqlgen/graphql.Duration
+  ContextLabels:
+    model:
+      - ../pkg/scm/gitlab.ContextLabels

@@ -7,6 +7,16 @@ import (
 	"strings"
 )
 
+func (e ContextMergeRequest) HasLabel(in string) bool {
+	for _, label := range e.Labels {
+		if label.Title == in {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Partially lifted from https://github.com/hmarr/codeowners/blob/main/match.go
 func (e ContextMergeRequest) ModifiedFiles(patterns ...string) bool {
 	leftAnchoredLiteral := false

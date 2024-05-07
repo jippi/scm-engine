@@ -21,6 +21,8 @@ scalar Time
 # Add time.Duration support
 scalar Duration
 
+scalar ContextLabels
+
 type Context {
   "The project the Merge Request belongs to"
   Project: ContextProject @graphql(key: "project(fullPath: $project_id)")
@@ -66,7 +68,7 @@ type ContextProject {
   # Connections
   #
 
-  Labels: [ContextLabel!] @generated
+  Labels: ContextLabels @generated
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
   MergeRequest: ContextMergeRequest @internal @graphql(key: "mergeRequest(iid: $mr_id)")
   ResponseGroup: ContextGroup @internal @graphql(key: "group")
@@ -178,7 +180,7 @@ type ContextMergeRequest {
   #
 
   DiffStats: [ContextDiffStat!]
-  Labels: [ContextLabel!] @generated
+  Labels: ContextLabels @generated
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
   ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
   ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")

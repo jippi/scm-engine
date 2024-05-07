@@ -40,9 +40,9 @@ func main() {
 		os.Exit(2)
 	}
 
-	// Attaching the mutation function onto modelgen plugin
+	// Attaching the mutation function onto model-gen plugin
 	p := modelgen.Plugin{
-		FieldHook:  constraintFieldHook,
+		FieldHook:  fieldHook,
 		MutateHook: mutateHook,
 	}
 
@@ -66,7 +66,10 @@ func main() {
 
 func nest(props []*Property) {
 	for _, field := range props {
+
 		if field.IsCustomType {
+			fmt.Println("nesting", field.Name, "of type", field.Type)
+
 			for _, nested := range PropMap[field.Type].Attributes {
 				field.AddAttribute(&Property{
 					Name:         nested.Name,
@@ -93,7 +96,7 @@ func getRootPath() string {
 }
 
 // Defining mutation function
-func constraintFieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (*modelgen.Field, error) {
+func fieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (*modelgen.Field, error) {
 	// Call default hook to proceed standard directives like goField and goTag.
 	// You can omit it, if you don't need.
 	if f, err := modelgen.DefaultFieldMutateHook(td, fd, f); err != nil {
@@ -145,7 +148,7 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 
 		modelProperty := &Property{
 			Name:        modelName,
-			Type:        "model",
+			Type:        modelName,
 			Description: model.Description,
 		}
 
@@ -177,8 +180,6 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 					Description: field.Description,
 				}
 
-				fieldProperty.IsSlice = strings.HasPrefix(fieldType, "[]")
-
 				if strings.Contains(fieldType, "github.com/jippi/scm-engine") {
 					fieldType = filepath.Base(fieldType)
 					fieldType = strings.Split(fieldType, ".")[1]
@@ -197,22 +198,32 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				}
 
 				fieldProperty.Type = strings.TrimPrefix(fieldType, "*")
+				fieldProperty.IsSlice = strings.HasPrefix(fieldType, "[]") || fieldType == "labels"
 
 				modelProperty.AddAttribute(fieldProperty)
-			}
+
+				fmt.Println(" ", fieldProperty.Name, "of type", fieldProperty.Type)
+			} // end expr tag is set
 
 			slices.SortFunc(modelProperty.Attributes, sortSlice)
 
 			field.Tag = tags.String()
-		}
+		} // end fields loop
 
 		if strings.HasSuffix(model.Name, "Node") || model.Name == "Query" {
 			continue
 		}
 
+		if modelProperty.Type == "label" {
+			modelProperty.Type = "labels"
+			modelProperty.IsSlice = true
+		}
+
+		fmt.Println("Registering custom model", modelProperty.Name, "of type", modelProperty.Type)
+
 		Props = append(Props, modelProperty)
-		PropMap[modelProperty.Name] = modelProperty
-	}
+		PropMap[modelProperty.Type] = modelProperty
+	} // end model loop
 
 	return b
 }
