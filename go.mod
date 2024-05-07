@@ -13,7 +13,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/urfave/cli/v2 v2.27.2
 	github.com/vektah/gqlparser/v2 v2.5.11
-	github.com/xanzy/go-gitlab v0.104.0
+	github.com/xanzy/go-gitlab v0.104.1
 	github.com/xhit/go-str2duration/v2 v2.1.0
 	golang.org/x/oauth2 v0.20.0
 	gopkg.in/yaml.v3 v3.0.1
