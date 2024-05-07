@@ -23,9 +23,10 @@ const (
 
 type Labels []*Label
 
-func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
-	var results []scm.EvaluationResult
+func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResult, error) {
+	var results []scm.EvaluationLabelResult
 
+	// Evaluate labels
 	for _, label := range labels {
 		evaluationResult, err := label.Evaluate(evalContext)
 		if err != nil {
@@ -37,6 +38,23 @@ func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResu
 		}
 
 		results = append(results, evaluationResult...)
+	}
+
+	// Sanity/validation checks
+	seen := map[string]bool{}
+
+	for _, result := range results {
+		// Check labels has a proper name
+		if len(result.Name) == 0 {
+			return nil, errors.New("A label was generated with empty name, please check your configuration.")
+		}
+
+		// Check uniqueness of labels
+		if _, ok := seen[result.Name]; ok {
+			return nil, fmt.Errorf("The label %q was generated multiple times, please check your configuration. Hint: If you use [compute] label type, you can use the 'uniq()' function (example: '| uniq()')", result.Name)
+		}
+
+		seen[result.Name] = true
 	}
 
 	return results, nil
@@ -166,7 +184,7 @@ func (p *Label) ShouldSkip(evalContext scm.EvalContext) (bool, error) {
 	return runAndCheckBool(p.skipIfCompiled, evalContext)
 }
 
-func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
+func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResult, error) {
 	if err := p.initialize(evalContext); err != nil {
 		return nil, err
 	}
@@ -182,7 +200,7 @@ func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, e
 		return nil, err
 	}
 
-	var result []scm.EvaluationResult
+	var result []scm.EvaluationLabelResult
 
 	switch outputValue := output.(type) {
 	case bool:
@@ -225,8 +243,8 @@ func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, e
 	return result, nil
 }
 
-func (p Label) resultForLabel(name string, matched bool) scm.EvaluationResult {
-	return scm.EvaluationResult{
+func (p Label) resultForLabel(name string, matched bool) scm.EvaluationLabelResult {
+	return scm.EvaluationLabelResult{
 		Name:        name,
 		Matched:     matched,
 		Color:       p.Color,

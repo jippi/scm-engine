@@ -1,6 +1,9 @@
 package state
 
-import "context"
+import (
+	"context"
+	"strconv"
+)
 
 type contextKey uint
 
@@ -27,6 +30,17 @@ func ContextWithProjectID(ctx context.Context, value string) context.Context {
 
 func MergeRequestIDFromContext(ctx context.Context) string {
 	return ctx.Value(mergeRequestID).(string) //nolint:forcetypeassert
+}
+
+func MergeRequestIDFromContextInt(ctx context.Context) int {
+	val := MergeRequestIDFromContext(ctx)
+
+	number, err := strconv.Atoi(val)
+	if err != nil {
+		panic(err)
+	}
+
+	return number
 }
 
 func ContextWithMergeRequestID(ctx context.Context, id string) context.Context {

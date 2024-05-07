@@ -1,5 +1,13 @@
 # See: https://getbootstrap.com/docs/5.3/customize/color/#all-colors
 
+actions:
+  - name: Close ticket if older than 45 days
+    if: merge_request.time_since_last_commit > duration("45d")
+    then:
+      - action: close
+      - action: comment
+        message: "This Merge Request is older than 45 days and will be closed"
+
 label:
   - name: lang/go
     color: "$indigo"

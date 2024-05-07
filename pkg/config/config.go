@@ -1,38 +1,24 @@
 package config
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/jippi/scm-engine/pkg/scm"
 )
 
 type Config struct {
-	Labels Labels `yaml:"label"`
+	Labels  Labels  `yaml:"label"`
+	Actions Actions `yaml:"actions"`
 }
 
-func (c Config) Evaluate(e scm.EvalContext) ([]scm.EvaluationResult, error) {
-	results, err := c.Labels.Evaluate(e)
+func (c Config) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationLabelResult, []Action, error) {
+	labels, err := c.Labels.Evaluate(evalContext)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	// Sanity/validation checks
-	seen := map[string]bool{}
-
-	for _, result := range results {
-		// Check labels has a proper name
-		if len(result.Name) == 0 {
-			return nil, errors.New("A label was generated with empty name, please check your configuration.")
-		}
-
-		// Check uniqueness of labels
-		if _, ok := seen[result.Name]; ok {
-			return nil, fmt.Errorf("The label %q was generated multiple times, please check your configuration. Hint: If you use [compute] label type, you can use the 'uniq()' function (example: '| uniq()')", result.Name)
-		}
-
-		seen[result.Name] = true
+	actions, err := c.Actions.Evaluate(evalContext)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	return results, nil
+	return labels, actions, nil
 }
