@@ -468,7 +468,17 @@ Returns wether any of the provided files patterns have been modified in the Merg
 The file patterns use the [`.gitignore` format](https://git-scm.com/docs/gitignore#_pattern_format).
 
 ```expr
-merge_request.modified_files("*.go", "docs/")
+merge_request.modified_files("*.go", "docs/") == true
+```
+
+#### `merge_request.modified_files_list`
+
+Returns an array of files matching the provided (optional) pattern thas has been modified in the Merge Request.
+
+The file patterns use the [`.gitignore` format](https://git-scm.com/docs/gitignore#_pattern_format).
+
+```expr
+merge_request.modified_files_list("*.go", "docs/") == ["example/file.go", "docs/index.md"]
 ```
 
 #### `merge_request.has_label`

@@ -98,8 +98,7 @@ label:
     description: "Modified this a service directory"
     color: "$pink"
     script: >
-      map(merge_request.diff_stats, { .path })
-      | filter({ hasPrefix(#, "internal/service/") })
+      merge_request.modified_files_list("internal/service/")
       | map({ filepath_dir(#) })
       | map({ trimPrefix(#, "internal/") })
       | uniq()
@@ -113,8 +112,7 @@ label:
     description: "Modified this my-command command"
     color: "$purple"
     script: >
-      map(merge_request.diff_stats, { .path })
-      | filter({ hasPrefix(#, "internal/app/my-command/subcommands/") })
+      merge_request.modified_files_list("internal/app/my-command/subcommands/")
       | map({ filepath_dir(#) })
       | map({ trimPrefix(#, "internal/app/my-command/subcommands/") })
       | map({ string("command/" + #) })
