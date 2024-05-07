@@ -68,8 +68,6 @@ func nest(props []*Property) {
 	for _, field := range props {
 
 		if field.IsCustomType {
-			fmt.Println("nesting", field.Name, "of type", field.Type)
-
 			for _, nested := range PropMap[field.Type].Attributes {
 				field.AddAttribute(&Property{
 					Name:         nested.Name,
@@ -198,11 +196,9 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				}
 
 				fieldProperty.Type = strings.TrimPrefix(fieldType, "*")
-				fieldProperty.IsSlice = strings.HasPrefix(fieldType, "[]") || fieldType == "labels"
+				fieldProperty.IsSlice = strings.HasPrefix(fieldType, "[]") || fieldType == "label"
 
 				modelProperty.AddAttribute(fieldProperty)
-
-				fmt.Println(" ", fieldProperty.Name, "of type", fieldProperty.Type)
 			} // end expr tag is set
 
 			slices.SortFunc(modelProperty.Attributes, sortSlice)
@@ -213,13 +209,6 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 		if strings.HasSuffix(model.Name, "Node") || model.Name == "Query" {
 			continue
 		}
-
-		if modelProperty.Type == "label" {
-			modelProperty.Type = "labels"
-			modelProperty.IsSlice = true
-		}
-
-		fmt.Println("Registering custom model", modelProperty.Name, "of type", modelProperty.Type)
 
 		Props = append(Props, modelProperty)
 		PropMap[modelProperty.Type] = modelProperty
