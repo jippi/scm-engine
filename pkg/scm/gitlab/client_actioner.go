@@ -28,10 +28,10 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 	case "reopen":
 		update.StateEvent = gitlab.Ptr("reopen")
 
-	case "discussion_locked":
+	case "lock_discussion":
 		update.DiscussionLocked = gitlab.Ptr(true)
 
-	case "discussion_unlocked":
+	case "unlock_discussion":
 		update.DiscussionLocked = gitlab.Ptr(false)
 
 	case "approve":

@@ -207,13 +207,49 @@ label:
       | uniq()
 ```
 
-### `label` (list)
+### `actions[]` (list)
+
+The `actions` key is a list of actions that can be taken on a Merge Request.
+
+#### `actions[].name`
+
+The name of the action, this is purely for debugging and your convenience. It's encouraged to be descriptive of the actions.
+
+#### `actions[].if`
+
+A key controlling if the action should executed or not.
+
+The `if` field must be a valid [Expr-lang](https://expr-lang.org/) expression returning a boolean.
+
+#### `actions[].then[]` (list)
+
+The list of operations to take if the `action.if` returned `true`.
+
+#### `actions[].then[].action`
+
+This key controls what kind of action that should be taken.
+
+- `close` to close the Merge Request.
+- `reopen` to reopen the Merge Request.
+- `lock_discussion` to prevent further discussions on the Merge Request.
+- `unlock_discussion` to allow discussions on the Merge Request.
+- `approve` to approve the Merge Request.
+- `unapprove` to approve the Merge Request.
+- `comment` to add a comment to the Merge Request (requires the `message` field)
+
+#### `actions[].then[].message`
+
+Required field for `action: comment`.
+
+The message that will be commented on the Merge Request.
+
+### `label[]` (list)
 
 The `label` key is a list of the labels you want to manage.
 
 These keys are shared between the `conditional` and `generate` label strategy. (more above these below!)
 
-#### `label.name`
+#### `label[].name`
 
 - When using `label.strategy: conditional`
 
@@ -223,7 +259,7 @@ These keys are shared between the `conditional` and `generate` label strategy. (
 
     **OMITTED** The `name` field must not be set when using the `generate` strategy.
 
-#### `label.script` (required)
+#### `label[].script` (required)
 
 > [!TIP]
 > See the [SCM engine expr-lang documentation](#expr-lang-information) for more information about [functions](#functions) and [attributes](#attributes) available.
@@ -232,7 +268,7 @@ The `script` field is an [expr-lang](https://expr-lang.org/) expression, a safe,
 
 Depending on the `label.strategy` used, the behavior of the script changes, read more about this below.
 
-#### `label.strategy` (optional)
+#### `label[].strategy` (optional)
 
 SCM Engine supports two strategies for managing labels, each changes the behavior of the `script`.
 
@@ -244,11 +280,11 @@ SCM Engine supports two strategies for managing labels, each changes the behavio
 
     The `script` must return a `list of strings`, where each label returned will be added to the Merge Request.
 
-##### `label.strategy: conditional` use-cases
+##### `label[].strategy: conditional` use-cases
 
 Use the `conditional` strategy when you want to add/remove a label on a Merge Request depending on _something_. It's the default strategy, and the most simple one to use.
 
-##### `label.strategy: conditional` examples
+##### `label[].strategy: conditional` examples
 
 > [!NOTE]
 > The `script` field is a [expr-lang](https://expr-lang.org/) expression, a safe, fast, and intuitive expression evaluator.
@@ -283,11 +319,11 @@ label:
     script: merge_request.modified_files("*_test.go")
 ```
 
-##### `label.strategy: generate` use-cases
+##### `label[].strategy: generate` use-cases
 
 Use the `generate` strategy if you want to manage dynamic labels, for example, depending on the file structure within your project.
 
-##### `label.strategy: generate` examples
+##### `label[].strategy: generate` examples
 
 > The `script` field is a [expr-lang](https://expr-lang.org/) expression, a safe, fast, and intuitive expression evaluator.
 
@@ -327,7 +363,7 @@ label:
       | uniq()
 ```
 
-#### `label.color` (required)
+#### `label[].color` (required)
 
 > [!NOTE]
 > When used on `strategy: generate` labels, all generated labels will have the same color.
@@ -336,7 +372,7 @@ label:
 
 You can either provide your own `#hex` value or use the [Twitter Bootstrap color variables](https://getbootstrap.com/docs/5.3/customize/color/#all-colors), for example `$blue-500` and `$teal`.
 
-#### `label.description` (optional)
+#### `label[].description` (optional)
 
 > [!NOTE]
 > When used on `strategy: generate` labels, all generated labels will have the same description.
@@ -345,14 +381,14 @@ An optional key that control the `description` field for the label within GitLab
 
 Descriptions are shown in the User Interface when you hover any label.
 
-#### `label.priority` (optional)
+#### `label[].priority` (optional)
 
 > [!NOTE]
 > When used on `strategy: generate` labels, all generated labels will have the same priority.
 
 An optional key that controls the [label `priority`](https://docs.gitlab.com/ee/user/project/labels.html#set-label-priority).
 
-#### `label.skip_if` (optional)
+#### `label[].skip_if` (optional)
 
 An optional key controlling if the label should be skipped (meaning no removal or adding of labels).
 
