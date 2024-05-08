@@ -21,6 +21,8 @@ scalar Time
 # Add time.Duration support
 scalar Duration
 
+# Add 'any' type for Event
+scalar Any
 
 type Context {
   "The project the Merge Request belongs to"
@@ -31,6 +33,9 @@ type Context {
 
   "Information about the Merge Request"
   MergeRequest: ContextMergeRequest @generated
+
+  "Information about the event that triggered the evaluation. Empty when not using webhook server."
+  WebhookEvent: Any @generated
 }
 
 enum MergeRequestState {

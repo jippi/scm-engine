@@ -10,7 +10,7 @@ import (
 	"github.com/jippi/scm-engine/pkg/state"
 )
 
-func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr string) error {
+func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr string, event any) error {
 	ctx = state.ContextWithMergeRequestID(ctx, mr)
 
 	// for mr := 900; mr <= 1000; mr++ {
@@ -33,6 +33,8 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 
 		return nil
 	}
+
+	evalContext.SetWebhookEvent(event)
 
 	fmt.Println("Evaluating context")
 

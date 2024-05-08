@@ -26,6 +26,7 @@ type MergeRequestClient interface {
 
 type EvalContext interface {
 	IsValid() bool
+	SetWebhookEvent(in any)
 }
 
 type EvalContextualizer struct{}

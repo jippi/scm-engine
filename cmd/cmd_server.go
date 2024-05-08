@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"log/slog"
 	"net/http"
@@ -72,9 +74,16 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 			return
 		}
 
+		body, err := io.ReadAll(reader.Body)
+		if err != nil {
+			errHandler(writer, http.StatusInternalServerError, err)
+
+			return
+		}
+
 		// Decode request payload
 		var payload Payload
-		if err := json.NewDecoder(reader.Body).Decode(&payload); err != nil {
+		if err := json.NewDecoder(bytes.NewReader(body)).Decode(&payload); err != nil {
 			errHandler(writer, http.StatusInternalServerError, err)
 
 			return
@@ -118,8 +127,16 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 			return
 		}
 
+		// Decode request payload
+		var full any
+		if err := json.NewDecoder(bytes.NewReader(body)).Decode(&full); err != nil {
+			errHandler(writer, http.StatusInternalServerError, err)
+
+			return
+		}
+
 		// Process the MR
-		if err := ProcessMR(ctx, client, cfg, id); err != nil {
+		if err := ProcessMR(ctx, client, cfg, id, full); err != nil {
 			errHandler(writer, http.StatusOK, err)
 
 			return

@@ -32,14 +32,14 @@ func Evaluate(cCtx *cli.Context) error {
 		}
 
 		for _, mr := range res {
-			if err := ProcessMR(ctx, client, cfg, mr.ID); err != nil {
+			if err := ProcessMR(ctx, client, cfg, mr.ID, nil); err != nil {
 				return err
 			}
 		}
 
 	// If the flag is set, use that for evaluation
 	case cCtx.String(FlagMergeRequestID) != "":
-		return ProcessMR(ctx, client, cfg, cCtx.String(FlagMergeRequestID))
+		return ProcessMR(ctx, client, cfg, cCtx.String(FlagMergeRequestID), nil)
 
 	// If no flag is set, we require arguments
 	case cCtx.Args().Len() == 0:
@@ -47,7 +47,7 @@ func Evaluate(cCtx *cli.Context) error {
 
 	default:
 		for _, mr := range cCtx.Args().Slice() {
-			if err := ProcessMR(ctx, client, cfg, mr); err != nil {
+			if err := ProcessMR(ctx, client, cfg, mr, nil); err != nil {
 				return err
 			}
 		}

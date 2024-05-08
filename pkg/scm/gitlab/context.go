@@ -83,3 +83,7 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 func (c *Context) IsValid() bool {
 	return c != nil
 }
+
+func (c *Context) SetWebhookEvent(in any) {
+	c.WebhookEvent = in
+}
