@@ -2,6 +2,7 @@ package scm
 
 import (
 	"context"
+	"io"
 )
 
 type Client interface {
@@ -20,6 +21,7 @@ type LabelClient interface {
 type MergeRequestClient interface {
 	Update(ctx context.Context, opt *UpdateMergeRequestOptions) (*Response, error)
 	List(ctx context.Context, options *ListMergeRequestsOptions) ([]ListMergeRequest, error)
+	GetRemoteConfig(ctx context.Context, name string, ref string) (io.Reader, error)
 }
 
 type EvalContext interface {

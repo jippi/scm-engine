@@ -43,15 +43,7 @@ func main() {
 					"SCM_ENGINE_TOKEN",
 				},
 			},
-			&cli.StringFlag{
-				Name:     cmd.FlagSCMProject,
-				Usage:    "GitLab project (example: 'gitlab-org/gitlab')",
-				Required: true,
-				EnvVars: []string{
-					"GITLAB_PROJECT",
-					"CI_PROJECT_PATH",
-				},
-			},
+
 			&cli.StringFlag{
 				Name:  cmd.FlagSCMBaseURL,
 				Usage: "Base URL for the SCM instance",
@@ -68,6 +60,15 @@ func main() {
 				Usage:  "Evaluate a Merge Request",
 				Action: cmd.Evaluate,
 				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     cmd.FlagSCMProject,
+						Usage:    "GitLab project (example: 'gitlab-org/gitlab')",
+						Required: true,
+						EnvVars: []string{
+							"GITLAB_PROJECT",
+							"CI_PROJECT_PATH",
+						},
+					},
 					&cli.StringFlag{
 						Name:  cmd.FlagMergeRequestID,
 						Usage: "The pull/merge to process, if not provided as a CLI flag",
