@@ -25,7 +25,6 @@ type MergeRequest struct {
 }
 
 type Project struct {
-	ID                int    `json:"id"`
 	PathWithNamespace string `json:"path_with_namespace"`
 }
 
