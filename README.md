@@ -187,11 +187,10 @@ label:
     color: "$pink"
     # From this script, returning a list of labels
     script: >
-      map(merge_request.diff_stats, { .path })   // Generate a list of all file paths that was changed in the Merge Request
-      | filter({ hasPrefix(#, "pkg/service/") }) // Remove all paths that doesn't start with "pkg/service/"
-      | map({ filepath_dir(#) })                 // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
-      | map({ trimPrefix(#, "pkg/") })           // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
-      | uniq()                                   // Remove duplicate values from the output
+      merge_request.modified_files_list("pkg/service/") // Generate a list of all file paths that was changed in the Merge Request inside pkg/service/
+      | map({ filepath_dir(#) })                        // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
+      | map({ trimPrefix(#, "pkg/") })                  // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
+      | uniq()                                          // Remove duplicate values from the output
 ```
 
 ### `label` (list)
@@ -301,11 +300,10 @@ label:
     description: "Modified this service directory"
     color: "$pink"
     script: >
-      map(merge_request.diff_stats, { .path })   // Generate a list of all file paths that was changed in the Merge Request
-      | filter({ hasPrefix(#, "pkg/service/") }) // Remove all paths that doesn't start with "pkg/service/"
-      | map({ filepath_dir(#) })                 // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
-      | map({ trimPrefix(#, "pkg/") })           // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
-      | uniq()                                   // Remove duplicate values from the output
+      merge_request.modified_files_list("pkg/service/") // Generate a list of all file paths that was changed in the Merge Request inside pkg/service/
+      | map({ filepath_dir(#) })                        // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
+      | map({ trimPrefix(#, "pkg/") })                  // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
+      | uniq()                                          // Remove duplicate values from the output
 ```
 
 #### `label.color` (required)
