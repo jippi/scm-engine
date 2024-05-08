@@ -187,11 +187,17 @@ label:
     color: "$pink"
     # From this script, returning a list of labels
     script: >
-      map(merge_request.diff_stats, { .path })   // Generate a list of all file paths that was changed in the Merge Request
-      | filter({ hasPrefix(#, "pkg/service/") }) // Remove all paths that doesn't start with "pkg/service/"
-      | map({ filepath_dir(#) })                 // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
-      | map({ trimPrefix(#, "pkg/") })           // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
-      | uniq()                                   // Remove duplicate values from the output
+      // Generate a list of all file paths that was changed in the Merge Request inside pkg/service/
+      merge_request.modified_files_list("pkg/service/")
+
+      // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
+      | map({ filepath_dir(#) })
+
+      // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
+      | map({ trimPrefix(#, "pkg/") })
+
+      // Remove duplicate values from the output
+      | uniq()
 ```
 
 ### `label` (list)
@@ -301,11 +307,17 @@ label:
     description: "Modified this service directory"
     color: "$pink"
     script: >
-      map(merge_request.diff_stats, { .path })   // Generate a list of all file paths that was changed in the Merge Request
-      | filter({ hasPrefix(#, "pkg/service/") }) // Remove all paths that doesn't start with "pkg/service/"
-      | map({ filepath_dir(#) })                 // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
-      | map({ trimPrefix(#, "pkg/") })           // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
-      | uniq()                                   // Remove duplicate values from the output
+      // Generate a list of all file paths that was changed in the Merge Request inside pkg/service/
+      merge_request.modified_files_list("pkg/service/")
+
+      // Remove the filename from the path "pkg/service/example/file.go" => "pkg/service/example"
+      | map({ filepath_dir(#) })
+
+      // Remove the prefix "pkg/" from the path "pkg/service/example" => "service/example"
+      | map({ trimPrefix(#, "pkg/") })
+
+      // Remove duplicate values from the output
+      | uniq()
 ```
 
 #### `label.color` (required)
@@ -468,7 +480,25 @@ Returns wether any of the provided files patterns have been modified in the Merg
 The file patterns use the [`.gitignore` format](https://git-scm.com/docs/gitignore#_pattern_format).
 
 ```expr
-merge_request.modified_files("*.go", "docs/")
+merge_request.modified_files("*.go", "docs/") == true
+```
+
+#### `merge_request.modified_files_list`
+
+Returns an array of files matching the provided (optional) pattern thas has been modified in the Merge Request.
+
+The file patterns use the [`.gitignore` format](https://git-scm.com/docs/gitignore#_pattern_format).
+
+```expr
+merge_request.modified_files_list("*.go", "docs/") == ["example/file.go", "docs/index.md"]
+```
+
+#### `merge_request.has_label`
+
+Returns wether any of the provided label exist on the Merge Request.
+
+```expr
+merge_request.has_label("my-label-name")
 ```
 
 #### `duration`

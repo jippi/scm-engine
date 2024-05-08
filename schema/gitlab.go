@@ -40,9 +40,9 @@ func main() {
 		os.Exit(2)
 	}
 
-	// Attaching the mutation function onto modelgen plugin
+	// Attaching the mutation function onto model-gen plugin
 	p := modelgen.Plugin{
-		FieldHook:  constraintFieldHook,
+		FieldHook:  fieldHook,
 		MutateHook: mutateHook,
 	}
 
@@ -93,7 +93,7 @@ func getRootPath() string {
 }
 
 // Defining mutation function
-func constraintFieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (*modelgen.Field, error) {
+func fieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (*modelgen.Field, error) {
 	// Call default hook to proceed standard directives like goField and goTag.
 	// You can omit it, if you don't need.
 	if f, err := modelgen.DefaultFieldMutateHook(td, fd, f); err != nil {
@@ -145,7 +145,7 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 
 		modelProperty := &Property{
 			Name:        modelName,
-			Type:        "model",
+			Type:        modelName,
 			Description: model.Description,
 		}
 
@@ -174,10 +174,9 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				fieldProperty := &Property{
 					Name:        exprTags.Name,
 					Optional:    field.Omittable || strings.HasPrefix(fieldType, "*"),
+					IsSlice:     strings.HasPrefix(fieldType, "[]"),
 					Description: field.Description,
 				}
-
-				fieldProperty.IsSlice = strings.HasPrefix(fieldType, "[]")
 
 				if strings.Contains(fieldType, "github.com/jippi/scm-engine") {
 					fieldType = filepath.Base(fieldType)
@@ -199,20 +198,20 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				fieldProperty.Type = strings.TrimPrefix(fieldType, "*")
 
 				modelProperty.AddAttribute(fieldProperty)
-			}
+			} // end expr tag is set
 
 			slices.SortFunc(modelProperty.Attributes, sortSlice)
 
 			field.Tag = tags.String()
-		}
+		} // end fields loop
 
 		if strings.HasSuffix(model.Name, "Node") || model.Name == "Query" {
 			continue
 		}
 
 		Props = append(Props, modelProperty)
-		PropMap[modelProperty.Name] = modelProperty
-	}
+		PropMap[modelProperty.Type] = modelProperty
+	} // end model loop
 
 	return b
 }

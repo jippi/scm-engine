@@ -36,20 +36,40 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 
 	fmt.Println("Evaluating context")
 
-	matches, err := cfg.Evaluate(evalContext)
+	labels, actions, err := cfg.Evaluate(evalContext)
 	if err != nil {
 		return err
 	}
 
-	// spew.Dump(matches)
-
-	// for _, label := range matches {
-	// 	fmt.Println(label.Name, label.Matched, label.Color)
-	// }
-
 	fmt.Println("Sync labels")
 
-	if err := sync(ctx, client, remoteLabels, matches); err != nil {
+	if err := syncLabels(ctx, client, remoteLabels, labels); err != nil {
+		return err
+	}
+
+	fmt.Println("Done!")
+
+	var (
+		add    scm.LabelOptions
+		remove scm.LabelOptions
+	)
+
+	for _, e := range labels {
+		if e.Matched {
+			add = append(add, e.Name)
+		} else {
+			remove = append(remove, e.Name)
+		}
+	}
+
+	update := &scm.UpdateMergeRequestOptions{
+		AddLabels:    &add,
+		RemoveLabels: &remove,
+	}
+
+	fmt.Println("Applying actions")
+
+	if err := runActions(ctx, client, update, actions); err != nil {
 		return err
 	}
 
@@ -57,7 +77,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 
 	fmt.Println("Updating MR")
 
-	if err := apply(ctx, client, matches); err != nil {
+	if err := updateMergeRequest(ctx, client, update); err != nil {
 		return err
 	}
 
@@ -66,29 +86,25 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 	return nil
 }
 
-func apply(ctx context.Context, client scm.Client, remoteLabels []scm.EvaluationResult) error {
-	var (
-		add    scm.LabelOptions
-		remove scm.LabelOptions
-	)
-
-	for _, e := range remoteLabels {
-		if e.Matched {
-			add = append(add, e.Name)
-		} else {
-			remove = append(remove, e.Name)
-		}
-	}
-
-	_, err := client.MergeRequests().Update(ctx, &scm.UpdateMergeRequestOptions{
-		AddLabels:    &add,
-		RemoveLabels: &remove,
-	})
+func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.UpdateMergeRequestOptions) error {
+	_, err := client.MergeRequests().Update(ctx, update)
 
 	return err
 }
 
-func sync(ctx context.Context, client scm.Client, remote []*scm.Label, required []scm.EvaluationResult) error {
+func runActions(ctx context.Context, client scm.Client, update *scm.UpdateMergeRequestOptions, actions []config.Action) error {
+	for _, action := range actions {
+		for _, task := range action.Then {
+			if err := client.ApplyStep(ctx, update, task); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, required []scm.EvaluationResult) error {
 	fmt.Println("Going to sync", len(required), "required labels")
 
 	remoteLabels := map[string]*scm.Label{}
@@ -131,7 +147,7 @@ func sync(ctx context.Context, client scm.Client, remote []*scm.Label, required 
 			continue
 		}
 
-		if label.EqualLabel(e) {
+		if label.IsEqual(e) {
 			continue
 		}
 

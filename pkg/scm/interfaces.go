@@ -8,6 +8,7 @@ type Client interface {
 	Labels() LabelClient
 	MergeRequests() MergeRequestClient
 	EvalContext(ctx context.Context) (EvalContext, error)
+	ApplyStep(ctx context.Context, update *UpdateMergeRequestOptions, step EvaluationActionStep) error
 }
 
 type LabelClient interface {

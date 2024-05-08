@@ -1,5 +1,26 @@
 # See: https://getbootstrap.com/docs/5.3/customize/color/#all-colors
 
+actions:
+  - name: Warn that the ticket if older than 30 days
+    if: merge_request.state != "closed" && merge_request.time_since_last_commit > duration("30d") && not merge_request.has_label("do-not-close")
+    then:
+      - action: comment
+        message: "Hey, this MR is old, we will close it in 15 days if no activity has happened. If you want to disable this behavior, add the label 'do-not-close' on the MR."
+
+  - name: Close ticket if older than 45 days
+    if: merge_request.state != "closed" && merge_request.time_since_last_commit > duration("45d") && not merge_request.has_label("do-not-close")
+    then:
+      - action: close
+      - action: comment
+        message: "As promised, we're closing the MR due to inactivity, bye bye"
+
+  - name: Approve MR if the 'break-glass-approve' label is configured
+    if: merge_request.state != "closed" && not merge_request.approved && merge_request.has_label("break-glass-approve")
+    then:
+      - action: approve
+      - action: comment
+        message: "Approving the MR since it has the 'break-glass-approve' label. Talk to ITGC about this!"
+
 label:
   - name: lang/go
     color: "$indigo"
@@ -77,8 +98,7 @@ label:
     description: "Modified this a service directory"
     color: "$pink"
     script: >
-      map(merge_request.diff_stats, { .path })
-      | filter({ hasPrefix(#, "internal/service/") })
+      merge_request.modified_files_list("internal/service/")
       | map({ filepath_dir(#) })
       | map({ trimPrefix(#, "internal/") })
       | uniq()
@@ -92,8 +112,7 @@ label:
     description: "Modified this my-command command"
     color: "$purple"
     script: >
-      map(merge_request.diff_stats, { .path })
-      | filter({ hasPrefix(#, "internal/app/my-command/subcommands/") })
+      merge_request.modified_files_list("internal/app/my-command/subcommands/")
       | map({ filepath_dir(#) })
       | map({ trimPrefix(#, "internal/app/my-command/subcommands/") })
       | map({ string("command/" + #) })

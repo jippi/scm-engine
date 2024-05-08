@@ -72,6 +72,7 @@ type UpdateMergeRequestOptions struct {
 // GitLab API docs: https://docs.gitlab.com/ee/api/labels.html#list-labels
 type ListLabelsOptions struct {
 	ListOptions
+
 	WithCounts            *bool   `json:"with_counts,omitempty"             url:"with_counts,omitempty"`
 	IncludeAncestorGroups *bool   `json:"include_ancestor_groups,omitempty" url:"include_ancestor_groups,omitempty"`
 	Search                *string `json:"search,omitempty"                  url:"search,omitempty"`
@@ -136,12 +137,19 @@ type EvaluationResult struct {
 	// This controls if the label is prioritized (sorted first) in the list.
 	Priority types.Value[int]
 
-	//
-	Matched       bool
-	CreateInGroup string
+	// Wether the evaluation rule matched positive (add label) or negative (remove label)
+	Matched bool
 }
 
-func (local EvaluationResult) EqualLabel(remote *Label) bool {
+type EvaluationActionStep map[string]any
+
+type EvaluationActionResult struct {
+	Name string `yaml:"name"`
+	If   string `yaml:"if"`
+	Then []EvaluationActionStep
+}
+
+func (local EvaluationResult) IsEqual(remote *Label) bool {
 	if local.Name != remote.Name {
 		return false
 	}

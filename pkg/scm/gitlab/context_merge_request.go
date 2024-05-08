@@ -7,9 +7,30 @@ import (
 	"strings"
 )
 
+func (e ContextMergeRequest) HasLabel(in string) bool {
+	for _, label := range e.Labels {
+		if label.Title == in {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (e ContextMergeRequest) ModifiedFilesList(patterns ...string) []string {
+	return e.findModifiedFiles(patterns...)
+}
+
 // Partially lifted from https://github.com/hmarr/codeowners/blob/main/match.go
 func (e ContextMergeRequest) ModifiedFiles(patterns ...string) bool {
+	return len(e.findModifiedFiles(patterns...)) > 0
+}
+
+// Partially lifted from https://github.com/hmarr/codeowners/blob/main/match.go
+func (e ContextMergeRequest) findModifiedFiles(patterns ...string) []string {
 	leftAnchoredLiteral := false
+
+	output := []string{}
 
 	for _, pattern := range patterns {
 		if !strings.ContainsAny(pattern, "*?\\") && pattern[0] == '/' {
@@ -21,6 +42,7 @@ func (e ContextMergeRequest) ModifiedFiles(patterns ...string) bool {
 			panic(err)
 		}
 
+	NEXT_FILE:
 		for _, changedFile := range e.DiffStats {
 			// Normalize Windows-style path separators to forward slashes
 			testPath := filepath.ToSlash(changedFile.Path)
@@ -35,27 +57,35 @@ func (e ContextMergeRequest) ModifiedFiles(patterns ...string) bool {
 
 				// If the pattern ends with a slash we can do a simple prefix match
 				if prefix[len(prefix)-1] == '/' && strings.HasPrefix(testPath, prefix) {
-					return true
+					output = append(output, testPath)
+
+					continue NEXT_FILE
 				}
 
 				// If the strings are the same length, check for an exact match
 				if len(testPath) == len(prefix) && testPath == prefix {
-					return true
+					output = append(output, testPath)
+
+					continue NEXT_FILE
 				}
 
 				// Otherwise check if the test path is a subdirectory of the pattern
 				if len(testPath) > len(prefix) && testPath[len(prefix)] == '/' && testPath[:len(prefix)] == prefix {
-					return true
+					output = append(output, testPath)
+
+					continue NEXT_FILE
 				}
 			}
 
 			if regex.MatchString(testPath) {
-				return true
+				output = append(output, testPath)
+
+				continue NEXT_FILE
 			}
 		}
 	}
 
-	return false
+	return output
 }
 
 // buildPatternRegex compiles a new regexp object from a gitignore-style pattern string
