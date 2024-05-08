@@ -47,6 +47,8 @@ func errHandler(w http.ResponseWriter, code int, err error) {
 func Server(cCtx *cli.Context) error { //nolint:unparam
 	mux := http.NewServeMux()
 
+	ourSecret := cCtx.String(FlagWebhookSecret)
+
 	// Initialize GitLab client
 	client, err := gitlab.NewClient(cCtx.String(FlagAPIToken), cCtx.String(FlagSCMBaseURL))
 	if err != nil {
@@ -54,6 +56,15 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 	}
 
 	mux.HandleFunc("POST /gitlab", func(writer http.ResponseWriter, reader *http.Request) {
+		if len(ourSecret) > 0 {
+			theirSecret := reader.Header.Get("X-Gitlab-Token")
+			if ourSecret != theirSecret {
+				errHandler(writer, http.StatusForbidden, errors.New("Missing or invalid X-Gitlab-Token header"))
+
+				return
+			}
+		}
+
 		// Validate headers
 		if reader.Header.Get("Content-Type") != "application/json" {
 			errHandler(writer, http.StatusInternalServerError, errors.New("not json"))

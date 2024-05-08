@@ -86,6 +86,15 @@ func main() {
 				Name:   "server",
 				Usage:  "Start HTTP server for webhook event driven usage",
 				Action: cmd.Server,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  cmd.FlagWebhookSecret,
+						Usage: "Used to validate received payloads. Sent with the request in the X-Gitlab-Token HTTP header",
+						EnvVars: []string{
+							"SCM_ENGINE_WEBHOOK_SECRET",
+						},
+					},
+				},
 			},
 		},
 	}
