@@ -119,12 +119,19 @@ Using scm-engine within a GitLab CI pipeline is straight forward.
 1. Setup a CI job using the `scm-engine` Docker image that will run when a pipeline is created from a Merge Request Event.
 
     ```yaml
-    scm-engine:
+    scm-engine::evaluate::on-merge-request-event:
       image: ghcr.io/jippi/scm-engine:latest
       rules:
         - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       script:
         - scm-engine evaluate
+
+    scm-engine::evaluate::on-schedule:
+      image: ghcr.io/jippi/scm-engine:latest
+      rules:
+        - if: $CI_PIPELINE_SOURCE == "schedule"
+      script:
+        - scm-engine evaluate all
     ```
 
 1. Done! Every Merge Request change should now re-run scm-engine and apply your label rules

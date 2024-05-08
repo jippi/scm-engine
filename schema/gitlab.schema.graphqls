@@ -21,6 +21,7 @@ scalar Time
 # Add time.Duration support
 scalar Duration
 
+
 type Context {
   "The project the Merge Request belongs to"
   Project: ContextProject @graphql(key: "project(fullPath: $project_id)")
@@ -30,6 +31,37 @@ type Context {
 
   "Information about the Merge Request"
   MergeRequest: ContextMergeRequest @generated
+}
+
+enum MergeRequestState {
+  all
+  closed
+  locked
+  merged
+  opened
+}
+
+input ListMergeRequestsQueryInput {
+  project_id: ID!
+  state: MergeRequestState! = "opened"
+  first: Int! = 100
+}
+
+type ListMergeRequestsQuery {
+  "The project the Merge Request belongs to"
+  Project: ListMergeRequestsProject @graphql(key: "project(fullPath: $project_id)")
+}
+
+type ListMergeRequestsProject {
+  MergeRequests: ListMergeRequestsProjectMergeRequestNodes @graphql(key: "mergeRequests(state: $state, first: $first)") @internal
+}
+
+type ListMergeRequestsProjectMergeRequestNodes {
+  Nodes: [ListMergeRequestsProjectMergeRequest!]
+}
+
+type ListMergeRequestsProjectMergeRequest {
+  ID: String! @graphql(key: "iid") @internal
 }
 
 type ContextProject {

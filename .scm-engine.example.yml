@@ -2,20 +2,44 @@
 
 actions:
   - name: Warn that the ticket if older than 30 days
-    if: merge_request.state != "closed" && merge_request.time_since_last_commit > duration("30d") && not merge_request.has_label("do-not-close")
+    if: |
+      // ignore MRs already closed
+      merge_request.state != "closed"
+      // if last commit happened more than 30 days ago
+      && merge_request.time_since_last_commit > duration("30d")
+      // but still less than 45 days ago (where we close the MR)
+      && merge_request.time_since_last_commit < duration("45d")
+      // and the label to disable this feature is not on the MR
+      && not merge_request.has_label("do-not-close")
     then:
       - action: comment
-        message: "Hey, this MR is old, we will close it in 15 days if no activity has happened. If you want to disable this behavior, add the label 'do-not-close' on the MR."
+        message: |
+          Hello!
+
+          This Merge Request have not seen any commit activity for 30 days. In an effort to keep our project clean we will automatically close the Merge request after 45 days.
+
+          You can add the "do-not-close" label to the Merge Request to disable this behavior.
 
   - name: Close ticket if older than 45 days
-    if: merge_request.state != "closed" && merge_request.time_since_last_commit > duration("45d") && not merge_request.has_label("do-not-close")
+    if: |
+      merge_request.state != "closed"
+      && merge_request.time_since_last_commit > duration("45d")
+      && not merge_request.has_label("do-not-close")
     then:
       - action: close
       - action: comment
-        message: "As promised, we're closing the MR due to inactivity, bye bye"
+        message: |
+          Hello!
+
+          This Merge Request have not seen any commit activity for 45 days. In an effort to keep our project clean we will automatically close the Merge request.
+
+          You can add the "do-not-close" label to the Merge Request to disable this behavior.
 
   - name: Approve MR if the 'break-glass-approve' label is configured
-    if: merge_request.state != "closed" && not merge_request.approved && merge_request.has_label("break-glass-approve")
+    if: |
+      merge_request.state != "closed"
+      && not merge_request.approved
+      && merge_request.has_label("break-glass-approve")
     then:
       - action: approve
       - action: comment

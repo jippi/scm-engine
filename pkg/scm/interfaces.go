@@ -19,6 +19,7 @@ type LabelClient interface {
 
 type MergeRequestClient interface {
 	Update(ctx context.Context, opt *UpdateMergeRequestOptions) (*Response, error)
+	List(ctx context.Context, options *ListMergeRequestsOptions) ([]ListMergeRequest, error)
 }
 
 type EvalContext interface {

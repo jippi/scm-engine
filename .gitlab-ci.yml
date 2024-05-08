@@ -1,7 +1,18 @@
-run::cli:
+# NOTE: This is integration testing file, its not meant for production usage
+#       The README has a production example
+
+scm-engine::evaluate::on-change:
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golang:1.22.3
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
     - go mod tidy
     - go run ./cmd/scm-engine/ evaluate
+
+scm-engine::evaluate::on-schedule:
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golang:1.22.3
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    - go mod tidy
+    - go run ./cmd/scm-engine/ evaluate all
