@@ -67,7 +67,12 @@ func main() {
 func nest(props []*Property) {
 	for _, field := range props {
 		if field.IsCustomType {
-			for _, nested := range PropMap[field.Type].Attributes {
+			attr, ok := PropMap[field.Type]
+			if !ok {
+				continue
+			}
+
+			for _, nested := range attr.Attributes {
 				field.AddAttribute(&Property{
 					Name:         nested.Name,
 					Description:  nested.Description,
@@ -148,6 +153,8 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 			Type:        modelName,
 			Description: model.Description,
 		}
+
+		fmt.Println("model", modelProperty.Name)
 
 		for _, field := range model.Fields {
 			tags, err := structtag.Parse(field.Tag)

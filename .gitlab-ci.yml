@@ -1,4 +1,4 @@
-run::cli:
+scm-engine::evaluate:
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/golang:1.22.3
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

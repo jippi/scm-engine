@@ -94,6 +94,16 @@ type ListOptions struct {
 	Sort string `json:"sort,omitempty" url:"sort,omitempty"`
 }
 
+type ListMergeRequestsOptions struct {
+	ListOptions
+	State string
+	First int
+}
+
+type ListMergeRequest struct {
+	ID string `expr:"id" graphql:"id"`
+}
+
 // Response is a GitLab API response. This wraps the standard http.Response
 // returned from GitLab and provides convenient access to things like
 // pagination links.
