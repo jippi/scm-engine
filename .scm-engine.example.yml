@@ -1,39 +1,37 @@
 # See: https://getbootstrap.com/docs/5.3/customize/color/#all-colors
 
 actions:
-  - name: Warn that the ticket if older than 30 days
+  - name: Warn if the Merge Request haven't had commit activity for 21 days and will be closed
     if: |
-      // ignore MRs already closed
       merge_request.state != "closed"
-      // if last commit happened more than 30 days ago
-      && merge_request.time_since_last_commit > duration("30d")
-      // but still less than 45 days ago (where we close the MR)
-      && merge_request.time_since_last_commit < duration("45d")
-      // and the label to disable this feature is not on the MR
+      && merge_request.time_since_last_commit > duration("21d")
+      && merge_request.time_since_last_commit < duration("28d")
       && not merge_request.has_label("do-not-close")
     then:
       - action: comment
         message: |
-          Hello!
+          :wave: Hello!
 
-          This Merge Request have not seen any commit activity for 30 days. In an effort to keep our project clean we will automatically close the Merge request after 45 days.
+          This Merge Request has not seen any commit activity for 21 days.
+          We will automatically close the Merge request after 28 days to keep our project clean.
 
-          You can add the "do-not-close" label to the Merge Request to disable this behavior.
+          To disable this behavior, add the `do-not-close` label to the Merge Request in the right menu or add a comment with `/label ~"do-not-close"`.
 
-  - name: Close ticket if older than 45 days
+  - name: Close the Merge Request if it haven't had commit activity for 28 days
     if: |
       merge_request.state != "closed"
-      && merge_request.time_since_last_commit > duration("45d")
+      && merge_request.time_since_last_commit > duration("28d")
       && not merge_request.has_label("do-not-close")
     then:
       - action: close
       - action: comment
         message: |
-          Hello!
+          :wave: Hello!
 
-          This Merge Request have not seen any commit activity for 45 days. In an effort to keep our project clean we will automatically close the Merge request.
+          This Merge Request has not seen any commit activity for 28 days.
+          To keep our project clean, we will close the Merge request now.
 
-          You can add the "do-not-close" label to the Merge Request to disable this behavior.
+          To disable this behavior, add the `do-not-close` label to the Merge Request in the right menu or add a comment with `/label ~"do-not-close"`.
 
   - name: Approve MR if the 'break-glass-approve' label is configured
     if: |
