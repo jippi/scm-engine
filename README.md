@@ -183,6 +183,39 @@ The file path can be changed via `--config` CLI flag and `$SCM_ENGINE_CONFIG_FIL
 > The `script` field is a [expr-lang](https://expr-lang.org/) expression, a safe, fast, and intuitive expression evaluator.
 
 ```yaml
+actions:
+  - name: Warn if the Merge Request haven't had commit activity for 21 days and will be closed
+    if: |
+      merge_request.state != "closed"
+      && merge_request.time_since_last_commit > duration("21d")
+      && merge_request.time_since_last_commit < duration("28d")
+      && not merge_request.has_label("do-not-close")
+    then:
+      - action: comment
+        message: |
+          :wave: Hello!
+
+          This Merge Request has not seen any commit activity for 21 days.
+          We will automatically close the Merge request after 28 days to keep our project clean.
+
+          To disable this behavior, add the `do-not-close` label to the Merge Request in the right menu or add a comment with `/label ~"do-not-close"`.
+
+  - name: Close the Merge Request if it haven't had commit activity for 28 days
+    if: |
+      merge_request.state != "closed"
+      && merge_request.time_since_last_commit > duration("28d")
+      && not merge_request.has_label("do-not-close")
+    then:
+      - action: close
+      - action: comment
+        message: |
+          :wave: Hello!
+
+          This Merge Request has not seen any commit activity for 28 days.
+          To keep our project clean, we will close the Merge request now.
+
+          To disable this behavior, add the `do-not-close` label to the Merge Request in the right menu or add a comment with `/label ~"do-not-close"`.
+
 label:
     # Add a label named "lang/go"
   - name: lang/go
