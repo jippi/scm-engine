@@ -100,7 +100,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Ensure scm-engine binary work
-        run: ./scm-engine -h
+        run: ./scm-engine
 
       - name: Test scm-engine against test GitLab project
         run: ./scm-engine evaluate 1
