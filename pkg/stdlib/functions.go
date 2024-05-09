@@ -45,11 +45,11 @@ var Uniq = expr.Function(
 			return UniqSlice(elements), nil
 
 		default:
-			return nil, NewInvalidArgumentTypeError("uniq", fmt.Sprintf("invalid input, must be an array of [string] or [interface], got %T", args[0]))
+			return nil, fmt.Errorf("invalid input, must be an array of [string] or [interface], got %T", args[0])
 		}
 	},
-	new(func([]string) []string), // []string -> []string
 	new(func([]any) []string),    // []any -> []string (when using map() that always return []any)
+	new(func([]string) []string), // []string -> []string
 )
 
 // Override built-in duration() function to provide support for additional periods
