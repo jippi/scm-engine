@@ -16,6 +16,7 @@ jobs:
 
   govulncheck:
     runs-on: ubuntu-latest
+    name: govulncheck
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,6 +44,7 @@ jobs:
 
   semgrep:
     runs-on: ubuntu-latest
+    name: semgrep
     container:
       image: returntocorp/semgrep
     steps:
@@ -61,3 +63,41 @@ jobs:
 
       - name: semgrep
         run: semgrep scan --error --enable-nosem -f ./rules .
+
+  # ------------------------------
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    name: gitleaks
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
+        if: ${{ env.GITLEAKS_LICENSE != '' }}
+
+  # -----------------------------
+
+  grype-scan:
+    runs-on: ubuntu-latest
+    name: grype-scan
+
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: anchore/scan-action@v3
+        with:
+          path: "."
+          fail-build: true

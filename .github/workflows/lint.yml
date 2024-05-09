@@ -1,4 +1,4 @@
-name: golangci-lint
+name: Lint
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
   # ------------------------------
 
   golangci-lint:
-    name: lint
+    name: golangci-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,3 +48,25 @@ jobs:
           args: --timeout=5m
 
   # ------------------------------
+
+  codeql-analyze:
+    name: codeql-analyze
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - uses: github/codeql-action/init@v3
+
+      - uses: github/codeql-action/autobuild@v3
+
+      - uses: github/codeql-action/analyze@v3
