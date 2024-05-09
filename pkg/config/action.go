@@ -29,8 +29,6 @@ func (actions Actions) Evaluate(evalContext scm.EvalContext) ([]Action, error) {
 	return results, nil
 }
 
-type ActionStep = scm.EvaluationActionStep
-
 type Action scm.EvaluationActionResult
 
 func (p *Action) Evaluate(evalContext scm.EvalContext) (bool, error) {
