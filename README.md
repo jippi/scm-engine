@@ -38,7 +38,7 @@
     - [`label[].description` (optional)](#labeldescription-optional)
     - [`label[].priority` (optional)](#labelpriority-optional)
     - [`label[].skip_if` (optional)](#labelskip_if-optional)
-- [Expr-lang information](#expr-lang-information)
+- [Script (Expr lang) information](#script-expr-lang-information)
   - [Attributes](#attributes)
   - [Functions](#functions)
     - [`merge_request.modified_files`](#merge_requestmodified_files)
@@ -473,7 +473,7 @@ An optional key controlling if the label should be skipped (meaning no removal o
 
 The `skip_if` field must be a valid [Expr-lang](https://expr-lang.org/) expression returning a boolean, where `true` means `skip` and `false` means `process`.
 
-## Expr-lang information
+## Script (Expr lang) information
 
 > [!TIP]
 > The [Expr Language Definition](https://expr-lang.org/docs/language-definition) is a great resource to learn more about the language. This guide will only cover SCM Engine specific extensions and information.
