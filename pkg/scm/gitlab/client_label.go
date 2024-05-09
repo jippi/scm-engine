@@ -65,7 +65,7 @@ func (client *LabelClient) List(ctx context.Context) ([]*scm.Label, error) {
 }
 
 func (client *LabelClient) list(ctx context.Context, opt *scm.ListLabelsOptions) ([]*scm.Label, *scm.Response, error) {
-	project, err := ParseID(state.ProjectIDFromContext(ctx))
+	project, err := ParseID(state.ProjectID(ctx))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -95,7 +95,7 @@ func (client *LabelClient) Create(ctx context.Context, opt *scm.CreateLabelOptio
 	// Invalidate cache
 	client.cache = nil
 
-	project, err := ParseID(state.ProjectIDFromContext(ctx))
+	project, err := ParseID(state.ProjectID(ctx))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -125,7 +125,7 @@ func (client *LabelClient) Update(ctx context.Context, opt *scm.UpdateLabelOptio
 	// Invalidate cache
 	client.cache = nil
 
-	project, err := ParseID(state.ProjectIDFromContext(ctx))
+	project, err := ParseID(state.ProjectID(ctx))
 	if err != nil {
 		return nil, nil, err
 	}

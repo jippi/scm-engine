@@ -43,7 +43,7 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 			return nil
 		}
 
-		_, _, err := c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.ApproveMergeRequestOptions{})
+		_, _, err := c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.ApproveMergeRequestOptions{})
 
 		return err
 
@@ -54,7 +54,7 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 			return nil
 		}
 
-		_, err := c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx))
+		_, err := c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectID(ctx), state.MergeRequestIDInt(ctx))
 
 		return err
 
@@ -79,7 +79,7 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 			return nil
 		}
 
-		_, _, err := c.wrapped.Notes.CreateMergeRequestNote(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
+		_, _, err := c.wrapped.Notes.CreateMergeRequestNote(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
 			Body: gitlab.Ptr(msgString),
 		})
 

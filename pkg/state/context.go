@@ -24,7 +24,7 @@ func NewContext(project, mr string) context.Context {
 	return ctx
 }
 
-func ProjectIDFromContext(ctx context.Context) string {
+func ProjectID(ctx context.Context) string {
 	return ctx.Value(projectID).(string) //nolint:forcetypeassert
 }
 
@@ -53,12 +53,12 @@ func ContextWithMergeRequestID(ctx context.Context, id string) context.Context {
 	return ctx
 }
 
-func MergeRequestIDFromContext(ctx context.Context) string {
+func MergeRequestID(ctx context.Context) string {
 	return ctx.Value(mergeRequestID).(string) //nolint:forcetypeassert
 }
 
-func MergeRequestIDFromContextInt(ctx context.Context) int {
-	val := MergeRequestIDFromContext(ctx)
+func MergeRequestIDInt(ctx context.Context) int {
+	val := MergeRequestID(ctx)
 
 	number, err := strconv.Atoi(val)
 	if err != nil {

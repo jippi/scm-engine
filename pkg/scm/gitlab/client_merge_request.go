@@ -25,12 +25,12 @@ func NewMergeRequestClient(client *Client) *MergeRequestClient {
 }
 
 func (client *MergeRequestClient) Update(ctx context.Context, opt *scm.UpdateMergeRequestOptions) (*scm.Response, error) {
-	project, err := ParseID(state.ProjectIDFromContext(ctx))
+	project, err := ParseID(state.ProjectID(ctx))
 	if err != nil {
 		return nil, err
 	}
 
-	endpoint := fmt.Sprintf("projects/%s/merge_requests/%s", go_gitlab.PathEscape(project), state.MergeRequestIDFromContext(ctx))
+	endpoint := fmt.Sprintf("projects/%s/merge_requests/%s", go_gitlab.PathEscape(project), state.MergeRequestID(ctx))
 
 	options := []go_gitlab.RequestOptionFunc{
 		go_gitlab.WithContext(ctx),
@@ -49,7 +49,7 @@ func (client *MergeRequestClient) Update(ctx context.Context, opt *scm.UpdateMer
 }
 
 func (client *MergeRequestClient) GetRemoteConfig(ctx context.Context, filename, ref string) (io.Reader, error) {
-	project, err := ParseID(state.ProjectIDFromContext(ctx))
+	project, err := ParseID(state.ProjectID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (client *MergeRequestClient) List(ctx context.Context, options *scm.ListMer
 	var (
 		result    *ListMergeRequestsQuery
 		variables = map[string]any{
-			"project_id": graphql.ID(state.ProjectIDFromContext(ctx)),
+			"project_id": graphql.ID(state.ProjectID(ctx)),
 			"state":      MergeRequestState(options.State),
 			"first":      options.First,
 		}
