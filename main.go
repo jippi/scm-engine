@@ -60,7 +60,6 @@ func main() {
 					"SCM_ENGINE_TOKEN",
 				},
 			},
-
 			&cli.StringFlag{
 				Name:  cmd.FlagSCMBaseURL,
 				Usage: "Base URL for the SCM instance",
@@ -69,6 +68,10 @@ func main() {
 					"GITLAB_BASEURL",
 					"CI_SERVER_URL",
 				},
+			},
+			&cli.BoolFlag{
+				Name:  cmd.FlagDryRun,
+				Usage: "Dry run, don't actually _do_ actions, just print them",
 			},
 		},
 		Commands: []*cli.Command{

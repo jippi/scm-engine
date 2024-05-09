@@ -12,6 +12,7 @@ import (
 
 func Evaluate(cCtx *cli.Context) error {
 	ctx := state.ContextWithProjectID(cCtx.Context, cCtx.String(FlagSCMProject))
+	ctx = state.ContextWithDryRun(ctx, cCtx.Bool(FlagDryRun))
 
 	cfg, err := config.LoadFile(cCtx.String(FlagConfigFile))
 	if err != nil {

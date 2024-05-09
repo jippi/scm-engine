@@ -32,27 +32,6 @@ func ParseLogLevel(name string, fallback slog.Level) slog.Level {
 	}
 }
 
-func pkgLogLevel(name string, fallback slog.Level) slog.Level {
-	return ParseLogLevel(os.Getenv(name+"_LOG_LEVEL"), fallback)
-}
-
-func packageLogLevels() map[string]slog.Level {
-	logLevel := ParseLogLevel(os.Getenv("LOG_LEVEL"), slog.LevelInfo)
-
-	lowestOf := func(in slog.Level) slog.Level {
-		if in < logLevel {
-			return in
-		}
-
-		return logLevel
-	}
-
-	return map[string]slog.Level{
-		pkgPrefix + "/pkg/parser":  pkgLogLevel("PARSER", lowestOf(slog.LevelWarn)),
-		pkgPrefix + "/pkg/scanner": pkgLogLevel("SCANNER", lowestOf(slog.LevelWarn)),
-	}
-}
-
 func logHandler(out io.Writer) slog.Handler {
 	logLevel := ParseLogLevel(os.Getenv("LOG_LEVEL"), slog.LevelInfo)
 
@@ -69,7 +48,8 @@ func logHandler(out io.Writer) slog.Handler {
 	return devslog.NewHandler(
 		out,
 		&devslog.Options{
-			SortKeys: true,
+			SortKeys:          true,
+			MaxSlicePrintSize: 999,
 			HandlerOptions: &slog.HandlerOptions{
 				Level:     logLevel,
 				AddSource: logLevel == slog.LevelDebug,

@@ -2,6 +2,7 @@ package state
 
 import (
 	"context"
+	"log/slog"
 	"strconv"
 
 	slogctx "github.com/veqryn/slog-context"
@@ -11,6 +12,7 @@ type contextKey uint
 
 const (
 	projectID contextKey = iota
+	dryRun
 	mergeRequestID
 )
 
@@ -27,10 +29,21 @@ func ProjectIDFromContext(ctx context.Context) string {
 }
 
 func ContextWithProjectID(ctx context.Context, value string) context.Context {
-	ctx = slogctx.With(ctx, "project_id", value)
+	ctx = slogctx.With(ctx, slog.String("project_id", value))
 	ctx = context.WithValue(ctx, projectID, value)
 
 	return ctx
+}
+
+func ContextWithDryRun(ctx context.Context, dry bool) context.Context {
+	ctx = slogctx.With(ctx, slog.Bool("dry_run", dry))
+	ctx = context.WithValue(ctx, dryRun, dry)
+
+	return ctx
+}
+
+func IsDryRun(ctx context.Context) bool {
+	return ctx.Value(dryRun).(bool) //nolint:forcetypeassert
 }
 
 func ContextWithMergeRequestID(ctx context.Context, id string) context.Context {

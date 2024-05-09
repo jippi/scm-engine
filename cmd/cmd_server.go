@@ -176,7 +176,9 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		BaseContext: func(l net.Listener) context.Context {
-			return cCtx.Context
+			ctx := state.ContextWithDryRun(cCtx.Context, cCtx.Bool(FlagDryRun))
+
+			return ctx
 		},
 	}
 

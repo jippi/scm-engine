@@ -84,6 +84,12 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 }
 
 func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.UpdateMergeRequestOptions) error {
+	if state.IsDryRun(ctx) {
+		slogctx.Info(ctx, "In dry-run, dumping the update struct we would send to GitLab", slog.Any("changes", update))
+
+		return nil
+	}
+
 	_, err := client.MergeRequests().Update(ctx, update)
 
 	return err
@@ -117,6 +123,10 @@ func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, req
 
 		slogctx.Info(ctx, "Creating label", slog.String("label", label.Name))
 
+		if state.IsDryRun(ctx) {
+			continue
+		}
+
 		_, resp, err := client.Labels().Create(ctx, &scm.CreateLabelOptions{
 			Name:        &label.Name,        //nolint:gosec
 			Color:       &label.Color,       //nolint:gosec
@@ -147,6 +157,10 @@ func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, req
 		}
 
 		slogctx.Info(ctx, "Updating label", slog.String("label", label.Name))
+
+		if state.IsDryRun(ctx) {
+			continue
+		}
 
 		_, _, err := client.Labels().Update(ctx, &scm.UpdateLabelOptions{
 			Name:        &label.Name,        //nolint:gosec
