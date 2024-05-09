@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -9,6 +10,15 @@ import (
 	"github.com/jippi/scm-engine/cmd"
 	"github.com/jippi/scm-engine/pkg/tui"
 	"github.com/urfave/cli/v2"
+	slogctx "github.com/veqryn/slog-context"
+)
+
+// nolint: gochecknoglobals
+var (
+	commit    = "unknown"
+	date      = "unknown"
+	treeState = "unknown"
+	version   = "dev"
 )
 
 func main() {
@@ -20,14 +30,16 @@ func main() {
 		Copyright:            "Christian Winther",
 		EnableBashCompletion: true,
 		Suggest:              true,
+		Version:              fmt.Sprintf("%s (date: %s; commit: %s)", version, date, commit),
 		Authors: []*cli.Author{
 			{
 				Name:  "Christian Winther",
-				Email: "gitlab-engine@jippi.dev",
+				Email: "scm-engine@jippi.dev",
 			},
 		},
 		Before: func(cCtx *cli.Context) error {
 			cCtx.Context = tui.NewContext(cCtx.Context, cCtx.App.Writer, cCtx.App.ErrWriter)
+			cCtx.Context = slogctx.With(cCtx.Context, "scm_engine_version", version)
 
 			return nil
 		},
