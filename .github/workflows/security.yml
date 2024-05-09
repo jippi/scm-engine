@@ -19,8 +19,6 @@ jobs:
     name: govulncheck
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/setup-go@v5
         with:
@@ -49,8 +47,6 @@ jobs:
       image: returntocorp/semgrep
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/checkout@v4
         with:
@@ -71,9 +67,6 @@ jobs:
     name: gitleaks
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: gitleaks/gitleaks-action@v2
         env:
@@ -94,8 +87,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: anchore/scan-action@v3
         with:
