@@ -487,6 +487,9 @@ The `skip_if` field must be a valid [Expr-lang](https://expr-lang.org/) expressi
 > [!IMPORTANT]
 > _SCM Engine uses [`snake_case`](https://en.wikipedia.org/wiki/Snake_case) for fields instead of [`camelCase`](https://en.wikipedia.org/wiki/Camel_case)_
 
+> [!TIP]
+> You have access to the raw webhook event payload via `webhook_event.*` attributes (not listed below) in Expr script fields when using [`server`](#server) mode. See the [GitLab Webhook Events documentation](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html) for available fields. The attributes are named _exactly_ as documented in the GitLab documentation.
+
 The following attributes are available in `script` fields.
 
 They can be accessed exactly as shown in this list.
