@@ -21,6 +21,7 @@
   - [GitLab-CI pipeline](#gitlab-ci-pipeline)
 - [Commands](#commands)
   - [`evaluate`](#evaluate)
+  - [`server`](#server)
 - [Configuration file](#configuration-file)
   - [Examples](#examples)
   - [`actions[]` (list)](#actions-list)
