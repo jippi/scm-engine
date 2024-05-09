@@ -15,10 +15,9 @@ import (
 
 // nolint: gochecknoglobals
 var (
-	commit    = "unknown"
-	date      = "unknown"
-	treeState = "unknown"
-	version   = "dev"
+	commit  = "unknown"
+	date    = "unknown"
+	version = "dev"
 )
 
 func main() {

@@ -41,7 +41,7 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X {{.ModulePath}.version={{.Version}} -X {{.ModulePath}}.commit={{.Commit}} -X {{.ModulePath}}.date={{ .CommitDate }} -X {{.ModulePath}}.treeState={{ .IsGitDirty }}
+      - -s -w -X {{.ModulePath}/main.version={{.Version}} -X {{.ModulePath}}/main.commit={{.Commit}} -X {{.ModulePath}}/main.date={{ .CommitDate }}
 
 universal_binaries:
   - replace: false
