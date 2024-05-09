@@ -40,8 +40,14 @@ type Payload struct {
 	MergeRequest     *MergeRequest `json:"merge_request,omitempty"`     // "merge_request" is sent on "note" activity
 }
 
-func errHandler(w http.ResponseWriter, code int, err error) {
-	slog.Error(err.Error())
+func errHandler(ctx context.Context, w http.ResponseWriter, code int, err error) {
+	switch code {
+	case http.StatusOK:
+		slogctx.Info(ctx, "Server response", slog.Int("response_code", code), slog.Any("response_message", err))
+
+	default:
+		slogctx.Error(ctx, "Server response", slog.Int("response_code", code), slog.Any("response_message", err))
+	}
 
 	w.WriteHeader(code)
 	w.Write([]byte(err.Error()))
@@ -50,7 +56,7 @@ func errHandler(w http.ResponseWriter, code int, err error) {
 }
 
 func Server(cCtx *cli.Context) error { //nolint:unparam
-	slogctx.Info(cCtx.Context, "Starting HTTP server")
+	slogctx.Info(cCtx.Context, "Starting HTTP server", slog.String("listen", cCtx.String(FlagServerListen)))
 
 	mux := http.NewServeMux()
 
@@ -62,42 +68,51 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		return err
 	}
 
-	mux.HandleFunc("POST /gitlab", func(writer http.ResponseWriter, reader *http.Request) {
-		slogctx.Info(reader.Context(), "Handling /gitlab request")
+	mux.HandleFunc("POST /gitlab", func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
 
+		slogctx.Info(ctx, "Handling /gitlab request")
+
+		// Check if the webhook secret is set (and if its matching)
 		if len(ourSecret) > 0 {
-			theirSecret := reader.Header.Get("X-Gitlab-Token")
+			theirSecret := r.Header.Get("X-Gitlab-Token")
 			if ourSecret != theirSecret {
-				errHandler(writer, http.StatusForbidden, errors.New("Missing or invalid X-Gitlab-Token header"))
+				errHandler(ctx, w, http.StatusForbidden, errors.New("Missing or invalid X-Gitlab-Token header"))
 
 				return
 			}
 		}
 
-		// Validate headers
-		if reader.Header.Get("Content-Type") != "application/json" {
-			errHandler(writer, http.StatusInternalServerError, errors.New("not json"))
+		// Validate content type
+		if r.Header.Get("Content-Type") != "application/json" {
+			errHandler(ctx, w, http.StatusNotAcceptable, errors.New("The request is not using Content-Type: application/json"))
 
 			return
 		}
 
-		body, err := io.ReadAll(reader.Body)
+		// Read the POST body of the request
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			errHandler(writer, http.StatusInternalServerError, err)
+			errHandler(ctx, w, http.StatusBadRequest, err)
 
 			return
+		}
+
+		// Ensure we have content in the POST body
+		if len(body) == 0 {
+			errHandler(ctx, w, http.StatusBadRequest, errors.New("The POST body is empty; expected a JSON payload"))
 		}
 
 		// Decode request payload
 		var payload Payload
 		if err := json.NewDecoder(bytes.NewReader(body)).Decode(&payload); err != nil {
-			errHandler(writer, http.StatusInternalServerError, err)
+			errHandler(ctx, w, http.StatusBadRequest, fmt.Errorf("could not decode POST body into Payload struct: %w", err))
 
 			return
 		}
 
 		// Initialize context
-		ctx := state.ContextWithProjectID(reader.Context(), payload.Project.PathWithNamespace)
+		ctx = state.ContextWithProjectID(ctx, payload.Project.PathWithNamespace)
 
 		// Grab event specific information
 		var (
@@ -115,13 +130,15 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 			ref = payload.MergeRequest.LastCommit.ID
 
 		default:
-			errHandler(writer, http.StatusInternalServerError, fmt.Errorf("unknown event: %s", payload.EventType))
+			errHandler(ctx, w, http.StatusInternalServerError, fmt.Errorf("unknown event type: %s", payload.EventType))
 		}
+
+		ctx = slogctx.With(ctx, slog.String("event_type", payload.EventType), slog.String("merge_request_id", id), slog.String("sha_reference", ref))
 
 		// Get the remote config file
 		file, err := client.MergeRequests().GetRemoteConfig(ctx, cCtx.String(FlagConfigFile), ref)
 		if err != nil {
-			errHandler(writer, http.StatusOK, err)
+			errHandler(ctx, w, http.StatusOK, fmt.Errorf("could not read remote config file: %w", err))
 
 			return
 		}
@@ -129,32 +146,32 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		// Parse the file
 		cfg, err := config.ParseFile(file)
 		if err != nil {
-			errHandler(writer, http.StatusOK, err)
+			errHandler(ctx, w, http.StatusOK, fmt.Errorf("could not parse config file: %w", err))
 
 			return
 		}
 
-		// Decode request payload
-		var full any
-		if err := json.NewDecoder(bytes.NewReader(body)).Decode(&full); err != nil {
-			errHandler(writer, http.StatusInternalServerError, err)
+		// Decode request payload into 'any' so we have all the details
+		var fullEventPayload any
+		if err := json.NewDecoder(bytes.NewReader(body)).Decode(&fullEventPayload); err != nil {
+			errHandler(ctx, w, http.StatusInternalServerError, err)
 
 			return
 		}
 
 		// Process the MR
-		if err := ProcessMR(ctx, client, cfg, id, full); err != nil {
-			errHandler(writer, http.StatusOK, err)
+		if err := ProcessMR(ctx, client, cfg, id, fullEventPayload); err != nil {
+			errHandler(ctx, w, http.StatusOK, err)
 
 			return
 		}
 
-		writer.WriteHeader(http.StatusOK)
-		writer.Write([]byte("OK"))
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
 	})
 
 	server := &http.Server{
-		Addr:         "0.0.0.0:3000",
+		Addr:         cCtx.String(FlagServerListen),
 		Handler:      http.Handler(mux),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,

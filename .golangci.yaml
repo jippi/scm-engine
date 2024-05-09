@@ -179,6 +179,8 @@ linters-settings:
       - i
       - id
       - ok
+      - r
+      - w
 
   tagalign:
     # Align and sort can be used together or separately.

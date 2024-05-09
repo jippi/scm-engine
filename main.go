@@ -100,6 +100,14 @@ func main() {
 							"SCM_ENGINE_WEBHOOK_SECRET",
 						},
 					},
+					&cli.StringFlag{
+						Name:  cmd.FlagServerListen,
+						Usage: "Port the HTTP server should listen on",
+						Value: "0.0.0.0:3000",
+						EnvVars: []string{
+							"SCM_ENGINE_LISTEN",
+						},
+					},
 				},
 			},
 		},
