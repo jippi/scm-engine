@@ -68,6 +68,6 @@ jobs:
           AUR_KEY: "${{ secrets.AUR_KEY }}"
           FURY_PUSH_TOKEN: "${{ secrets.FURY_PUSH_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          # SNAPCRAFT_STORE_CREDENTIALS: "${{ secrets.SNAPCRAFT_LOGIN }}"
+          SNAPCRAFT_STORE_CREDENTIALS: "${{ secrets.SNAPCRAFT_LOGIN }}"
           GITHUB_REF: "${{ github.ref }}"
         run: task goreleaser
