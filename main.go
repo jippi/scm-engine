@@ -60,7 +60,6 @@ func main() {
 					"SCM_ENGINE_TOKEN",
 				},
 			},
-
 			&cli.StringFlag{
 				Name:  cmd.FlagSCMBaseURL,
 				Usage: "Base URL for the SCM instance",
@@ -70,12 +69,18 @@ func main() {
 					"CI_SERVER_URL",
 				},
 			},
+			&cli.BoolFlag{
+				Name:  cmd.FlagDryRun,
+				Usage: "Dry run, don't actually _do_ actions, just print them",
+			},
 		},
 		Commands: []*cli.Command{
 			{
-				Name:   "evaluate",
-				Usage:  "Evaluate a Merge Request",
-				Action: cmd.Evaluate,
+				Name:      "evaluate",
+				Usage:     "Evaluate a Merge Request",
+				Args:      true,
+				ArgsUsage: " [id, id, ...]",
+				Action:    cmd.Evaluate,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:     cmd.FlagSCMProject,

@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
+	slogctx "github.com/veqryn/slog-context"
 	"github.com/xanzy/go-gitlab"
 )
 
@@ -35,11 +37,23 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 		update.DiscussionLocked = gitlab.Ptr(false)
 
 	case "approve":
+		if state.IsDryRun(ctx) {
+			slogctx.Info(ctx, "Approving MR")
+
+			return nil
+		}
+
 		_, _, err := c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.ApproveMergeRequestOptions{})
 
 		return err
 
 	case "unapprove":
+		if state.IsDryRun(ctx) {
+			slogctx.Info(ctx, "Unapproving MR")
+
+			return nil
+		}
+
 		_, err := c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx))
 
 		return err
@@ -57,6 +71,12 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 
 		if len(msgString) == 0 {
 			return errors.New("step field 'message' must not be an empty string")
+		}
+
+		if state.IsDryRun(ctx) {
+			slogctx.Info(ctx, "Commenting on MR", slog.String("message", msgString))
+
+			return nil
 		}
 
 		_, _, err := c.wrapped.Notes.CreateMergeRequestNote(state.ProjectIDFromContext(ctx), state.MergeRequestIDFromContextInt(ctx), &gitlab.CreateMergeRequestNoteOptions{

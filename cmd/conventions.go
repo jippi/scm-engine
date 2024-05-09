@@ -1,11 +1,12 @@
 package cmd
 
 const (
-	FlagConfigFile     = "config"
 	FlagAPIToken       = "api-token"
-	FlagSCMProject     = "project"
-	FlagSCMBaseURL     = "base-url"
+	FlagConfigFile     = "config"
+	FlagDryRun         = "dry-run"
 	FlagMergeRequestID = "id"
+	FlagSCMBaseURL     = "base-url"
+	FlagSCMProject     = "project"
+	FlagServerListen   = "listen"
 	FlagWebhookSecret  = "webhook-secret"
-	FlagServerListen   = "listen-port"
 )

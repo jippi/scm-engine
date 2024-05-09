@@ -14,7 +14,6 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/lmittmann/tint v1.0.4
 	github.com/muesli/termenv v0.15.2
-	github.com/reugn/pkgslog v0.2.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/teacat/noire v1.1.0
 	github.com/urfave/cli/v2 v2.27.2
