@@ -1,0 +1,59 @@
+name: Test
+
+on:
+  push:
+    tags:
+      - v*
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: setup-tparse
+        run: go install github.com/mfridman/tparse@latest
+
+      - uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: setup
+        run: |
+          task setup
+          task build
+
+      - name: test
+        run: ./scripts/test.sh
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Ensure scm-engine binary work
+        run: ./scm-engine -h
+
+      - name: Test scm-engine against test GitLab project
+        run: ./scm-engine evaluate 1
+        env:
+          SCM_ENGINE_TOKEN: "${{ secrets.GITLAB_INTEGRATION_TEST_API_TOKEN }}"
+          SCM_ENGINE_CONFIG_FILE: ".scm-engine.example.yml"
+          GITLAB_PROJECT: "jippi/scm-engine-schema-test"
+          GITLAB_BASEURL: https://gitlab.com/
+
+      - name: Show any diff that may be in the project
+        run: git diff

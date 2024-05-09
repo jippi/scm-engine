@@ -2,10 +2,10 @@ name: Grype
 
 on:
   push:
-    branches:
-      - "main"
     tags:
-      - "v*"
+      - v*
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: anchore/scan-action@v3
         with:
