@@ -6,4 +6,6 @@ const (
 	FlagSCMProject     = "project"
 	FlagSCMBaseURL     = "base-url"
 	FlagMergeRequestID = "id"
+	FlagWebhookSecret  = "webhook-secret"
+	FlagServerListen   = "listen-port"
 )

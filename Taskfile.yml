@@ -20,12 +20,12 @@ tasks:
 
   build:
     desc: Build the binary
+    cmds:
+      - go build -o scm-engine .
     sources:
       - ./**/*.go
     generates:
       - ./scm-engine
-    cmds:
-      - go build -o scm-engine .
 
   test:
     desc: Run tests

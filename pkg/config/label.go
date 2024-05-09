@@ -7,9 +7,9 @@ import (
 
 	"github.com/expr-lang/expr"
 	"github.com/expr-lang/expr/vm"
-	"github.com/jippi/scm-engine/pkg/colors"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/stdlib"
+	"github.com/jippi/scm-engine/pkg/tui"
 	"github.com/jippi/scm-engine/pkg/types"
 )
 
@@ -144,7 +144,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 	var err error
 
 	if p.scriptCompiled == nil {
-		p.Color = colors.Replace(p.Color)
+		p.Color = tui.Replace(p.Color)
 
 		opts := []expr.Option{}
 		opts = append(opts, scriptReturnType)
@@ -159,7 +159,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 	}
 
 	if p.skipIfCompiled == nil && len(p.SkipIf) > 0 {
-		p.Color = colors.Replace(p.Color)
+		p.Color = tui.Replace(p.Color)
 
 		opts := []expr.Option{}
 		opts = append(opts, expr.AsBool())

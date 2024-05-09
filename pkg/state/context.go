@@ -3,6 +3,8 @@ package state
 import (
 	"context"
 	"strconv"
+
+	slogctx "github.com/veqryn/slog-context"
 )
 
 type contextKey uint
@@ -25,7 +27,17 @@ func ProjectIDFromContext(ctx context.Context) string {
 }
 
 func ContextWithProjectID(ctx context.Context, value string) context.Context {
-	return context.WithValue(ctx, projectID, value)
+	ctx = slogctx.With(ctx, "project_id", value)
+	ctx = context.WithValue(ctx, projectID, value)
+
+	return ctx
+}
+
+func ContextWithMergeRequestID(ctx context.Context, id string) context.Context {
+	ctx = slogctx.With(ctx, "merge_request_id", id)
+	ctx = context.WithValue(ctx, mergeRequestID, id)
+
+	return ctx
 }
 
 func MergeRequestIDFromContext(ctx context.Context) string {
@@ -41,8 +53,4 @@ func MergeRequestIDFromContextInt(ctx context.Context) int {
 	}
 
 	return number
-}
-
-func ContextWithMergeRequestID(ctx context.Context, id string) context.Context {
-	return context.WithValue(ctx, mergeRequestID, id)
 }

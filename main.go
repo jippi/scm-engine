@@ -1,13 +1,24 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/jippi/scm-engine/cmd"
+	"github.com/jippi/scm-engine/pkg/tui"
 	"github.com/urfave/cli/v2"
+	slogctx "github.com/veqryn/slog-context"
+)
+
+// nolint: gochecknoglobals
+var (
+	commit    = "unknown"
+	date      = "unknown"
+	treeState = "unknown"
+	version   = "dev"
 )
 
 func main() {
@@ -19,11 +30,18 @@ func main() {
 		Copyright:            "Christian Winther",
 		EnableBashCompletion: true,
 		Suggest:              true,
+		Version:              fmt.Sprintf("%s (date: %s; commit: %s)", version, date, commit),
 		Authors: []*cli.Author{
 			{
 				Name:  "Christian Winther",
-				Email: "gitlab-engine@jippi.dev",
+				Email: "scm-engine@jippi.dev",
 			},
+		},
+		Before: func(cCtx *cli.Context) error {
+			cCtx.Context = tui.NewContext(cCtx.Context, cCtx.App.Writer, cCtx.App.ErrWriter)
+			cCtx.Context = slogctx.With(cCtx.Context, "scm_engine_version", version)
+
+			return nil
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -43,15 +61,7 @@ func main() {
 					"SCM_ENGINE_TOKEN",
 				},
 			},
-			&cli.StringFlag{
-				Name:     cmd.FlagSCMProject,
-				Usage:    "GitLab project (example: 'gitlab-org/gitlab')",
-				Required: true,
-				EnvVars: []string{
-					"GITLAB_PROJECT",
-					"CI_PROJECT_PATH",
-				},
-			},
+
 			&cli.StringFlag{
 				Name:  cmd.FlagSCMBaseURL,
 				Usage: "Base URL for the SCM instance",
@@ -69,6 +79,15 @@ func main() {
 				Action: cmd.Evaluate,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
+						Name:     cmd.FlagSCMProject,
+						Usage:    "GitLab project (example: 'gitlab-org/gitlab')",
+						Required: true,
+						EnvVars: []string{
+							"GITLAB_PROJECT",
+							"CI_PROJECT_PATH",
+						},
+					},
+					&cli.StringFlag{
 						Name:  cmd.FlagMergeRequestID,
 						Usage: "The pull/merge to process, if not provided as a CLI flag",
 						Aliases: []string{
@@ -85,6 +104,23 @@ func main() {
 				Name:   "server",
 				Usage:  "Start HTTP server for webhook event driven usage",
 				Action: cmd.Server,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  cmd.FlagWebhookSecret,
+						Usage: "Used to validate received payloads. Sent with the request in the X-Gitlab-Token HTTP header",
+						EnvVars: []string{
+							"SCM_ENGINE_WEBHOOK_SECRET",
+						},
+					},
+					&cli.StringFlag{
+						Name:  cmd.FlagServerListen,
+						Usage: "Port the HTTP server should listen on",
+						Value: "0.0.0.0:3000",
+						EnvVars: []string{
+							"SCM_ENGINE_LISTEN",
+						},
+					},
+				},
 			},
 		},
 	}

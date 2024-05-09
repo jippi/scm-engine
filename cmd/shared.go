@@ -2,26 +2,27 @@ package cmd
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
+	slogctx "github.com/veqryn/slog-context"
 )
 
-func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr string) error {
+func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr string, event any) error {
 	ctx = state.ContextWithMergeRequestID(ctx, mr)
 
 	// for mr := 900; mr <= 1000; mr++ {
-	fmt.Println("Processing MR", mr)
+	slogctx.Info(ctx, "Processing MR")
 
 	remoteLabels, err := client.Labels().List(ctx)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Creating evaluation context")
+	slogctx.Info(ctx, "Creating evaluation context")
 
 	evalContext, err := client.EvalContext(ctx)
 	if err != nil {
@@ -29,25 +30,25 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 	}
 
 	if evalContext == nil || !evalContext.IsValid() {
-		fmt.Println("Evaluating context is empty, does the Merge Request exists?")
+		slogctx.Warn(ctx, "Evaluating context is empty, does the Merge Request exists?")
 
 		return nil
 	}
 
-	fmt.Println("Evaluating context")
+	evalContext.SetWebhookEvent(event)
+
+	slogctx.Info(ctx, "Evaluating context")
 
 	labels, actions, err := cfg.Evaluate(evalContext)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Sync labels")
+	slogctx.Info(ctx, "Sync labels")
 
 	if err := syncLabels(ctx, client, remoteLabels, labels); err != nil {
 		return err
 	}
-
-	fmt.Println("Done!")
 
 	var (
 		add    scm.LabelOptions
@@ -67,21 +68,17 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 		RemoveLabels: &remove,
 	}
 
-	fmt.Println("Applying actions")
+	slogctx.Info(ctx, "Applying actions")
 
 	if err := runActions(ctx, client, update, actions); err != nil {
 		return err
 	}
 
-	fmt.Println("Done!")
-
-	fmt.Println("Updating MR")
+	slogctx.Info(ctx, "Updating MR")
 
 	if err := updateMergeRequest(ctx, client, update); err != nil {
 		return err
 	}
-
-	fmt.Println("Done!")
 
 	return nil
 }
@@ -105,7 +102,7 @@ func runActions(ctx context.Context, client scm.Client, update *scm.UpdateMergeR
 }
 
 func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, required []scm.EvaluationResult) error {
-	fmt.Println("Going to sync", len(required), "required labels")
+	slogctx.Info(ctx, "Going to sync required labels", slog.Int("number_of_labels", len(required)))
 
 	remoteLabels := map[string]*scm.Label{}
 	for _, e := range remote {
@@ -118,7 +115,7 @@ func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, req
 			continue
 		}
 
-		fmt.Print("Creating label ", label.Name, ": ")
+		slogctx.Info(ctx, "Creating label", slog.String("label", label.Name))
 
 		_, resp, err := client.Labels().Create(ctx, &scm.CreateLabelOptions{
 			Name:        &label.Name,        //nolint:gosec
@@ -129,15 +126,13 @@ func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, req
 		if err != nil {
 			// Label already exists
 			if resp.StatusCode == http.StatusConflict {
-				fmt.Println("Already exists!")
+				slogctx.Warn(ctx, "Label already exists", slog.String("label", label.Name))
 
 				continue
 			}
 
 			return err
 		}
-
-		fmt.Println("OK")
 	}
 
 	// Update
@@ -151,7 +146,7 @@ func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, req
 			continue
 		}
 
-		fmt.Print("Updating label ", label.Name, ": ")
+		slogctx.Info(ctx, "Updating label", slog.String("label", label.Name))
 
 		_, _, err := client.Labels().Update(ctx, &scm.UpdateLabelOptions{
 			Name:        &label.Name,        //nolint:gosec
@@ -162,8 +157,6 @@ func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, req
 		if err != nil {
 			return err
 		}
-
-		fmt.Println("OK")
 	}
 
 	return nil

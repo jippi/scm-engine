@@ -1,8 +1,10 @@
 package gitlab
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/hasura/go-graphql-client"
@@ -44,6 +46,20 @@ func (client *MergeRequestClient) Update(ctx context.Context, opt *scm.UpdateMer
 	resp, err := client.client.wrapped.Do(req, m)
 
 	return convertResponse(resp), err
+}
+
+func (client *MergeRequestClient) GetRemoteConfig(ctx context.Context, filename, ref string) (io.Reader, error) {
+	project, err := ParseID(state.ProjectIDFromContext(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	file, _, err := client.client.wrapped.RepositoryFiles.GetRawFile(project, filename, &go_gitlab.GetRawFileOptions{Ref: go_gitlab.Ptr(ref)})
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.NewReader(file), nil
 }
 
 func (client *MergeRequestClient) List(ctx context.Context, options *scm.ListMergeRequestsOptions) ([]scm.ListMergeRequest, error) {
