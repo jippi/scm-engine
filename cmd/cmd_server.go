@@ -2,19 +2,22 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"log/slog"
+	"net"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/urfave/cli/v2"
+	slogctx "github.com/veqryn/slog-context"
 )
 
 type Commit struct {
@@ -47,6 +50,8 @@ func errHandler(w http.ResponseWriter, code int, err error) {
 }
 
 func Server(cCtx *cli.Context) error { //nolint:unparam
+	slogctx.Info(cCtx.Context, "Starting HTTP server")
+
 	mux := http.NewServeMux()
 
 	ourSecret := cCtx.String(FlagWebhookSecret)
@@ -58,6 +63,8 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 	}
 
 	mux.HandleFunc("POST /gitlab", func(writer http.ResponseWriter, reader *http.Request) {
+		slogctx.Info(reader.Context(), "Handling /gitlab request")
+
 		if len(ourSecret) > 0 {
 			theirSecret := reader.Header.Get("X-Gitlab-Token")
 			if ourSecret != theirSecret {
@@ -146,7 +153,15 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		writer.Write([]byte("OK"))
 	})
 
-	log.Fatal(http.ListenAndServe("0.0.0.0:3000", mux)) //nolint:gosec
+	server := &http.Server{
+		Addr:         "0.0.0.0:3000",
+		Handler:      http.Handler(mux),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
+		BaseContext: func(l net.Listener) context.Context {
+			return cCtx.Context
+		},
+	}
 
-	return nil
+	return server.ListenAndServe()
 }

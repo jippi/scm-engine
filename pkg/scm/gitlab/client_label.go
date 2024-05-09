@@ -3,10 +3,12 @@ package gitlab
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
+	slogctx "github.com/veqryn/slog-context"
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 
@@ -40,7 +42,7 @@ func (client *LabelClient) List(ctx context.Context) ([]*scm.Label, error) {
 	}
 
 	for {
-		fmt.Println("Reading labels page", opts.Page)
+		slogctx.Info(ctx, "Reading labels page", slog.Int("page", opts.Page))
 
 		labels, resp, err := client.list(ctx, opts)
 		if err != nil {

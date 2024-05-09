@@ -7,6 +7,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/jippi/scm-engine/cmd"
+	"github.com/jippi/scm-engine/pkg/tui"
 	"github.com/urfave/cli/v2"
 )
 
@@ -24,6 +25,11 @@ func main() {
 				Name:  "Christian Winther",
 				Email: "gitlab-engine@jippi.dev",
 			},
+		},
+		Before: func(cCtx *cli.Context) error {
+			cCtx.Context = tui.NewContext(cCtx.Context, cCtx.App.Writer, cCtx.App.ErrWriter)
+
+			return nil
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
