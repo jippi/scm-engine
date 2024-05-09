@@ -76,9 +76,11 @@ func main() {
 		},
 		Commands: []*cli.Command{
 			{
-				Name:   "evaluate",
-				Usage:  "Evaluate a Merge Request",
-				Action: cmd.Evaluate,
+				Name:      "evaluate",
+				Usage:     "Evaluate a Merge Request",
+				Args:      true,
+				ArgsUsage: " [id, id, ...]",
+				Action:    cmd.Evaluate,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:     cmd.FlagSCMProject,
