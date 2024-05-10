@@ -1,0 +1,3 @@
+   merge_request.is_open()
+&& merge_request.lacks_label("do-not-close")
+&& since(merge_request.updated_at) > duration("21d")

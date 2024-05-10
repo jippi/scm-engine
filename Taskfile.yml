@@ -31,7 +31,7 @@ tasks:
     desc: Run Docs dev server with live preview
     cmds:
       - docker build -t scm-engine-docs -f Dockerfile.docs .
-      - docker run --rm -it -p 8000:8000 -v ${PWD}:/docs scm-engine-docs serve -o --watch-theme -w /docs --dev-addr 0.0.0.0:8000
+      - docker run --rm -it -p 8000:8000 -v ${PWD}:/docs scm-engine-docs serve
 
   docs:deploy:
     desc: Deploy GitHub pages docs

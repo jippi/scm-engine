@@ -39,7 +39,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr st
 
 	slogctx.Info(ctx, "Evaluating context")
 
-	labels, actions, err := cfg.Evaluate(evalContext)
+	labels, actions, err := cfg.Evaluate(ctx, evalContext)
 	if err != nil {
 		return err
 	}

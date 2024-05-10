@@ -1,17 +1,8 @@
-# Welcome to MkDocs
+# About
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
-
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+> SCM Engine allow for easy Merge Request automation within your GitLab projects.
+>
+> Automatically add / remove labels depending on files changes, age of the Merge Request, who contributes,
+> and pretty much anything else you could want, thanks to the usage of [expr-lang](https://expr-lang.org/).
+>
+> SCM engine can be run either as a regular CI job in your pipeline, or be triggered through the Webhook system, allowing for versatile and flexible deployments.

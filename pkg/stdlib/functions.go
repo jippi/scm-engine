@@ -64,6 +64,14 @@ var Duration = expr.Function(
 	time.ParseDuration, // string => (time.Duration, error)
 )
 
+var Since = expr.Function(
+	"since",
+	func(args ...any) (any, error) {
+		return time.Since(args[0].(time.Time)), nil //nolint:forcetypeassert
+	},
+	time.Since,
+)
+
 var LimitPathDepthTo = expr.Function(
 	"limit_path_depth_to",
 	func(args ...any) (any, error) {

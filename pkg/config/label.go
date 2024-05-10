@@ -30,7 +30,7 @@ func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResu
 	for _, label := range labels {
 		evaluationResult, err := label.Evaluate(evalContext)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("label: %s; %w", label.Name, err)
 		}
 
 		if evaluationResult == nil {
@@ -113,6 +113,10 @@ type Label struct {
 func (p *Label) initialize(evalContext scm.EvalContext) error {
 	var scriptReturnType expr.Option
 
+	if len(p.Script) == 0 {
+		return errors.New("required 'script' field is empty")
+	}
+
 	// Default behavior is conditional labels
 	if p.Strategy == "" {
 		p.Strategy = ConditionalLabel
@@ -154,7 +158,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 
 		p.scriptCompiled, err = expr.Compile(p.Script, opts...)
 		if err != nil {
-			return err
+			return fmt.Errorf("'script' error: %w", err)
 		}
 	}
 
@@ -169,7 +173,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 
 		p.skipIfCompiled, err = expr.Compile(p.SkipIf, opts...)
 		if err != nil {
-			return err
+			return fmt.Errorf("'if' script error: %w", err)
 		}
 	}
 
@@ -186,7 +190,7 @@ func (p *Label) ShouldSkip(evalContext scm.EvalContext) (bool, error) {
 
 func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
 	if err := p.initialize(evalContext); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to initialize expr script engine: %w", err)
 	}
 
 	// Check if the label should be skipped

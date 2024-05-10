@@ -17,6 +17,14 @@ func (e ContextMergeRequest) HasLabel(in string) bool {
 	return false
 }
 
+func (e ContextMergeRequest) LacksLabel(in string) bool {
+	return !e.HasLabel(in)
+}
+
+func (e ContextMergeRequest) IsOpen() bool {
+	return e.State != "close"
+}
+
 func (e ContextMergeRequest) ModifiedFilesList(patterns ...string) []string {
 	return e.findModifiedFiles(patterns...)
 }
