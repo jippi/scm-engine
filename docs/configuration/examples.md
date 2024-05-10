@@ -8,21 +8,14 @@
 
 ## Close Merge Request without recent commit activity
 
-!!! warning "When adopting this script on existing projects"
-
-    The script will *NOT* wait 7 days between warning and closing
-
-    * On the first run, all MRs with commits older than 21 days will be warned
-    * On the second run, all MRs with commits older than 28 days will be closed.
-
-This example will close a Merge Request if no commits has been made for 28 days.
+This example will close a Merge Request if no activity has happened for 28 days.
 
 The script will warn at 21 days mark that this will happen.
 
 ```{.yaml linenums=1}
 label:
   - name: "mark MR as stale" # (1)!
-    color: $red
+    color: $red # (11)!
     script: |1 # (2)!
         --8<-- "docs/configuration/snippets/close-merge-request/label-script.expr"
 
@@ -31,10 +24,10 @@ actions:
     if: |1 # (3)!
         --8<-- "docs/configuration/snippets/close-merge-request/warn-if.expr"
     then:
-      - action: add_label
+      - action: add_label # (6)!
         name: stale
 
-      - action: comment
+      - action: comment # (9)!
         message: |
           :wave: Hello!
 
@@ -44,12 +37,13 @@ actions:
           To disable this behavior, add the `do-not-close` label to the
           MR in the right menu or add comment with `/label ~"do-not-close"`
 
-  - name: "close"
+  - name: "close" # (10)!
     if: |1 # (4)!
         --8<-- "docs/configuration/snippets/close-merge-request/close-if.expr"
     then:
-      - action: close
-      - action: comment
+      - action: close # (8)!
+
+      - action: comment # (7)!
         message: |
           :wave: Hello!
 
@@ -83,6 +77,19 @@ actions:
     ```
 
 5. Send "warning" about the MR being inactive
+6. Add the `stale` label to the MR (if it doesn't exists)
+7. Add a comment to the MR
+8. Close the MR
+9. Add a comment to the MR
+10. Close the MR if no activity has happened after 7 days.
+
+    !!! question "Why 7 days?"
+
+        The `merge_request.updated_at` updated when we commented and added the `stale` label at the 21 day mark.
+
+        So instead we count 7 days from *that* point in time for the `close` step.
+
+11. You can use [Twitter Bootstrap color variables](https://getbootstrap.com/docs/5.3/customize/color/#all-colors){target="_blank"} instead of HEX values.
 
 ## Add label if a file extension is modified
 

@@ -34,16 +34,48 @@ type Context {
   "Information about the Merge Request"
   MergeRequest: ContextMergeRequest @generated
 
+  "Get information about current user"
+  CurrentUser: ContextUser!
+
   "Information about the event that triggered the evaluation. Empty when not using webhook server."
   WebhookEvent: Any @generated
 }
 
 enum MergeRequestState {
+  "All available"
   all
+
+  "In closed state"
   closed
+
+  "Discussion has been locked"
   locked
+
+  "Merge request has been merged"
   merged
+
+  "Opened merge request"
   opened
+}
+
+enum UserState {
+  "User is active and can use the system"
+  active
+
+  "User has been blocked by an administrator and cannot use the system"
+  blocked
+
+  "User is no longer active and cannot use the system"
+  deactivated
+
+  "User is blocked, and their contributions are hidden"
+  banned
+
+  "User has been blocked by the system"
+  ldap_blocked
+
+  "User is blocked and pending approval"
+  blocked_pending_approval
 }
 
 input ListMergeRequestsQueryInput {
@@ -69,11 +101,8 @@ type ListMergeRequestsProjectMergeRequest {
   ID: String! @graphql(key: "iid") @internal
 }
 
+# https://docs.gitlab.com/ee/api/graphql/reference/#project
 type ContextProject {
-  #
-  # Native GraphQL fields - https://docs.gitlab.com/ee/api/graphql/reference/#project
-  #
-
   "Indicates the archived status of the project"
   Archived: Boolean!
   "Timestamp of the project creation"
@@ -141,6 +170,8 @@ type ContextMergeRequest {
   ApprovalsRequired: Int
   "Indicates if the merge request has all the required approvals"
   Approved: Boolean!
+  "User who created this merge request"
+  Author: ContextUser!
   "Indicates if auto merge is enabled for the merge request"
   AutoMergeEnabled: Boolean!
   "Selected auto merge strategy"
@@ -194,7 +225,7 @@ type ContextMergeRequest {
   "Indicates if the merge request will be squashed when merged"
   SquashOnMerge: Boolean!
   "State of the merge request"
-  State: String!
+  State: MergeRequestState!
   "Target branch of the merge request"
   TargetBranch: String!
   "Indicates if the target branch of the merge request exists"
@@ -219,16 +250,41 @@ type ContextMergeRequest {
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
   ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
   ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")
+  ResponseNotes: ContextNotesNode @internal @graphql(key: "notes(last: 10)")
 
   #
   # scm-engine customs
   #
 
+  Notes: [ContextNote!] @generated
   FirstCommit: ContextCommit @generated()
   LastCommit: ContextCommit @generated()
   TimeBetweenFirstAndLastCommit: Duration @generated()
   TimeSinceFirstCommit: Duration @generated()
   TimeSinceLastCommit: Duration @generated()
+
+  CurrentUser: ContextUser! @generated @internal
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#note
+type ContextNote {
+  Body: String!
+  UpdatedAt: Time!
+  CreatedAt: Time!
+  Author: ContextUser!
+}
+
+# Internal only, used to de-nest connections
+type ContextNotesNode {
+  Nodes: [ContextNote!] @internal
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#user
+type ContextUser {
+  Username: String!
+  Bot: Boolean!
+  PublicEmail: String
+  State: UserState!
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#commit

@@ -1,4 +1,4 @@
-   merge_request.is_open()
+   merge_request.state_is("opened")
 && merge_request.has_label("stale")
-&& merge_request.lacks_label("do-not-close")
-&& since(merge_request.updated_at) > duration("7d")
+&& merge_request.has_no_label("do-not-close")
+&& merge_request.has_no_activity_within("7d")
