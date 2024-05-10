@@ -225,7 +225,7 @@ type ContextMergeRequest {
   "Indicates if the merge request will be squashed when merged"
   SquashOnMerge: Boolean!
   "State of the merge request"
-  State: MergeRequestState!
+  State: String! # Can't use MergeRequestState! here since 'merge_request.state in ["opened"]' will fail with 'gitlab.MergeRequestState is not assignable to type string'
   "Target branch of the merge request"
   TargetBranch: String!
   "Indicates if the target branch of the merge request exists"

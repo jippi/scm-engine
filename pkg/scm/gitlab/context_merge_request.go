@@ -26,10 +26,9 @@ func (e ContextMergeRequest) HasNoLabel(in string) bool {
 }
 
 func (e ContextMergeRequest) StateIs(anyOf ...string) bool {
-	for _, stateString := range anyOf {
-		state := MergeRequestState(stateString)
-		if !state.IsValid() {
-			panic(fmt.Errorf("unknown state value: %q", stateString))
+	for _, state := range anyOf {
+		if !MergeRequestState(state).IsValid() {
+			panic(fmt.Errorf("unknown state value: %q", state))
 		}
 
 		if state == e.State {
