@@ -4,25 +4,25 @@ The default configuration filename is `.scm-engine.yml`, either in current worki
 
 The file path can be changed via `--config` CLI flag and `$SCM_ENGINE_CONFIG_FILE` environment variable.
 
-## `actions[]`
+## `actions[]` {#actions data-toc-label="actions"}
 
 The `actions` key is a list of actions that can be taken on a Merge Request.
 
-### `name`
+### `actions[].name` {#actions.name data-toc-label="name"}
 
 The name of the action, this is purely for debugging and your convenience. It's encouraged to be descriptive of the actions.
 
-### `if`
+### `actions[].if` {#actions.if data-toc-label="if"}
 
 A key controlling if the action should executed or not.
 
 The `if` field must be a valid [Expr-lang](https://expr-lang.org/) expression returning a boolean.
 
-### `then[]`
+### `actions[].if.then[]` {#actions.if.then data-toc-label="then"}
 
 The list of operations to take if the `action.if` returned `true`.
 
-#### `action`
+#### `actions[].if.then[].action` {#actions.if.then.action data-toc-label="action"}
 
 This key controls what kind of action that should be taken.
 
@@ -32,21 +32,41 @@ This key controls what kind of action that should be taken.
 - `unlock_discussion` to allow discussions on the Merge Request.
 - `approve` to approve the Merge Request.
 - `unapprove` to approve the Merge Request.
-- `comment` to add a comment to the Merge Request (requires the `message` field)
+- `comment` to add a comment to the Merge Request
 
-#### `message`
+      Additional fields:
 
-Required field for `action: comment`.
+      - (required) `message` The message that will be commented on the Merge Request.
 
-The message that will be commented on the Merge Request.
+- `add_label` to add *an existing* label to the Merge Request
 
-## `label[]`
+      Additional fields:
+
+      - (required) `label` The label name to add.
+
+      ```{.yaml title="add_label example"}
+      - action: add_label
+        label: example
+      ```
+
+- `remove_label` to remove a label from the Merge Request
+
+      Additional fields:
+
+      - (required) `label` The label name to add.
+
+      ```{.yaml title="remove_label example"}
+      - action: remove_label
+        label: example
+      ```
+
+## `label[]` {#label data-toc-label="label"}
 
 The `label` key is a list of the labels you want to manage.
 
 These keys are shared between the `conditional` and `generate` label strategy. (more above these below!)
 
-### `name` {#label-name}
+### `label[].name` {#label.name data-toc-label="name"}
 
 - When using `label.strategy: conditional`
 
@@ -56,7 +76,7 @@ These keys are shared between the `conditional` and `generate` label strategy. (
 
     **OMITTED** The `name` field must not be set when using the `generate` strategy.
 
-### `script`
+### `label[].script` {#label.script data-toc-label="script"}
 
 !!! tip
 
@@ -66,7 +86,7 @@ The `script` field is an [expr-lang](https://expr-lang.org/) expression, a safe,
 
 Depending on the `label.strategy` used, the behavior of the script changes, read more about this below.
 
-### `strategy`
+### `label[].strategy` {#label.strategy data-toc-label="strategy"}
 
 SCM Engine supports two strategies for managing labels, each changes the behavior of the `script`.
 
@@ -78,9 +98,9 @@ SCM Engine supports two strategies for managing labels, each changes the behavio
 
     The `script` must return a `list of strings`, where each label returned will be added to the Merge Request.
 
-#### `conditional`
+#### `label[].strategy = conditional` {#label.strategy-conditional data-toc-label="conditional"}
 
-Use the `conditional` strategy when you want to add/remove a label on a Merge Request depending on _something_. It's the default strategy, and the most simple one to use.
+Use the `conditional` strategy when you want to add/remove a label on a Merge Request depending on *something*. It's the default strategy, and the most simple one to use.
 
 !!! note
 
@@ -116,7 +136,7 @@ label:
     script: merge_request.modified_files("*_test.go")
 ```
 
-#### `generate`
+#### `label[].strategy = generate` {#label.strategy-generate data-toc-label="generate"}
 
 Use the `generate` strategy if you want to manage dynamic labels, for example, depending on the file structure within your project.
 
@@ -158,7 +178,7 @@ label:
       | uniq()
 ```
 
-### `color`
+### `label[].color` {#label.color data-toc-label="color"}
 
 !!! note
 
@@ -168,7 +188,7 @@ label:
 
 You can either provide your own `#hex` value or use the [Twitter Bootstrap color variables](https://getbootstrap.com/docs/5.3/customize/color/#all-colors), for example `$blue-500` and `$teal`.
 
-### `description`
+### `label[].description` {#label.description data-toc-label="description"}
 
 !!! note
 
@@ -178,7 +198,7 @@ An optional key that control the `description` field for the label within GitLab
 
 Descriptions are shown in the User Interface when you hover any label.
 
-### `priority`
+### `label[].priority` {#label.priority data-toc-label="priority"}
 
 !!! note
 
@@ -186,7 +206,7 @@ Descriptions are shown in the User Interface when you hover any label.
 
 An optional key that controls the [label `priority`](https://docs.gitlab.com/ee/user/project/labels.html#set-label-priority).
 
-### `skip_if`
+### `label[].skip_if` {#label.skip_if data-toc-label="skip_if"}
 
 An optional key controlling if the label should be skipped (meaning no removal or adding of labels).
 
