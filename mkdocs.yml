@@ -1,4 +1,6 @@
 site_name: SCM Engine Docs
+site_url: https://jippi.github.io/scm-engine/
+edit_uri: https://github.com/jippi/scm-engine/edit/proper-docs/docs/
 
 theme:
   name: material
