@@ -66,7 +66,7 @@ func IsDryRun(ctx context.Context) bool {
 }
 
 func ShouldUpdatePipeline(ctx context.Context) bool {
-	return ctx.Value(updatePipeline).(bool) //nolint:forcetypeassert
+	return !IsDryRun(ctx) && ctx.Value(updatePipeline).(bool) //nolint:forcetypeassert
 }
 
 func MergeRequestID(ctx context.Context) string {
