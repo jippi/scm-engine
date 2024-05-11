@@ -24,7 +24,6 @@ plugins:
   - git-revision-date-localized:
       enable_creation_date: true
       fallback_to_build_date: true
-  - git-authors
   - social
 
 theme:
@@ -32,16 +31,14 @@ theme:
   features:
     - content.action.edit
     - content.action.view
-    #- navigation.indexes
-    - navigation.sections
-    - navigation.tracking
-    - navigation.expand
-    - toc.follow
-    - navigation.instant
-    #- toc.integrate
-    - navigation.top
-    - content.code.copy
     - content.code.annotate
+    - content.code.copy
+    - navigation.expand
+    - navigation.instant
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - toc.follow
   font:
     text: Roboto
     code: Roboto Mono
