@@ -7,7 +7,7 @@
 {{ end }}
 {{ end -}}
 
-{{- define "single_attribute" -}}- `#!css {{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}){{ if .Description}} {{ .Description -}}{{ end }}{{- end -}}
+{{- define "single_attribute" -}}- `#!css {{ .BlockName }}` ; `{{ if .Optional }}optional {{ end }}{{ .Type }}`{{ if .Description}}. {{ .Description -}}{{ end }}{{- end -}}
 
 {{- define "description" }}{{ if .Description }}
 {{ .Description }}

@@ -223,6 +223,9 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 				case strings.Contains(fieldType, "time.Time"):
 					fieldType = "time"
 
+				case strings.Contains(fieldType, "bool"):
+					fieldType = "boolean"
+
 				case strings.Contains(fieldType, "time.Duration"):
 					fieldType = "duration"
 				}
