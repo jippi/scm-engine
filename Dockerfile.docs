@@ -1,4 +1,4 @@
-FROM squidfunk/mkdocs-material:9.5.17
+FROM squidfunk/mkdocs-material
 
 # https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
 RUN pip install mkdocs-awesome-pages-plugin
