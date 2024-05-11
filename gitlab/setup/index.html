@@ -754,15 +754,15 @@
 <h1 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h1>
 <h2 id="webhook-server">Webhook Server<a class="headerlink" href="#webhook-server" title="Permanent link">&para;</a></h2>
 <p>Using <code>scm-engine</code> as a webhook server allows for richer feature set compared to <a href="#gitlab-ci-pipeline">GitLab CI pipeline</a> mode</p>
-<ul>
-<li><code>+</code> Reacting to comments</li>
-<li><code>+</code> Access to webhook event data in scripts via <code>webhook_event.*</code> (see <a href="../../commands/server/">server docs</a> for more information)</li>
-<li><code>+</code> A single <code>scm-engine</code> instance (and single token) for your GitLab project, group, or instance depending on where you configure the webhook.</li>
-<li><code>+</code> Each Project still have their own <code>.scm-engine.yml</code> file, it's downloaded via the API when the server is processing a webhook event.</li>
-<li><code>+</code> A single "bot" identity across your projects.</li>
-<li><code>+</code> Turn key once configured; if a project want to use <code>scm-engine</code> they just need to create the <code>.scm-engine.yml</code> file in their project.</li>
-<li><code>+</code> Real-time reactions to changes</li>
-<li><code>-</code> No intuitive access to <a href="../../commands/evaluate/"><code>evaluation</code> logs</a> within GitLab (you can see them in the server logs or in the webhook failure log)</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Real-time reactions to changes.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Reacting to comments.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Access to webhook event data in scripts via <code>webhook_event.*</code> (see <a href="../../commands/server/">server docs</a> for more information).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> A single <code>scm-engine</code> instance (and single token) for your GitLab project, group, or instance depending on where you configure the webhook.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Each Project still have their own <code>.scm-engine.yml</code> file, it's downloaded via the API when the server is processing a webhook event.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> A single "bot" identity across your projects.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Turn key once configured; if a project want to use <code>scm-engine</code> they just need to create the <code>.scm-engine.yml</code> file in their project.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> No intuitive access to <a href="../../commands/evaluate/"><code>evaluation</code> logs</a> within GitLab (you can see them in the server logs or in the webhook failure log).</li>
 </ul>
 <p><strong>Setup</strong>:</p>
 <ol>
@@ -771,12 +771,12 @@
 </ol>
 <h2 id="gitlab-ci-pipeline">GitLab-CI pipeline<a class="headerlink" href="#gitlab-ci-pipeline" title="Permanent link">&para;</a></h2>
 <p>Using <code>scm-engine</code> within a GitLab CI pipeline is straight forward - every time a CI pipeline runs, <code>scm-engine</code> will <a href="../../commands/evaluate/">evaluate</a> the Merge Request.</p>
-<ul>
-<li><code>+</code> Simple &amp; quick installation.</li>
-<li><code>+</code> Limited access token permissions.</li>
-<li><code>+</code> Easy access to <a href="../../commands/evaluate/"><code>evaluation</code> logs</a> within the GitLab CI job.</li>
-<li><code>-</code> Can't react to comments; only works within a CI pipeline.</li>
-<li><code>-</code> Higher latency for reacting to changes depending on how fast CI jobs run (and where in the pipeline it runs).</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Simple &amp; quick installation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Limited access token permissions.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Easy access to <a href="../../commands/evaluate/"><code>evaluation</code> logs</a> within the GitLab CI job.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Can't react to comments; only works within a CI pipeline.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Higher latency for reacting to changes depending on how fast CI jobs run (and where in the pipeline it runs).</li>
 </ul>
 <p><strong>Setup</strong>:</p>
 <ol>
