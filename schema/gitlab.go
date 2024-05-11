@@ -7,12 +7,12 @@ import (
 	"cmp"
 	_ "embed"
 	"fmt"
-	"html/template"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"slices"
 	"strings"
+	"text/template"
 
 	"github.com/99designs/gqlgen/api"
 	"github.com/99designs/gqlgen/codegen/config"
@@ -61,6 +61,10 @@ func main() {
 		panic(err)
 	}
 
+	if err := os.WriteFile(getRootPath()+"/docs/gitlab/script-attributes.md", []byte(index.String()), 0600); err != nil {
+		panic(err)
+	}
+
 	fmt.Println(index.String())
 }
 
@@ -79,12 +83,16 @@ func nest(props []*Property) {
 					Optional:     nested.Optional,
 					Type:         nested.Type,
 					IsSlice:      nested.IsSlice,
+					IsEnum:       nested.IsEnum,
+					Enum:         nested.Enum,
 					IsCustomType: nested.IsCustomType,
 				})
 			}
 		}
 
 		nest(field.Attributes)
+
+		slices.SortFunc(field.Attributes, sortSlice)
 	}
 }
 
@@ -139,6 +147,12 @@ func fieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (
 }
 
 func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
+	enums := map[string]*modelgen.Enum{}
+
+	for _, enum := range b.Enums {
+		enums[enum.Name] = enum
+	}
+
 	for _, model := range b.Models {
 		modelName := model.Name
 
@@ -160,6 +174,11 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 			tags, err := structtag.Parse(field.Tag)
 			if err != nil {
 				return b
+			}
+
+			// We manually document this one in the template!
+			if field.Name == "WebhookEvent" {
+				continue
 			}
 
 			if !strings.Contains(field.Tag, "expr:") {
@@ -189,14 +208,23 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 					fieldType = filepath.Base(fieldType)
 					fieldType = strings.Split(fieldType, ".")[1]
 					fieldType = strings.TrimPrefix(fieldType, "Context")
-					fieldType = strcase.ToSnake(fieldType)
 
-					fieldProperty.IsCustomType = true
+					// Check if our field is an enum
+					if enum, ok := enums[fieldType]; ok {
+						fieldProperty.IsEnum = true
+						fieldProperty.Enum = enum
+					}
+					fieldProperty.IsCustomType = !fieldProperty.IsEnum
+
+					fieldType = strcase.ToSnake(fieldType)
 				}
 
 				switch {
 				case strings.Contains(fieldType, "time.Time"):
 					fieldType = "time"
+
+				case strings.Contains(fieldType, "bool"):
+					fieldType = "boolean"
 
 				case strings.Contains(fieldType, "time.Duration"):
 					fieldType = "duration"
@@ -206,8 +234,6 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 
 				modelProperty.AddAttribute(fieldProperty)
 			} // end expr tag is set
-
-			slices.SortFunc(modelProperty.Attributes, sortSlice)
 
 			field.Tag = tags.String()
 		} // end fields loop
@@ -240,6 +266,9 @@ type Property struct {
 	// Used to show "String list" or "Block list" in the documentation output
 	IsSlice bool
 
+	IsEnum bool
+	Enum   *modelgen.Enum
+
 	IsCustomType bool
 
 	// Contains any sub-attributes for this Property.
@@ -260,6 +289,10 @@ func (p *Property) AddAttribute(attrs ...*Property) {
 
 		p.Attributes = append(p.Attributes, attr)
 	}
+}
+
+func (p Property) GetHeadline() string {
+	return fmt.Sprintf("%s `%s` {#%s data-toc-label=%q}", strings.Repeat("#", len(p.getHierarchy())+1), p.BlockName(), p.BlockName(), p.Name)
 }
 
 // getHierarchy returns a slice representing all ancestors of this Property
@@ -293,5 +326,19 @@ func (p *Property) BlockName() string {
 }
 
 func sortSlice(i, j *Property) int {
+	// Custom types last
+	if i.IsCustomType && j.IsCustomType {
+		return 0
+	}
+
+	if i.IsCustomType && !j.IsCustomType {
+		return 1
+	}
+
+	if !i.IsCustomType && j.IsCustomType {
+		return -1
+	}
+
+	// Everything else sorted by name
 	return cmp.Compare(i.Name, j.Name)
 }

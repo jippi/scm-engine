@@ -8,6 +8,7 @@ var Functions = []expr.Option{
 	// Replace built-in duration function with one that supports "d" (days) and "w" (weeks)
 	expr.DisableBuiltin("duration"),
 	Duration,
+	Since,
 
 	// filepath.Dir
 	FilepathDir,

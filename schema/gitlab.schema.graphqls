@@ -34,16 +34,48 @@ type Context {
   "Information about the Merge Request"
   MergeRequest: ContextMergeRequest @generated
 
+  "Get information about current user"
+  CurrentUser: ContextUser!
+
   "Information about the event that triggered the evaluation. Empty when not using webhook server."
   WebhookEvent: Any @generated
 }
 
 enum MergeRequestState {
+  "All available"
   all
+
+  "In closed state"
   closed
+
+  "Discussion has been locked"
   locked
+
+  "Merge request has been merged"
   merged
+
+  "Opened merge request"
   opened
+}
+
+enum UserState {
+  "User is active and can use the system"
+  active
+
+  "User has been blocked by an administrator and cannot use the system"
+  blocked
+
+  "User is no longer active and cannot use the system"
+  deactivated
+
+  "User is blocked, and their contributions are hidden"
+  banned
+
+  "User has been blocked by the system"
+  ldap_blocked
+
+  "User is blocked and pending approval"
+  blocked_pending_approval
 }
 
 input ListMergeRequestsQueryInput {
@@ -69,11 +101,8 @@ type ListMergeRequestsProjectMergeRequest {
   ID: String! @graphql(key: "iid") @internal
 }
 
+# https://docs.gitlab.com/ee/api/graphql/reference/#project
 type ContextProject {
-  #
-  # Native GraphQL fields - https://docs.gitlab.com/ee/api/graphql/reference/#project
-  #
-
   "Indicates the archived status of the project"
   Archived: Boolean!
   "Timestamp of the project creation"
@@ -103,7 +132,9 @@ type ContextProject {
   # Connections
   #
 
+  "Labels available on this project"
   Labels: [ContextLabel!] @generated
+
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
   MergeRequest: ContextMergeRequest @internal @graphql(key: "mergeRequest(iid: $mr_id)")
   ResponseGroup: ContextGroup @internal @graphql(key: "group")
@@ -141,6 +172,8 @@ type ContextMergeRequest {
   ApprovalsRequired: Int
   "Indicates if the merge request has all the required approvals"
   Approved: Boolean!
+  "User who created this merge request"
+  Author: ContextUser!
   "Indicates if auto merge is enabled for the merge request"
   AutoMergeEnabled: Boolean!
   "Selected auto merge strategy"
@@ -194,7 +227,7 @@ type ContextMergeRequest {
   "Indicates if the merge request will be squashed when merged"
   SquashOnMerge: Boolean!
   "State of the merge request"
-  State: String!
+  State: String! # Can't use MergeRequestState! here since 'merge_request.state in ["opened"]' will fail with 'gitlab.MergeRequestState is not assignable to type string'
   "Target branch of the merge request"
   TargetBranch: String!
   "Indicates if the target branch of the merge request exists"
@@ -214,25 +247,73 @@ type ContextMergeRequest {
   # Connections
   #
 
+  "Changes to a single file"
   DiffStats: [ContextDiffStat!]
+  "Labels available on this merge request"
   Labels: [ContextLabel!] @generated
-  ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
-  ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
-  ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")
 
   #
   # scm-engine customs
   #
 
+  "All notes on this MR"
+  Notes: [ContextNote!] @generated
+
+  "Information about the first commit made"
   FirstCommit: ContextCommit @generated()
+  "Information about the last commit made"
   LastCommit: ContextCommit @generated()
+  "Duration between first and last commit made"
   TimeBetweenFirstAndLastCommit: Duration @generated()
+  "Duration (from 'now') since the first commit was made"
   TimeSinceFirstCommit: Duration @generated()
+  "Duration (from 'now') since the last commit was made"
   TimeSinceLastCommit: Duration @generated()
+
+  #
+  # scm-engine internal
+  #
+
+  CurrentUser: ContextUser! @generated @internal
+  ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
+  ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
+  ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")
+  ResponseNotes: ContextNotesNode @internal @graphql(key: "notes(last: 10)")
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#note
+type ContextNote {
+  "User who wrote the note"
+  Author: ContextUser!
+  "Content of the note"
+  Body: String!
+  "Timestamp of the note creation"
+  CreatedAt: Time!
+  "Timestamp of the note’s last activity"
+  UpdatedAt: Time!
+}
+
+# Internal only, used to de-nest connections
+type ContextNotesNode {
+  Nodes: [ContextNote!] @internal
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#user
+type ContextUser {
+  "Indicates if the user is a bot"
+  Bot: Boolean!
+  "Username of the user. Unique within this instance of GitLab"
+  Username: String!
+  "User’s public email"
+  PublicEmail: String
+  "State of the user"
+  State: UserState!
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#commit
 type ContextCommit {
+  "Author of the commit"
+  Author: ContextUser
   "Commit author’s email"
   AuthorEmail: String
   "Commit authors name"
@@ -286,6 +367,7 @@ type ContextLabelNode {
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#diffstats
+"Changes to a single file"
 type ContextDiffStat {
   "Number of lines added to this file"
   Additions: Int!

@@ -27,6 +27,18 @@ tasks:
     generates:
       - ./scm-engine
 
+  docs:server:
+    desc: Run Docs dev server with live preview
+    cmds:
+      - docker build -t scm-engine-docs -f Dockerfile.docs .
+      - docker run --rm -it -p 8000:8000 -v ${PWD}:/docs scm-engine-docs serve
+
+  docs:deploy:
+    desc: Deploy GitHub pages docs
+    cmds:
+      - docker build -t scm-engine-docs -f Dockerfile.docs .
+      - docker run --rm -v ${PWD}:/docs scm-engine-docs gh-deploy --force
+
   test:
     desc: Run tests
     env:

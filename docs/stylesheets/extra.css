@@ -1,0 +1,36 @@
+/**
+Functions:
+  - something()
+  - field.something()
+**/
+.highlight .nt:has(+ .o),
+.highlight .nc:has(+ .o){
+  color: var(--md-code-hl-number-color)
+}
+
+/**
+Operators:
+  - &&
+  - !=
+*/
+.highlight .o  {
+  /* color: red; */
+  color: var(--md-code-hl-special-color);
+}
+
+/**
+Keywords
+  - IN
+  - NOT
+*/
+.highlight .nt:has(+ .w) {
+  color: var(--md-code-hl-special-color);
+  font-weight: bold;
+}
+
+/**
+  Fix for $ not being seen as a variable
+*/
+.highlight .o:has(+ .nt) {
+  color: var(--md-code-hl-keyword-color)
+}

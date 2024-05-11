@@ -24,6 +24,46 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 	}
 
 	switch actionString {
+	case "add_label":
+		name, ok := step["name"]
+		if !ok {
+			return errors.New("step field 'name' is required, but missing")
+		}
+
+		nameVal, ok := name.(string)
+		if !ok {
+			return errors.New("step field 'name' must be a string")
+		}
+
+		labels := update.AddLabels
+		if labels == nil {
+			labels = &scm.LabelOptions{}
+		}
+
+		tmp := append(*labels, nameVal)
+
+		update.AddLabels = &tmp
+
+	case "remove_label":
+		name, ok := step["name"]
+		if !ok {
+			return errors.New("step field 'name' is required, but missing")
+		}
+
+		nameVal, ok := name.(string)
+		if !ok {
+			return errors.New("step field 'name' must be a string")
+		}
+
+		labels := update.RemoveLabels
+		if labels == nil {
+			labels = &scm.LabelOptions{}
+		}
+
+		tmp := append(*labels, nameVal)
+
+		update.AddLabels = &tmp
+
 	case "close":
 		update.StateEvent = gitlab.Ptr("close")
 
