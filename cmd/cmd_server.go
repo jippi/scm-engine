@@ -112,31 +112,34 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		}
 
 		// Initialize context
-		ctx = state.ContextWithProjectID(ctx, payload.Project.PathWithNamespace)
+		ctx = state.WithProjectID(ctx, payload.Project.PathWithNamespace)
 
 		// Grab event specific information
 		var (
-			id  string
-			ref string
+			id     string
+			gitSha string
 		)
 
 		switch payload.EventType {
 		case "merge_request":
 			id = strconv.Itoa(payload.ObjectAttributes.IID)
-			ref = payload.ObjectAttributes.LastCommit.ID
+			gitSha = payload.ObjectAttributes.LastCommit.ID
 
 		case "note":
 			id = strconv.Itoa(payload.MergeRequest.IID)
-			ref = payload.MergeRequest.LastCommit.ID
+			gitSha = payload.MergeRequest.LastCommit.ID
 
 		default:
 			errHandler(ctx, w, http.StatusInternalServerError, fmt.Errorf("unknown event type: %s", payload.EventType))
 		}
 
-		ctx = slogctx.With(ctx, slog.String("event_type", payload.EventType), slog.String("merge_request_id", id), slog.String("sha_reference", ref))
+		// Build context for rest of the pipeline
+		ctx = state.WithCommitSHA(ctx, gitSha)
+		ctx = state.ContextWithMergeRequestID(ctx, id)
+		ctx = slogctx.With(ctx, slog.String("event_type", payload.EventType))
 
 		// Get the remote config file
-		file, err := client.MergeRequests().GetRemoteConfig(ctx, cCtx.String(FlagConfigFile), ref)
+		file, err := client.MergeRequests().GetRemoteConfig(ctx, cCtx.String(FlagConfigFile), gitSha)
 		if err != nil {
 			errHandler(ctx, w, http.StatusOK, fmt.Errorf("could not read remote config file: %w", err))
 
@@ -160,7 +163,7 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		}
 
 		// Process the MR
-		if err := ProcessMR(ctx, client, cfg, id, fullEventPayload); err != nil {
+		if err := ProcessMR(ctx, client, cfg, fullEventPayload); err != nil {
 			errHandler(ctx, w, http.StatusOK, err)
 
 			return
@@ -176,7 +179,8 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		BaseContext: func(l net.Listener) context.Context {
-			ctx := state.ContextWithDryRun(cCtx.Context, cCtx.Bool(FlagDryRun))
+			ctx := state.WithDryRun(cCtx.Context, cCtx.Bool(FlagDryRun))
+			ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline))
 
 			return ctx
 		},

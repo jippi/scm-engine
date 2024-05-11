@@ -12,12 +12,14 @@ NAME:
    scm-engine evaluate - Evaluate a Merge Request
 
 USAGE:
-   scm-engine evaluate [command options] [id, id, ...]
+   scm-engine evaluate [command options] [mr_id, mr_id, ...]
 
 OPTIONS:
-   --project value                                                GitLab project (example: 'gitlab-org/gitlab') [$GITLAB_PROJECT, $CI_PROJECT_PATH]
-   --id value, --merge-request-id value, --pull-request-id value  The pull/merge to process, if not provided as a CLI flag [$CI_MERGE_REQUEST_IID]
-   --help, -h                                                     show help
+   --project value    GitLab project (example: 'gitlab-org/gitlab') [$GITLAB_PROJECT, $CI_PROJECT_PATH]
+   --id value         The pull/merge ID to process, if not provided as a CLI flag [$CI_MERGE_REQUEST_IID]
+   --commit value     The git commit sha [$CI_COMMIT_SHA]
+   --update-pipeline  Update the CI pipeline status with progress (default: true) [$SCM_ENGINE_SKIP_PIPELINE]
+   --help, -h         show help
 
 GLOBAL OPTIONS:
    --config value     Path to the scm-engine config file (default: ".scm-engine.yml") [$SCM_ENGINE_CONFIG_FILE]

@@ -25,7 +25,8 @@ USAGE:
 
 OPTIONS:
    --webhook-secret value  Used to validate received payloads. Sent with the request in the X-Gitlab-Token HTTP header [$SCM_ENGINE_WEBHOOK_SECRET]
-   --listen value          Port the HTTP server should listen on (default: "0.0.0.0:3000") [$SCM_ENGINE_LISTEN]
+   --listen value          IP + Port that the HTTP server should listen on (default: "0.0.0.0:3000") [$SCM_ENGINE_LISTEN]
+   --update-pipeline       Update the CI pipeline status with progress (default: true) [$SCM_ENGINE_SKIP_PIPELINE]
    --help, -h              show help
 
 GLOBAL OPTIONS:

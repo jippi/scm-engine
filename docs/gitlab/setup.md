@@ -4,14 +4,14 @@
 
 Using `scm-engine` as a webhook server allows for richer feature set compared to [GitLab CI pipeline](#gitlab-ci-pipeline) mode
 
-- `+` Reacting to comments
-- `+` Access to webhook event data in scripts via `webhook_event.*` (see [server docs](../commands/server.md) for more information)
-- `+` A single `scm-engine` instance (and single token) for your GitLab project, group, or instance depending on where you configure the webhook.
-- `+` Each Project still have their own `.scm-engine.yml` file, it's downloaded via the API when the server is processing a webhook event.
-- `+` A single "bot" identity across your projects.
-- `+` Turn key once configured; if a project want to use `scm-engine` they just need to create the `.scm-engine.yml` file in their project.
-- `+` Real-time reactions to changes
-- `-` No intuitive access to [`evaluation` logs](../commands/evaluate.md) within GitLab (you can see them in the server logs or in the webhook failure log)
+- [X] Real-time reactions to changes.
+- [X] Reacting to comments.
+- [X] Access to webhook event data in scripts via `webhook_event.*` (see [server docs](../commands/server.md) for more information).
+- [X] A single `scm-engine` instance (and single token) for your GitLab project, group, or instance depending on where you configure the webhook.
+- [X] Each Project still have their own `.scm-engine.yml` file, it's downloaded via the API when the server is processing a webhook event.
+- [X] A single "bot" identity across your projects.
+- [X] Turn key once configured; if a project want to use `scm-engine` they just need to create the `.scm-engine.yml` file in their project.
+- [ ] No intuitive access to [`evaluation` logs](../commands/evaluate.md) within GitLab (you can see them in the server logs or in the webhook failure log).
 
 **Setup**:
 
@@ -22,11 +22,11 @@ Using `scm-engine` as a webhook server allows for richer feature set compared to
 
 Using `scm-engine` within a GitLab CI pipeline is straight forward - every time a CI pipeline runs, `scm-engine` will [evaluate](../commands/evaluate.md) the Merge Request.
 
-- `+` Simple & quick installation.
-- `+` Limited access token permissions.
-- `+` Easy access to [`evaluation` logs](../commands/evaluate.md) within the GitLab CI job.
-- `-` Can't react to comments; only works within a CI pipeline.
-- `-` Higher latency for reacting to changes depending on how fast CI jobs run (and where in the pipeline it runs).
+- [X] Simple & quick installation.
+- [X] Limited access token permissions.
+- [X] Easy access to [`evaluation` logs](../commands/evaluate.md) within the GitLab CI job.
+- [ ] Can't react to comments; only works within a CI pipeline.
+- [ ] Higher latency for reacting to changes depending on how fast CI jobs run (and where in the pipeline it runs).
 
 **Setup**:
 
