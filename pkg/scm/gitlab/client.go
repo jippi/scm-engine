@@ -13,7 +13,7 @@ import (
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 
-var pipelineName = go_gitlab.Ptr("scm-engine/eval")
+var pipelineName = go_gitlab.Ptr("scm-engine")
 
 // Ensure the GitLab client implements the [scm.Client]
 var _ scm.Client = (*Client)(nil)
