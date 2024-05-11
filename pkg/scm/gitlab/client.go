@@ -2,15 +2,18 @@ package gitlab
 
 import (
 	"context"
+	"log/slog"
+	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
+	slogctx "github.com/veqryn/slog-context"
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 
-var pipelineName = go_gitlab.Ptr("scm-engine")
+var pipelineName = go_gitlab.Ptr("scm-engine/eval")
 
 // Ensure the GitLab client implements the [scm.Client]
 var _ scm.Client = (*Client)(nil)
@@ -68,13 +71,23 @@ func (client *Client) Start(ctx context.Context) error {
 		return nil
 	}
 
-	_, _, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
+	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       go_gitlab.Running,
 		Context:     pipelineName,
 		Description: go_gitlab.Ptr("Currently evaluating MR"),
 	})
 
-	return err
+	switch response.StatusCode {
+	// GitLab returns '400 {message: {name: [has already been taken]}}' if the context/pipeline name we use
+	// are already used by a regular CI job. We treat that as a non-failure and continue on after logging
+	case http.StatusBadRequest:
+		slogctx.Warn(ctx, "could not update commit pipeline status", slog.Any("err", err))
+
+		return nil
+
+	default:
+		return err
+	}
 }
 
 // Stop pipeline
@@ -91,13 +104,23 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 		message = err.Error()
 	}
 
-	_, _, err = client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
+	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       status,
 		Context:     pipelineName,
 		Description: go_gitlab.Ptr(message),
 	})
 
-	return err
+	switch response.StatusCode {
+	// GitLab returns '400 {message: {name: [has already been taken]}}' if the context/pipeline name we use
+	// are already used by a regular CI job. We treat that as a non-failure and continue on after logging
+	case http.StatusBadRequest:
+		slogctx.Warn(ctx, "could not update commit pipeline status", slog.Any("err", err))
+
+		return nil
+
+	default:
+		return err
+	}
 }
 
 func graphqlBaseURL(inputURL *url.URL) string {
