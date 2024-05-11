@@ -87,10 +87,19 @@ func (client *MergeRequestClient) List(ctx context.Context, options *scm.ListMer
 		return nil, err
 	}
 
-	hits := []scm.ListMergeRequest{}
-	for _, x := range result.Project.MergeRequests.Nodes {
-		hits = append(hits, scm.ListMergeRequest{ID: x.ID})
+	results := []scm.ListMergeRequest{}
+
+	for _, mergeRequest := range result.Project.MergeRequests.Nodes {
+		// If there are no DiffHeadSha; there are no commits on the MR; so don't process it
+		if mergeRequest.DiffHeadSha == nil {
+			continue
+		}
+
+		results = append(results, scm.ListMergeRequest{
+			ID:  mergeRequest.ID,
+			SHA: *mergeRequest.DiffHeadSha,
+		})
 	}
 
-	return hits, nil
+	return results, nil
 }
