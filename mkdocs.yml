@@ -21,9 +21,6 @@ plugins:
       strict: true
   - search:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
-  - git-revision-date-localized:
-      enable_creation_date: true
-      fallback_to_build_date: true
   - social
 
 theme:
