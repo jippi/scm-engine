@@ -2,7 +2,7 @@
 
 actions:
   # NOTE: depends on the "stale" label further down in the document
-  - name: "Warn if the Merge Request haven't had commit activity for 21 days and will be closed"
+  - name: Warn if the Merge Request haven't had commit activity for 21 days and will be closed
     if: |1
            merge_request.state_is("opened")
         && merge_request.has_no_label("stale")
@@ -23,7 +23,7 @@ actions:
           MR in the right menu or add comment with `/label ~"do-not-close"`
 
   # NOTE: depends on the "stale" label further down in the document
-  - name: "Close the Merge Request if it haven't had commit activity for 28 days"
+  - name: Close the Merge Request if it haven't had commit activity for 28 days
     if: |1
            merge_request.state_is("opened")
         && merge_request.has_label("stale")
@@ -62,60 +62,60 @@ label:
         && merge_request.has_no_user_activity_within("21d")
 
   - name: lang/go
-    color: "$indigo"
+    color: $indigo
     script: merge_request.modified_files("*.go")
 
   - name: lang/markdown
-    color: "$indigo"
-    description: "Modified MarkDown files"
+    color: $indigo
+    description: Modified MarkDown files
     script: merge_request.modified_files("*.md")
 
   - name: dependencies/go
-    color: "$orange"
-    description: "Updated Go dependency files like go.mod and go.sum"
+    color: $orange
+    description: Updated Go dependency files go.mod or go.sum
     script: merge_request.modified_files("go.mod", "go.sum")
 
   - name: type/ci
-    color: "$green"
-    description: "Modified CI files"
+    color: $green
+    description: Modified CI files
     script: merge_request.modified_files(".gitlab-ci.yml") || merge_request.modified_files("build/")
 
   - name: type/deployment
-    color: "$green"
-    description: "Modified Deployment files"
+    color: $green
+    description: Modified Deployment files
     script: merge_request.modified_files("_infrastructure/", "scripts/", "configs/")
 
   - name: type/documentation
-    color: "$green"
-    description: "Modified Documentation files"
+    color: $green
+    description: Modified Documentation files
     script: merge_request.modified_files("docs/")
 
   - name: type/services
-    color: "$green"
-    description: "Modified pkg/services files"
+    color: $green
+    description: Modified pkg/services files
     script: merge_request.modified_files("internal/pkg/services")
 
   # NOTE: This label assume your GitLab supports scoped labels
   #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: go::tests::missing
-    color: "$red"
-    description: "The Merge Request did NOT modify Go test files"
+    color: $red
+    description: The Merge Request did NOT modify Go test files
     priority: 999
     script: not merge_request.modified_files("*_test.go") && merge_request.modified_files("*.go")
 
   # NOTE: This label assume your GitLab supports scoped labels
   #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: go::tests::OK
-    color: "$green"
-    description: "The Merge Request modified Go test files"
+    color: $green
+    description: The Merge Request modified Go test files
     priority: 999
     script: merge_request.modified_files("*_test.go") && merge_request.modified_files("*.go")
 
   # NOTE: This label assume your GitLab supports scoped labels
   #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: status::age::abandoned
-    color: "$red"
-    description: "The most recent commit is older than 45 days"
+    color: $red
+    description: The most recent commit is older than 45 days
     priority: 999
     script: merge_request.time_since_last_commit > duration("45d")
     skip_if: merge_request.state in ["merged", "closed", "locked"]
@@ -123,8 +123,8 @@ label:
   # NOTE: This label assume your GitLab supports scoped labels
   #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: status::age::stale
-    color: "$red"
-    description: "The most recent commit is older than 30 days"
+    color: $red
+    description: The most recent commit is older than 30 days
     priority: 999
     script: duration("30d") < merge_request.time_since_last_commit < duration("45d")
     skip_if: merge_request.state in ["merged", "closed", "locked"]
@@ -132,8 +132,8 @@ label:
   # NOTE: This label assume your GitLab supports scoped labels
   #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: status::age::old
-    color: "$red"
-    description: "The most recent commit is older than 14 days"
+    color: $red
+    description: The most recent commit is older than 14 days
     priority: 999
     script: duration("14d") < merge_request.time_since_last_commit < duration("30d")
     skip_if: merge_request.state in ["merged", "closed", "locked"]
@@ -144,8 +144,8 @@ label:
   # =>
   # service/vault
   - strategy: generate
-    description: "Modified this a service directory"
-    color: "$pink"
+    description: Modified this a service directory
+    color: $pink
     script: >
       merge_request.modified_files_list("internal/service/")
       | map({ filepath_dir(#) })
@@ -158,8 +158,8 @@ label:
   # =>
   # command/aws/login
   - strategy: generate
-    description: "Modified this my-command command"
-    color: "$purple"
+    description: Modified this my-command command
+    color: $purple
     script: >
       merge_request.modified_files_list("internal/app/my-command/subcommands/")
       | map({ filepath_dir(#) })
