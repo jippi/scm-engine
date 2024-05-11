@@ -1,5 +1,6 @@
 # About
 
+> [!NOTE]
 > SCM Engine allow for easy Merge Request automation within your GitLab projects.
 >
 > Automatically add / remove labels depending on files changes, age of the Merge Request, who contributes,
@@ -12,14 +13,14 @@
 >
 > * [Installation](https://jippi.github.io/scm-engine/install/)
 > * [Configuration](https://jippi.github.io/scm-engine/configuration/)
-> * [Examples](https://jippi.github.io/scm-engine/configuration/examples/)
+> * [Configuration Examples](https://jippi.github.io/scm-engine/configuration/examples/)
 >
-> Commands:
+> **Commands:**
 >
 > * [evaluate](https://jippi.github.io/scm-engine/commands/evaluate/)
 > * [server](https://jippi.github.io/scm-engine/commands/server/)
 >
-> GitLab:
+> **GitLab:**
 >
 > * [Getting started](https://jippi.github.io/scm-engine/gitlab/setup/)
 > * [Script attributes](https://jippi.github.io/scm-engine/gitlab/script-attributes/)
