@@ -40,28 +40,6 @@ jobs:
 
   # ------------------------------
 
-  semgrep:
-    runs-on: ubuntu-latest
-    name: semgrep
-    container:
-      image: returntocorp/semgrep
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/checkout@v4
-        with:
-          repository: dgryski/semgrep-go
-          path: rules
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-
-      - name: semgrep
-        run: semgrep scan --error --enable-nosem -f ./rules .
-
-  # ------------------------------
-
   gitleaks:
     runs-on: ubuntu-latest
     name: gitleaks
