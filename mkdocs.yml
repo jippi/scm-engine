@@ -62,6 +62,11 @@ theme:
 extra_css:
   - stylesheets/extra.css
 
+# https://www.mkdocs.org/user-guide/configuration/#exclude_docs
+exclude_docs: |
+  _partials
+  *.expr
+
 # Extensions
 markdown_extensions:
   - abbr

@@ -1,6 +1,9 @@
-# About
+---
+title: About
+---
+# About scm-engine
 
-!!! info "About `scm-engine`"
+!!! question "What is `scm-engine`?"
 
     SCM Engine allow for easy Merge Request automation within your GitLab projects.
 
@@ -9,3 +12,9 @@
     You can even [*take actions*](configuration/index.md#actions) such as ([but not limited to](configuration/index.md#actions.if.then.action)) closing the Merge Request, approve it, or add a comment.
 
     SCM engine can be run either as a [regular CI job in your pipeline](gitlab/setup.md#gitlab-ci-pipeline), or be [triggered through the Webhook system](gitlab/setup.md#webhook-server), allowing for versatile and flexible deployments.
+
+## What does it look like?
+
+```yaml
+--8<-- ".scm-engine.example.yml"
+```
