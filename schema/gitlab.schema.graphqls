@@ -38,7 +38,7 @@ type Context {
   CurrentUser: ContextUser!
 
   "Information about the event that triggered the evaluation. Empty when not using webhook server."
-  WebhookEvent: Any @generated
+  WebhookEvent: Any @generated @expr(key: "webhook_event")
 }
 
 enum MergeRequestState {
@@ -98,7 +98,8 @@ type ListMergeRequestsProjectMergeRequestNodes {
 }
 
 type ListMergeRequestsProjectMergeRequest {
-  ID: String! @graphql(key: "iid") @internal
+  ID:          String! @graphql(key: "iid")         @internal
+  DiffHeadSha: String  @graphql(key: "diffHeadSha") @internal
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#project
@@ -135,9 +136,9 @@ type ContextProject {
   "Labels available on this project"
   Labels: [ContextLabel!] @generated
 
-  ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
-  MergeRequest: ContextMergeRequest @internal @graphql(key: "mergeRequest(iid: $mr_id)")
-  ResponseGroup: ContextGroup @internal @graphql(key: "group")
+  ResponseLabels: ContextLabelNode    @internal @graphql(key: "labels(first: 200)")
+  MergeRequest:   ContextMergeRequest @internal @graphql(key: "mergeRequest(iid: $mr_id)")
+  ResponseGroup:  ContextGroup        @internal @graphql(key: "group")
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#group

@@ -11,8 +11,10 @@ import (
 )
 
 func Evaluate(cCtx *cli.Context) error {
-	ctx := state.ContextWithProjectID(cCtx.Context, cCtx.String(FlagSCMProject))
-	ctx = state.ContextWithDryRun(ctx, cCtx.Bool(FlagDryRun))
+	ctx := state.WithProjectID(cCtx.Context, cCtx.String(FlagSCMProject))
+	ctx = state.WithCommitSHA(ctx, cCtx.String(FlagCommitSHA))
+	ctx = state.WithDryRun(ctx, cCtx.Bool(FlagDryRun))
+	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline))
 
 	cfg, err := config.LoadFile(cCtx.String(FlagConfigFile))
 	if err != nil {
@@ -33,14 +35,19 @@ func Evaluate(cCtx *cli.Context) error {
 		}
 
 		for _, mr := range res {
-			if err := ProcessMR(ctx, client, cfg, mr.ID, nil); err != nil {
+			ctx := state.ContextWithMergeRequestID(ctx, mr.ID)
+			ctx = state.WithCommitSHA(ctx, mr.SHA)
+
+			if err := ProcessMR(ctx, client, cfg, nil); err != nil {
 				return err
 			}
 		}
 
 	// If the flag is set, use that for evaluation
 	case cCtx.String(FlagMergeRequestID) != "":
-		return ProcessMR(ctx, client, cfg, cCtx.String(FlagMergeRequestID), nil)
+		ctx = state.ContextWithMergeRequestID(ctx, cCtx.String(FlagMergeRequestID))
+
+		return ProcessMR(ctx, client, cfg, nil)
 
 	// If no flag is set, we require arguments
 	case cCtx.Args().Len() == 0:
@@ -48,7 +55,9 @@ func Evaluate(cCtx *cli.Context) error {
 
 	default:
 		for _, mr := range cCtx.Args().Slice() {
-			if err := ProcessMR(ctx, client, cfg, mr, nil); err != nil {
+			ctx = state.ContextWithMergeRequestID(ctx, mr)
+
+			if err := ProcessMR(ctx, client, cfg, nil); err != nil {
 				return err
 			}
 		}

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/state"
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 
@@ -57,6 +58,44 @@ func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) 
 	}
 
 	return res, nil
+}
+
+// Start pipeline
+func (client *Client) Start(ctx context.Context) error {
+	if !state.ShouldUpdatePipeline(ctx) {
+		return nil
+	}
+
+	_, _, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
+		State:       go_gitlab.Running,
+		Name:        go_gitlab.Ptr("scm-engine"),
+		Description: go_gitlab.Ptr("Currently evaluating MR"),
+	})
+
+	return err
+}
+
+// Stop pipeline
+func (client *Client) Stop(ctx context.Context, err error) error {
+	if !state.ShouldUpdatePipeline(ctx) {
+		return nil
+	}
+
+	status := go_gitlab.Success
+	message := "OK"
+
+	if err != nil {
+		status = go_gitlab.Failed
+		message = err.Error()
+	}
+
+	_, _, err = client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
+		State:       status,
+		Name:        go_gitlab.Ptr("scm-engine"),
+		Description: go_gitlab.Ptr(message),
+	})
+
+	return err
 }
 
 func graphqlBaseURL(inputURL *url.URL) string {

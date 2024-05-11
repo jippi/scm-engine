@@ -72,6 +72,7 @@ func main() {
 			&cli.BoolFlag{
 				Name:  cmd.FlagDryRun,
 				Usage: "Dry run, don't actually _do_ actions, just print them",
+				Value: false,
 			},
 		},
 		Commands: []*cli.Command{
@@ -79,7 +80,7 @@ func main() {
 				Name:      "evaluate",
 				Usage:     "Evaluate a Merge Request",
 				Args:      true,
-				ArgsUsage: " [id, id, ...]",
+				ArgsUsage: " [mr_id, mr_id, ...]",
 				Action:    cmd.Evaluate,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -93,13 +94,24 @@ func main() {
 					},
 					&cli.StringFlag{
 						Name:  cmd.FlagMergeRequestID,
-						Usage: "The pull/merge to process, if not provided as a CLI flag",
-						Aliases: []string{
-							"merge-request-id", // GitLab naming
-							"pull-request-id",  // GitHub naming
-						},
+						Usage: "The pull/merge ID to process, if not provided as a CLI flag",
 						EnvVars: []string{
 							"CI_MERGE_REQUEST_IID", // GitLab CI
+						},
+					},
+					&cli.StringFlag{
+						Name:  cmd.FlagCommitSHA,
+						Usage: "The git commit sha",
+						EnvVars: []string{
+							"CI_COMMIT_SHA", // GitLab CI
+						},
+					},
+					&cli.BoolFlag{
+						Name:  cmd.FlagUpdatePipeline,
+						Usage: "Update the CI pipeline status with progress",
+						Value: true,
+						EnvVars: []string{
+							"SCM_ENGINE_UPDATE_PIPELINE",
 						},
 					},
 				},
@@ -122,6 +134,14 @@ func main() {
 						Value: "0.0.0.0:3000",
 						EnvVars: []string{
 							"SCM_ENGINE_LISTEN",
+						},
+					},
+					&cli.BoolFlag{
+						Name:  cmd.FlagUpdatePipeline,
+						Usage: "Update the CI pipeline status with progress",
+						Value: true,
+						EnvVars: []string{
+							"SCM_ENGINE_UPDATE_PIPELINE",
 						},
 					},
 				},

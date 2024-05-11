@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -11,10 +12,19 @@ import (
 	slogctx "github.com/veqryn/slog-context"
 )
 
-func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, mr string, event any) error {
-	ctx = state.ContextWithMergeRequestID(ctx, mr)
+func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event any) (err error) {
+	// Stop the pipeline when we leave this func
+	defer func() {
+		if stopErr := client.Stop(ctx, err); err != nil {
+			slogctx.Error(ctx, "Failed to update pipeline", slog.Any("error", stopErr))
+		}
+	}()
 
-	// for mr := 900; mr <= 1000; mr++ {
+	// Start the pipeline
+	if err = client.Start(ctx); err != nil {
+		return fmt.Errorf("failed to update pipeline monitor: %w", err)
+	}
+
 	slogctx.Info(ctx, "Processing MR")
 
 	remoteLabels, err := client.Labels().List(ctx)

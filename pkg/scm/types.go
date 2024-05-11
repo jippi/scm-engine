@@ -101,7 +101,8 @@ type ListMergeRequestsOptions struct {
 }
 
 type ListMergeRequest struct {
-	ID string `expr:"id" graphql:"id"`
+	ID  string `expr:"id"  graphql:"id"`
+	SHA string `expr:"sha" graphql:"sha"`
 }
 
 // Response is a GitLab API response. This wraps the standard http.Response
