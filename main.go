@@ -99,9 +99,8 @@ func main() {
 						},
 					},
 					&cli.StringFlag{
-						Name:     cmd.FlagCommitSHA,
-						Usage:    "The git commit sha",
-						Required: true,
+						Name:  cmd.FlagCommitSHA,
+						Usage: "The git commit sha",
 						EnvVars: []string{
 							"CI_COMMIT_SHA", // GitLab CI
 						},
