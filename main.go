@@ -92,9 +92,8 @@ func main() {
 						},
 					},
 					&cli.StringFlag{
-						Name:     cmd.FlagMergeRequestID,
-						Usage:    "The pull/merge ID to process, if not provided as a CLI flag",
-						Required: true,
+						Name:  cmd.FlagMergeRequestID,
+						Usage: "The pull/merge ID to process, if not provided as a CLI flag",
 						EnvVars: []string{
 							"CI_MERGE_REQUEST_IID", // GitLab CI
 						},
