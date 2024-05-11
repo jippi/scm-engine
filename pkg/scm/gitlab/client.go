@@ -10,6 +10,8 @@ import (
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 
+var pipelineName = go_gitlab.Ptr("scm-engine")
+
 // Ensure the GitLab client implements the [scm.Client]
 var _ scm.Client = (*Client)(nil)
 
@@ -68,7 +70,7 @@ func (client *Client) Start(ctx context.Context) error {
 
 	_, _, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       go_gitlab.Running,
-		Name:        go_gitlab.Ptr("scm-engine"),
+		Context:     pipelineName,
 		Description: go_gitlab.Ptr("Currently evaluating MR"),
 	})
 
@@ -91,7 +93,7 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 
 	_, _, err = client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       status,
-		Name:        go_gitlab.Ptr("scm-engine"),
+		Context:     pipelineName,
 		Description: go_gitlab.Ptr(message),
 	})
 
