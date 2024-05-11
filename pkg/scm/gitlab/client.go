@@ -71,11 +71,8 @@ func (client *Client) Start(ctx context.Context) error {
 		Name:        go_gitlab.Ptr("scm-engine"),
 		Description: go_gitlab.Ptr("Currently evaluating MR"),
 	})
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 // Stop pipeline
@@ -97,11 +94,8 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 		Name:        go_gitlab.Ptr("scm-engine"),
 		Description: go_gitlab.Ptr(message),
 	})
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 func graphqlBaseURL(inputURL *url.URL) string {
