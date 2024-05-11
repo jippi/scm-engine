@@ -1,11 +1,13 @@
 {{- define "enum_attribute" -}}
-- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}enum) {{ .Description }}
-  {{- range .Enum.Values }}
-      - `{{ .Name }}` - {{ .Description }}
-  {{- end -}}
-{{- end -}}
+- `#!css {{ .BlockName }}` ({{ if .Optional }}optional {{ end }}enum) {{ .Description }}
 
-{{- define "single_attribute" -}}- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}){{ if .Description}} {{ .Description -}}{{ end }}{{- end -}}
+      *The following values are valid:*
+
+{{ range .Enum.Values }}      - `{{ .Name }}` {{ .Description }}
+{{ end }}
+{{ end -}}
+
+{{- define "single_attribute" -}}- `#!css {{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}){{ if .Description}} {{ .Description -}}{{ end }}{{- end -}}
 
 {{- define "description" }}{{ if .Description }}
 {{ .Description }}
@@ -21,8 +23,8 @@
 
 {{- define "attributes" -}}{{- range .Attributes -}}
 {{- if .IsCustomType }}{{ template "custom_type" . }}
-{{- else if .IsEnum }}{{- template "enum_attribute" . }}
-{{- else }}{{- template "single_attribute" . }}
+{{- else if .IsEnum }}{{ template "enum_attribute" . }}
+{{- else }}{{ template "single_attribute" . }}
 {{ end }}
 {{- end -}}
 {{- end -}}

@@ -323,7 +323,7 @@ func (p *Property) BlockName() string {
 }
 
 func sortSlice(i, j *Property) int {
-	// non-custom types first
+	// Custom types last
 	if i.IsCustomType && j.IsCustomType {
 		return 0
 	}
@@ -336,5 +336,6 @@ func sortSlice(i, j *Property) int {
 		return -1
 	}
 
+	// Everything else sorted by name
 	return cmp.Compare(i.Name, j.Name)
 }
