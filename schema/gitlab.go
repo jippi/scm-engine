@@ -289,7 +289,7 @@ func (p *Property) AddAttribute(attrs ...*Property) {
 }
 
 func (p Property) GetHeadline() string {
-	return fmt.Sprintf("%s `%s` {#%s data-toc-label=%q}", strings.Repeat("#", len(p.getHierarchy())+1), p.BlockName(), p.Name, p.Name)
+	return fmt.Sprintf("%s `%s` {#%s data-toc-label=%q}", strings.Repeat("#", len(p.getHierarchy())+1), p.BlockName(), p.BlockName(), p.Name)
 }
 
 // getHierarchy returns a slice representing all ancestors of this Property
