@@ -12,7 +12,9 @@
 ## Example
 
 > [!TIP]
-> Want to see what `scm-engine` can do? [Check out the *examples* page for real-world use-cases](https://jippi.github.io/scm-engine/configuration/examples/), with in-depth explanations and turn-key usage patterns.
+> Want to see what `scm-engine` can do?
+>
+> [Check out the *examples* page for real-world use-cases](https://jippi.github.io/scm-engine/configuration/examples/), with in-depth explanations and turn-key usage patterns.
 
 ## Documentation
 
