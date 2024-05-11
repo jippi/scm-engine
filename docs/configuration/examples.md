@@ -6,11 +6,11 @@
 
     The `script` field is a [expr-lang](https://expr-lang.org/) expression, a safe, fast, and intuitive expression evaluator.
 
-## Close Merge Request without recent commit activity
+## Close Merge Requests without recent activity
 
 This example will close a Merge Request if no activity has happened for 28 days.
 
-The script will warn at 21 days mark that this will happen.
+The script will warn at 21 days mark that the Merge Request will be closed, with instructions on how to prevent it.
 
 ```{.yaml linenums=1}
 label:

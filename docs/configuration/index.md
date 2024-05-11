@@ -34,13 +34,19 @@ This key controls what kind of action that should be taken.
 - `unapprove` to approve the Merge Request.
 - `comment` to add a comment to the Merge Request
 
-      Additional fields:
+      *Additional fields:*
 
       - (required) `message` The message that will be commented on the Merge Request.
 
+      ```{.yaml title="'comment' example"}
+      - action: comment
+        message: |
+          Hello world
+      ```
+
 - `add_label` to add *an existing* label to the Merge Request
 
-      Additional fields:
+      *Additional fields:*
 
       - (required) `label` The label name to add.
 
@@ -51,7 +57,7 @@ This key controls what kind of action that should be taken.
 
 - `remove_label` to remove a label from the Merge Request
 
-      Additional fields:
+      *Additional fields:*
 
       - (required) `label` The label name to add.
 
