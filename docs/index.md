@@ -1,5 +1,7 @@
 ---
 title: About
+hide:
+  - toc
 ---
 # About scm-engine
 
@@ -14,6 +16,10 @@ title: About
     SCM engine can be run either as a [regular CI job in your pipeline](gitlab/setup.md#gitlab-ci-pipeline), or be [triggered through the Webhook system](gitlab/setup.md#webhook-server), allowing for versatile and flexible deployments.
 
 ## What does it look like?
+
+!!! tip "Please see the [Configuration Examples page](configuration/examples.md) for more use-cases"
+
+!!! info "Please see the [Configuration Options page](configuration/index.md) for all options and explanations"
 
 ```yaml
 --8<-- ".scm-engine.example.yml"

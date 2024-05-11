@@ -1,37 +1,46 @@
 # See: https://getbootstrap.com/docs/5.3/customize/color/#all-colors
 
 actions:
-  - name: Warn if the Merge Request haven't had commit activity for 21 days and will be closed
+  # NOTE: depends on the "stale" label further down in the document
+  - name: "Warn if the Merge Request haven't had commit activity for 21 days and will be closed"
     if: |1
-         merge_request.state != "closed"
-      && merge_request.time_since_last_commit > duration("21d")
-      && merge_request.time_since_last_commit < duration("28d")
-      && not merge_request.has_label("do-not-close")
+           merge_request.state_is("opened")
+        && merge_request.has_no_label("stale")
+        && merge_request.has_no_label("do-not-close")
+        && merge_request.has_no_user_activity_within("21d")
     then:
+      - action: add_label
+        name: stale
+
       - action: comment
         message: |
           :wave: Hello!
 
-          This Merge Request has not seen any commit activity for 21 days.
-          We will automatically close the Merge request after 28 days to keep our project clean.
+          This MR has not seen any commit activity for 21 days.
+          We will automatically close the MR after 28 days.
 
-          To disable this behavior, add the `do-not-close` label to the Merge Request in the right menu or add a comment with `/label ~"do-not-close"`.
+          To disable this behavior, add the `do-not-close` label to the
+          MR in the right menu or add comment with `/label ~"do-not-close"`
 
-  - name: Close the Merge Request if it haven't had commit activity for 28 days
+  # NOTE: depends on the "stale" label further down in the document
+  - name: "Close the Merge Request if it haven't had commit activity for 28 days"
     if: |1
-         merge_request.state != "closed"
-      && merge_request.time_since_last_commit > duration("28d")
-      && not merge_request.has_label("do-not-close")
+           merge_request.state_is("opened")
+        && merge_request.has_label("stale")
+        && merge_request.has_no_label("do-not-close")
+        && merge_request.has_no_activity_within("7d")
     then:
       - action: close
+
       - action: comment
         message: |
           :wave: Hello!
 
-          This Merge Request has not seen any commit activity for 28 days.
+          This MR has not seen any commit activity for 28 days.
           To keep our project clean, we will close the Merge request now.
 
-          To disable this behavior, add the `do-not-close` label to the Merge Request in the right menu or add a comment with `/label ~"do-not-close"`.
+          To disable this behavior, add the `do-not-close` label to the
+          MR in the right menu or add comment with `/label ~"do-not-close"`
 
   - name: Approve MR if the 'break-glass-approve' label is configured
     if: |1
@@ -40,10 +49,18 @@ actions:
       && merge_request.has_label("break-glass-approve")
     then:
       - action: approve
+
       - action: comment
         message: "Approving the MR since it has the 'break-glass-approve' label. Talk to ITGC about this!"
 
 label:
+  - name: stale
+    color: $red
+    script: |1
+           merge_request.state_is("opened")
+        && merge_request.has_no_label("do-not-close")
+        && merge_request.has_no_user_activity_within("21d")
+
   - name: lang/go
     color: "$indigo"
     script: merge_request.modified_files("*.go")
@@ -78,18 +95,24 @@ label:
     description: "Modified pkg/services files"
     script: merge_request.modified_files("internal/pkg/services")
 
+  # NOTE: This label assume your GitLab supports scoped labels
+  #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: go::tests::missing
     color: "$red"
     description: "The Merge Request did NOT modify Go test files"
     priority: 999
     script: not merge_request.modified_files("*_test.go") && merge_request.modified_files("*.go")
 
+  # NOTE: This label assume your GitLab supports scoped labels
+  #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: go::tests::OK
     color: "$green"
     description: "The Merge Request modified Go test files"
     priority: 999
     script: merge_request.modified_files("*_test.go") && merge_request.modified_files("*.go")
 
+  # NOTE: This label assume your GitLab supports scoped labels
+  #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: status::age::abandoned
     color: "$red"
     description: "The most recent commit is older than 45 days"
@@ -97,6 +120,8 @@ label:
     script: merge_request.time_since_last_commit > duration("45d")
     skip_if: merge_request.state in ["merged", "closed", "locked"]
 
+  # NOTE: This label assume your GitLab supports scoped labels
+  #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: status::age::stale
     color: "$red"
     description: "The most recent commit is older than 30 days"
@@ -104,6 +129,8 @@ label:
     script: duration("30d") < merge_request.time_since_last_commit < duration("45d")
     skip_if: merge_request.state in ["merged", "closed", "locked"]
 
+  # NOTE: This label assume your GitLab supports scoped labels
+  #       See: https://docs.gitlab.com/ee/user/project/labels.html#scoped-labels
   - name: status::age::old
     color: "$red"
     description: "The most recent commit is older than 14 days"
