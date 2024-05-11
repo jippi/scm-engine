@@ -9,10 +9,11 @@ remote_branch: gh-pages
 dev_addr: "0.0.0.0:8000"
 
 nav:
-  - ...
-  - ... | configuration/**
-  - ... | commands/**
-  - ... | gitlab/**
+  - index.md
+  - install.md
+  - ... | configuration/*.md
+  - ... | commands/*.md
+  - ... | gitlab/*.md
 
 plugins:
   - awesome-pages: # pip install mkdocs-awesome-pages-plugin

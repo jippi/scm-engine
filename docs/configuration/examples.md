@@ -97,14 +97,31 @@ actions:
 
     ```yaml
     label:
-        # Add a label named "lang/go"
       - name: lang/go
-        # and a label description (optional)
-        description: "Modified Go files"
-        # and the color $indigo
-        color: "$indigo"
-        # if files matching "*.go" was modified
+        color: $indigo
         script: merge_request.modified_files("*.go")
+
+      - name: lang/markdown
+        color: $indigo
+        script: merge_request.modified_files("*.md")
+
+      - name: type/documentation
+        color: $green
+        script: merge_request.modified_files("docs/")
+
+      - name: go::tests::missing
+        color: $red
+        priority: 999
+        script: |1
+              merge_request.modified_files("*.go")
+          && NOT merge_request.modified_files("*_test.go")
+
+      - name: go::tests::ok
+        color: $green
+        priority: 999
+        script: |1
+              merge_request.modified_files("*.go")
+          && merge_request.modified_files("*_test.go")
     ```
 
 === "Script with highlight"

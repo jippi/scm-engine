@@ -20,9 +20,9 @@ merge_request.state_is("merged")
 merge_request.state_is("opened", "locked")
 ```
 
-### `merge_request.has_(no_)user_activity_within(duration|string...) -> boolean` {: #merge_request.has_(no_)user_activity_within data-toc-label="has_(no_)user_activity_within"}
+### `merge_request.has_user_activity_within(duration|string...) -> boolean` {: #merge_request.has_user_activity_within data-toc-label="has_user_activity_within"}
 
-!!! info "This function *EXCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_(no_)activity_within`](#merge_request.has_(no_)activity_within) if you want to exclude those"
+!!! info "This function *EXCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_no_activity_within`](#merge_request.has_no_activity_within) if you want to include those"
 
 Return wether any *user* activity has happened with the provided duration.
 
@@ -38,13 +38,32 @@ Return wether any *user* activity has happened with the provided duration.
 
 ```css
 merge_request.has_user_activity_within("7d")
+```
+
+### `merge_request.has_no_user_activity_within(duration|string...) -> boolean` {: #merge_request.has_no_user_activity_within data-toc-label="has_no_user_activity_within"}
+
+!!! info "This function *EXCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_no_activity_within`](#merge_request.has_no_activity_within) if you want to exclude those"
+
+Return wether no *user* activity has happened with the provided duration.
+
+*User* is defined as, all users **except**:
+
+- The account that `scm-engine` is running as.
+- Other accounts marked as `bot` in their profile.
+
+*Activity* is defined as:
+
+- Commits pushed to the Merge Request branch.
+- Comments on the Merge Request itself (e.g. reviews and comments).
+
+```css
 merge_request.has_no_user_activity_within("7d")
 merge_request.has_no_user_activity_within(duration("7d"))
 ```
 
-### `merge_request.has_(no_)activity_within(duration|string...) -> boolean` {: #merge_request.has_(no_)activity_within data-toc-label="has_(no_)activity_within"}
+### `merge_request.has_activity_within(duration|string...) -> boolean` {: #merge_request.has_activity_within data-toc-label="has_activity_within"}
 
-!!! info "This function *INCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_(no_)user_activity_within`](#merge_request.has_(no_)user_activity_within) if you want to exclude those"
+!!! info "This function *INCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_user_activity_within`](#merge_request.has_user_activity_within) if you want to include those"
 
 Return wether **any** activity has happened with the provided duration, including bots and the `scm-engine` account.
 
@@ -55,6 +74,21 @@ Return wether **any** activity has happened with the provided duration, includin
 
 ```css
 merge_request.has_activity_within("7d")
+merge_request.has_activity_within(duration("7d"))
+```
+
+### `merge_request.has_no_activity_within(duration|string...) -> boolean` {: #merge_request.has_no_activity_within data-toc-label="has_no_activity_within"}
+
+!!! info "This function *INCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_no_user_activity_within`](#merge_request.has_no_user_activity_within) if you want to exclude those"
+
+Return wether **no** activity has happened with the provided duration, including bots and the `scm-engine` account.
+
+*Activity* is defined as:
+
+- Commits pushed to the Merge Request branch.
+- Comments on the Merge Request itself (e.g. reviews and comments).
+
+```css
 merge_request.has_no_activity_within("7d")
 merge_request.has_no_activity_within(duration("7d"))
 ```
