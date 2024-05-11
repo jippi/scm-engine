@@ -1,9 +1,55 @@
-{{- define "attributes" -}}
-{{- range .Attributes -}}
-{{ if .IsCustomType -}}{{- template "attributes" . }}{{- else }}
-- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}) {{ .Description }}{{- end -}}
-{{- end }}
+{{- define "enum_attribute" -}}
+- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}enum) {{ .Description }}
+  {{- range .Enum.Values }}
+      - `{{ .Name }}` - {{ .Description }}
+  {{- end -}}
 {{- end -}}
 
-### Attributes
-{{ template "attributes" . -}}
+{{- define "single_attribute" -}}- `{{ .BlockName }}` ({{ if .Optional }}optional {{ end }}{{ .Type }}){{ if .Description}} {{ .Description -}}{{ end }}{{- end -}}
+
+{{- define "description" }}{{ if .Description }}
+{{ .Description }}
+{{ end -}}
+{{ end -}}
+
+{{- define "headline" }}
+{{ .GetHeadline }}
+{{ end -}}
+
+{{- define "custom_type" }}{{ template "headline" . }}{{ template "description" . }}
+{{ template "attributes" . }}{{ end -}}
+
+{{- define "attributes" -}}{{- range .Attributes -}}
+{{- if .IsCustomType }}{{ template "custom_type" . }}
+{{- else if .IsEnum }}{{- template "enum_attribute" . }}
+{{- else }}{{- template "single_attribute" . }}
+{{ end }}
+{{- end -}}
+{{- end -}}
+
+# Script Attributes
+
+!!! tip "The [Expr Language Definition](https://expr-lang.org/docs/language-definition) is a great resource to learn more about the language"
+
+!!! note
+
+    Missing an attribute? The `schema/gitlab.schema.graphqls` file are what is used to query GitLab, adding the missing `field` to the right `type` should make it accessible. Please open an issue or Pull Request if something is missing.
+
+The following attributes are available in `script` fields.
+
+They can be accessed exactly as shown in this list.
+
+{{ template "attributes" . }}
+
+## `webhook_event`
+
+!!! tip "`webhook_event` attribute is only available in `server` mode"
+
+    You have access to the raw webhook event payload via `webhook_event.*` attributes (not listed below) in Expr script fields when using [`server`](#server) mode.
+
+    See the [GitLab Webhook Events documentation](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html) for available fields.
+
+    The attributes are named _exactly_ as documented in the GitLab documentation.
+
+- [`Comments`](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#comment-events) - A comment is made or edited on an issue or merge request.
+- [`Merge request events`](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#merge-request-events) - A merge request is created, updated, or merged.

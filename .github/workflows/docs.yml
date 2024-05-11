@@ -21,5 +21,12 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
       - name: setup
+        run: task setup
+
+      - name: deploy
         run: task docs:deploy

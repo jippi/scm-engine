@@ -245,6 +245,7 @@ type ContextMergeRequest {
   # Connections
   #
 
+  "Changes to a single file"
   DiffStats: [ContextDiffStat!]
   Labels: [ContextLabel!] @generated
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
@@ -281,14 +282,20 @@ type ContextNotesNode {
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#user
 type ContextUser {
-  Username: String!
+  "Indicates if the user is a bot"
   Bot: Boolean!
+  "Username of the user. Unique within this instance of GitLab"
+  Username: String!
+  "User’s public email"
   PublicEmail: String
+  "State of the user"
   State: UserState!
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#commit
 type ContextCommit {
+  "Author of the commit"
+  Author: ContextUser
   "Commit author’s email"
   AuthorEmail: String
   "Commit authors name"
@@ -342,6 +349,7 @@ type ContextLabelNode {
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#diffstats
+"Changes to a single file"
 type ContextDiffStat {
   "Number of lines added to this file"
   Additions: Int!
