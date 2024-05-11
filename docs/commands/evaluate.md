@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # Evaluate
 
 Evaluate the SCM engine rules against a specific Merge Request.

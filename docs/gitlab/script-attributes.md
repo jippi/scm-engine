@@ -1,10 +1,6 @@
 # Script Attributes
 
-!!! TIP "The [Expr Language Definition](https://expr-lang.org/docs/language-definition) is a great resource to learn more about the language"
-
-!!! TIP "`webhook_event`"
-
-    You have access to the raw webhook event payload via `webhook_event.*` attributes (not listed below) in Expr script fields when using [`server`](#server) mode. See the [GitLab Webhook Events documentation](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html) for available fields. The attributes are named _exactly_ as documented in the GitLab documentation.
+!!! tip "The [Expr Language Definition](https://expr-lang.org/docs/language-definition) is a great resource to learn more about the language"
 
 !!! note
 
@@ -138,3 +134,16 @@ They can be accessed exactly as shown in this list.
 - `project.labels[].description` (string) Description of the label (Markdown rendered as HTML for caching)
 - `project.labels[].id` (string) Label ID
 - `project.labels[].title` (string) Content of the label
+
+## `webhook_event`
+
+!!! tip "`webhook_event` attribute is only available in `server` mode"
+
+    You have access to the raw webhook event payload via `webhook_event.*` attributes (not listed below) in Expr script fields when using [`server`](#server) mode.
+
+    See the [GitLab Webhook Events documentation](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html) for available fields.
+
+    The attributes are named _exactly_ as documented in the GitLab documentation.
+
+- [`Comments`](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#comment-events) - A comment is made or edited on an issue or merge request.
+- [`Merge request events`](https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#merge-request-events) - A merge request is created, updated, or merged.

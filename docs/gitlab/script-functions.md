@@ -1,8 +1,6 @@
 # Script Functions
 
-!!! TIP
-
-    The [Expr Language Definition](https://expr-lang.org/docs/language-definition) is a great resource to learn more about the language. This guide will only cover SCM Engine specific extensions and information.
+!!! tip "The [Expr Language Definition](https://expr-lang.org/docs/language-definition) is a great resource to learn more about the language"
 
 ## merge_request
 

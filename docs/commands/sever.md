@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # Server
 
 Point your GitLab webhook at the `/gitlab` endpoint.
