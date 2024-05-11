@@ -47,7 +47,7 @@ jobs:
         run: ./scm-engine -h
 
       - name: Test scm-engine against test GitLab project
-        run: ./scm-engine evaluate 1
+        run: ./scm-engine evaluate --all
         env:
           SCM_ENGINE_TOKEN: "${{ secrets.GITLAB_INTEGRATION_TEST_API_TOKEN }}"
           SCM_ENGINE_CONFIG_FILE: ".scm-engine.example.yml"
