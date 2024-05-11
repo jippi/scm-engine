@@ -3,10 +3,11 @@
 > [!NOTE]
 > SCM Engine allow for easy Merge Request automation within your GitLab projects.
 >
-> Automatically add / remove labels depending on files changes, age of the Merge Request, who contributes,
-> and pretty much anything else you could want.
+> Automatically [add/remove labels](https://jippi.github.io/scm-engine/configuration/#label) depending on files changes, the age of the Merge Request, who contributes, and pretty much anything else you could want.
 >
-> SCM engine can be run either as a regular CI job in your pipeline, or be triggered through the Webhook system, allowing for versatile and flexible deployments.
+> You can even [*take actions*](https://jippi.github.io/scm-engine/configuration/#actions) such as ([but not limited to](https://jippi.github.io/scm-engine/configuration/#actions.if.then.action)) closing the Merge Request, approve it, or add a comment.
+>
+> SCM engine can be run either as a [regular CI job in your pipeline](https://jippi.github.io/scm-engine/gitlab/setup/#gitlab-ci-pipeline), or be [triggered through the Webhook system](https://jippi.github.io/scm-engine/gitlab/setup/#webhook-server), allowing for versatile and flexible deployments.
 
 ## Example
 
