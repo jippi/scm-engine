@@ -18,7 +18,7 @@ OPTIONS:
    --project value    GitLab project (example: 'gitlab-org/gitlab') [$GITLAB_PROJECT, $CI_PROJECT_PATH]
    --id value         The pull/merge ID to process, if not provided as a CLI flag [$CI_MERGE_REQUEST_IID]
    --commit value     The git commit sha [$CI_COMMIT_SHA]
-   --update-pipeline  Update the CI pipeline status with progress (default: true) [$SCM_ENGINE_UPDATE_PIPELINE]
+   --update-pipeline  Update the CI pipeline status with progress (default: false) [$SCM_ENGINE_UPDATE_PIPELINE]
    --help, -h         show help
 
 GLOBAL OPTIONS:

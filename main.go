@@ -109,7 +109,7 @@ func main() {
 					&cli.BoolFlag{
 						Name:  cmd.FlagUpdatePipeline,
 						Usage: "Update the CI pipeline status with progress",
-						Value: true,
+						Value: false,
 						EnvVars: []string{
 							"SCM_ENGINE_UPDATE_PIPELINE",
 						},
