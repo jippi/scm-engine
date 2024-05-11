@@ -72,6 +72,7 @@ func main() {
 			&cli.BoolFlag{
 				Name:  cmd.FlagDryRun,
 				Usage: "Dry run, don't actually _do_ actions, just print them",
+				Value: false,
 			},
 		},
 		Commands: []*cli.Command{
@@ -110,7 +111,7 @@ func main() {
 						Usage: "Update the CI pipeline status with progress",
 						Value: true,
 						EnvVars: []string{
-							"SCM_ENGINE_SKIP_PIPELINE",
+							"SCM_ENGINE_UPDATE_PIPELINE",
 						},
 					},
 				},
@@ -140,7 +141,7 @@ func main() {
 						Usage: "Update the CI pipeline status with progress",
 						Value: true,
 						EnvVars: []string{
-							"SCM_ENGINE_SKIP_PIPELINE",
+							"SCM_ENGINE_UPDATE_PIPELINE",
 						},
 					},
 				},
