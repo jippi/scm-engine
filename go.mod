@@ -9,6 +9,7 @@ require (
 	github.com/expr-lang/expr v1.16.7
 	github.com/fatih/structtag v1.2.0
 	github.com/golang-cz/devslog v0.0.8
+	github.com/google/go-github/v62 v62.0.0
 	github.com/guregu/null/v5 v5.0.0
 	github.com/hasura/go-graphql-client v0.12.1
 	github.com/iancoleman/strcase v0.3.0

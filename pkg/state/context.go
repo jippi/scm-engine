@@ -16,6 +16,9 @@ const (
 	mergeRequestID
 	commitSha
 	updatePipeline
+	provider
+	token
+	baseURL
 )
 
 func ProjectID(ctx context.Context) string {
@@ -24,6 +27,33 @@ func ProjectID(ctx context.Context) string {
 
 func CommitSHA(ctx context.Context) string {
 	return ctx.Value(commitSha).(string) //nolint:forcetypeassert
+}
+
+func BaseURL(ctx context.Context) string {
+	return ctx.Value(baseURL).(string) //nolint:forcetypeassert
+}
+
+func WithBaseURL(ctx context.Context, value string) context.Context {
+	return context.WithValue(ctx, baseURL, value)
+}
+
+func Token(ctx context.Context) string {
+	return ctx.Value(token).(string) //nolint:forcetypeassert
+}
+
+func WithToken(ctx context.Context, value string) context.Context {
+	return context.WithValue(ctx, token, value)
+}
+
+func Provider(ctx context.Context) string {
+	return ctx.Value(provider).(string) //nolint:forcetypeassert
+}
+
+func WithProvider(ctx context.Context, value string) context.Context {
+	ctx = slogctx.With(ctx, slog.String("provider", value))
+	ctx = context.WithValue(ctx, provider, value)
+
+	return ctx
 }
 
 func WithProjectID(ctx context.Context, value string) context.Context {

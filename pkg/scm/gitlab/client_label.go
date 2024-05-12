@@ -34,7 +34,7 @@ func (client *LabelClient) List(ctx context.Context) ([]*scm.Label, error) {
 
 	// Load all existing labels
 	opts := &scm.ListLabelsOptions{
-		IncludeAncestorGroups: go_gitlab.Ptr(true),
+		IncludeAncestorGroups: scm.Ptr(true),
 		ListOptions: scm.ListOptions{
 			PerPage: 100,
 			Page:    1,

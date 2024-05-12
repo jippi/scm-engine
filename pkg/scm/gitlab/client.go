@@ -13,7 +13,7 @@ import (
 	go_gitlab "github.com/xanzy/go-gitlab"
 )
 
-var pipelineName = go_gitlab.Ptr("scm-engine")
+var pipelineName = scm.Ptr("scm-engine")
 
 // Ensure the GitLab client implements the [scm.Client]
 var _ scm.Client = (*Client)(nil)
@@ -21,20 +21,19 @@ var _ scm.Client = (*Client)(nil)
 // Client is a wrapper around the GitLab specific implementation of [scm.Client] interface
 type Client struct {
 	wrapped *go_gitlab.Client
-	token   string
 
 	labels        *LabelClient
 	mergeRequests *MergeRequestClient
 }
 
 // NewClient creates a new GitLab client
-func NewClient(token, baseurl string) (*Client, error) {
-	client, err := go_gitlab.NewClient(token, go_gitlab.WithBaseURL(baseurl))
+func NewClient(ctx context.Context) (*Client, error) {
+	client, err := go_gitlab.NewClient(state.Token(ctx), go_gitlab.WithBaseURL(state.BaseURL(ctx)))
 	if err != nil {
 		return nil, err
 	}
 
-	return &Client{wrapped: client, token: token}, nil
+	return &Client{wrapped: client}, nil
 }
 
 // Labels returns a client target at managing labels/tags
@@ -57,7 +56,7 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 
 // EvalContext creates a new evaluation context for GitLab specific usage
 func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) {
-	res, err := NewContext(ctx, graphqlBaseURL(client.wrapped.BaseURL()), client.token)
+	res, err := NewContext(ctx, graphqlBaseURL(client.wrapped.BaseURL()), state.Token(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +73,7 @@ func (client *Client) Start(ctx context.Context) error {
 	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       go_gitlab.Running,
 		Context:     pipelineName,
-		Description: go_gitlab.Ptr("Currently evaluating MR"),
+		Description: scm.Ptr("Currently evaluating MR"),
 	})
 
 	switch response.StatusCode {
@@ -107,7 +106,7 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       status,
 		Context:     pipelineName,
-		Description: go_gitlab.Ptr(message),
+		Description: scm.Ptr(message),
 	})
 
 	switch response.StatusCode {

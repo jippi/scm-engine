@@ -31,8 +31,9 @@ OPTIONS:
 
 GLOBAL OPTIONS:
    --config value     Path to the scm-engine config file (default: ".scm-engine.yml") [$SCM_ENGINE_CONFIG_FILE]
-   --api-token value  GitHub/GitLab API token [$SCM_ENGINE_TOKEN]
-   --base-url value   Base URL for the SCM instance (default: "https://gitlab.com/") [$GITLAB_BASEURL, $CI_SERVER_URL]
+   --provider value   SCM provider to use. Must be either "github" or "gitlab". SCM Engine will automatically detect "github" if "GITHUB_ACTIONS" environment variable is set (e.g., inside GitHub Actions) and detect "gitlab" if "GITLAB_CI" environment variable is set (e.g., inside GitLab CI). [$SCM_ENGINE_PROVIDER]
+   --api-token value  GitHub/GitLab API token [$SCM_ENGINE_TOKEN, $GITHUB_TOKEN]
+   --base-url value   Base URL for the SCM instance (default: "https://gitlab.com/") [$GITLAB_BASEURL, $CI_SERVER_URL, $GITHUB_API_URL]
    --dry-run          Dry run, don't actually _do_ actions, just print them (default: false)
    --help, -h         show help
    --version, -v      print the version

@@ -1,4 +1,4 @@
-package gitlab
+package github
 
 import (
 	"context"
@@ -6,13 +6,15 @@ import (
 	"fmt"
 	"log/slog"
 
+	go_github "github.com/google/go-github/v62/github"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
-	"github.com/xanzy/go-gitlab"
 )
 
 func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOptions, step scm.EvaluationActionStep) error {
+	owner, repo := ownerAndRepo(ctx)
+
 	action, ok := step["action"]
 	if !ok {
 		return errors.New("step is missing an 'action' key")
@@ -83,7 +85,9 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 			return nil
 		}
 
-		_, _, err := c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.ApproveMergeRequestOptions{})
+		_, _, err := c.wrapped.PullRequests.CreateReview(ctx, owner, repo, state.MergeRequestIDInt(ctx), &go_github.PullRequestReviewRequest{
+			Event: scm.Ptr("APPROVE"),
+		})
 
 		return err
 
@@ -94,7 +98,7 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 			return nil
 		}
 
-		_, err := c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectID(ctx), state.MergeRequestIDInt(ctx))
+		_, _, err := c.wrapped.PullRequests.CreateReview(ctx, owner, repo, state.MergeRequestIDInt(ctx), &go_github.PullRequestReviewRequest{})
 
 		return err
 
@@ -119,7 +123,7 @@ func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOp
 			return nil
 		}
 
-		_, _, err := c.wrapped.Notes.CreateMergeRequestNote(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
+		_, _, err := c.wrapped.PullRequests.CreateComment(ctx, owner, repo, state.MergeRequestIDInt(ctx), &go_github.PullRequestComment{
 			Body: scm.Ptr(msgString),
 		})
 

@@ -1,3 +1,3 @@
-package schema
+package main
 
-//go:generate go run gitlab.go
+//go:generate go run main.go

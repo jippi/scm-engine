@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
-	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/urfave/cli/v2"
 	slogctx "github.com/veqryn/slog-context"
@@ -55,15 +54,22 @@ func errHandler(ctx context.Context, w http.ResponseWriter, code int, err error)
 	return
 }
 
-func Server(cCtx *cli.Context) error { //nolint:unparam
-	slogctx.Info(cCtx.Context, "Starting HTTP server", slog.String("listen", cCtx.String(FlagServerListen)))
+func Server(cCtx *cli.Context) error {
+	// Initialize context
+	ctx := state.WithDryRun(cCtx.Context, cCtx.Bool(FlagDryRun))
+	ctx = state.WithBaseURL(ctx, cCtx.String(FlagSCMBaseURL))
+	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
+	ctx = state.WithProvider(ctx, cCtx.String(FlagProvider))
+	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline))
+
+	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen", cCtx.String(FlagServerListen)))
 
 	mux := http.NewServeMux()
 
 	ourSecret := cCtx.String(FlagWebhookSecret)
 
-	// Initialize GitLab client
-	client, err := gitlab.NewClient(cCtx.String(FlagAPIToken), cCtx.String(FlagSCMBaseURL))
+	// Initialize client
+	client, err := getClient(cCtx.Context)
 	if err != nil {
 		return err
 	}
@@ -179,9 +185,6 @@ func Server(cCtx *cli.Context) error { //nolint:unparam
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		BaseContext: func(l net.Listener) context.Context {
-			ctx := state.WithDryRun(cCtx.Context, cCtx.Bool(FlagDryRun))
-			ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline))
-
 			return ctx
 		},
 	}

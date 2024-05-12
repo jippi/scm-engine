@@ -11,13 +11,14 @@ dev_addr: "0.0.0.0:8000"
 nav:
   - index.md
   - install.md
-  - ... | configuration/*.md
+  - configuration.md
   - ... | commands/*.md
+  - ... | github/*.md
   - ... | gitlab/*.md
 
 plugins:
   - awesome-pages: # pip install mkdocs-awesome-pages-plugin
-      collapse_single_pages: true
+      collapse_single_pages: false
       strict: true
   - search:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'

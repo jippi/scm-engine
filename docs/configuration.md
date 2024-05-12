@@ -1,4 +1,4 @@
-# Options
+# Configuration file
 
 The default configuration filename is `.scm-engine.yml`, either in current working directory, or if you are in a Git repository, the root of the project.
 
@@ -105,7 +105,7 @@ SCM Engine supports two strategies for managing labels, each changes the behavio
 
 Use the `#!yaml conditional` strategy when you want to add/remove a label on a Merge Request depending on *something*. It's the default strategy, and the most simple one to use.
 
-!!! example "Please see the [*Add label if a file extension is modified*](examples.md#add-label-if-a-file-extension-is-modified) example for how to use this"
+!!! example "Please see the [*Add label if a file extension is modified*](./gitlab/examples.md#add-label-if-a-file-extension-is-modified) example for how to use this"
 
 #### `label[].strategy = generate` {#label.strategy-generate data-toc-label="generate"}
 
@@ -113,7 +113,7 @@ Use the [`#!yaml generate`](#label.strategy) strategy if you want to create dyna
 
 Thanks to the dynamic nature of the `#!yaml generate` strategy, it has fantastic flexibility, at the cost of greater complexity.
 
-!!! example "Please see the [*generate labels from directory layout*](examples.md#generate-labels-via-script) example for how to use this"
+!!! example "Please see the [*generate labels from directory layout*](./gitlab/examples.md#generate-labels-via-script) example for how to use this"
 
 ### `label[].name` {#label.name data-toc-label="name"}
 

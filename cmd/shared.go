@@ -8,14 +8,29 @@ import (
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/scm/github"
+	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
 )
 
+func getClient(ctx context.Context) (scm.Client, error) {
+	switch state.Provider(ctx) {
+	case "github":
+		return github.NewClient(ctx), nil
+
+	case "gitlab":
+		return gitlab.NewClient(ctx)
+
+	default:
+		return nil, fmt.Errorf("unknown provider %q - we only support 'github' and 'gitlab'", state.Provider(ctx))
+	}
+}
+
 func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event any) (err error) {
 	// Stop the pipeline when we leave this func
 	defer func() {
-		if stopErr := client.Stop(ctx, err); err != nil {
+		if stopErr := client.Stop(ctx, err); stopErr != nil {
 			slogctx.Error(ctx, "Failed to update pipeline", slog.Any("error", stopErr))
 		}
 	}()
@@ -157,12 +172,12 @@ func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, req
 
 	// Update
 	for _, label := range required {
-		e, ok := remoteLabels[label.Name]
+		remote, ok := remoteLabels[label.Name]
 		if !ok {
 			continue
 		}
 
-		if label.IsEqual(e) {
+		if label.IsEqual(ctx, remote) {
 			continue
 		}
 

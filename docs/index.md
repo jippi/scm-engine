@@ -17,10 +17,10 @@ hide:
 
 ## What does it look like?
 
-!!! tip "Please see the [Configuration Examples page](configuration/examples.md) for more use-cases"
+!!! tip "Please see the [Configuration Examples page](gitlab/examples.md) for more use-cases"
 
-!!! info "Please see the [Configuration Options page](configuration/index.md) for all options and explanations"
+!!! info "Please see the [Configuration Options page](configuration.md) for all options and explanations"
 
 ```yaml
---8<-- ".scm-engine.example.yml"
+--8<-- ".scm-engine.gitlab.example.yml"
 ```
