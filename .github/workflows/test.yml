@@ -46,11 +46,11 @@ jobs:
       - name: Ensure scm-engine binary work
         run: ./scm-engine -h
 
-      - name: Test scm-engine against test GitLab project
+      - name: Test scm-engine against a GitLab project
         run: ./scm-engine evaluate all
         env:
           SCM_ENGINE_TOKEN: "${{ secrets.GITLAB_INTEGRATION_TEST_API_TOKEN }}"
-          SCM_ENGINE_CONFIG_FILE: ".scm-engine.example.yml"
+          SCM_ENGINE_CONFIG_FILE: ".scm-engine.gitlab.example.yml"
           GITLAB_PROJECT: "jippi/scm-engine-schema-test"
           GITLAB_BASEURL: https://gitlab.com/
 

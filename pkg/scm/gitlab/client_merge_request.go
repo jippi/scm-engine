@@ -54,7 +54,7 @@ func (client *MergeRequestClient) GetRemoteConfig(ctx context.Context, filename,
 		return nil, err
 	}
 
-	file, _, err := client.client.wrapped.RepositoryFiles.GetRawFile(project, filename, &go_gitlab.GetRawFileOptions{Ref: go_gitlab.Ptr(ref)})
+	file, _, err := client.client.wrapped.RepositoryFiles.GetRawFile(project, filename, &go_gitlab.GetRawFileOptions{Ref: scm.Ptr(ref)})
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (client *MergeRequestClient) List(ctx context.Context, options *scm.ListMer
 		ctx,
 		oauth2.StaticTokenSource(
 			&oauth2.Token{
-				AccessToken: client.client.token,
+				AccessToken: state.Token(ctx),
 			},
 		),
 	)

@@ -53,11 +53,20 @@ func main() {
 				},
 			},
 			&cli.StringFlag{
+				Name:  cmd.FlagProvider,
+				Usage: `SCM provider to use. Must be either "github" or "gitlab". SCM Engine will automatically detect "github" if "GITHUB_ACTIONS" environment variable is set (e.g., inside GitHub Actions) and detect "gitlab" if "GITLAB_CI" environment variable is set (e.g., inside GitLab CI).`,
+				Value: detectProviderFromEnv(),
+				EnvVars: []string{
+					"SCM_ENGINE_PROVIDER",
+				},
+			},
+			&cli.StringFlag{
 				Name:     cmd.FlagAPIToken,
 				Usage:    "GitHub/GitLab API token",
 				Required: true,
 				EnvVars: []string{
-					"SCM_ENGINE_TOKEN",
+					"SCM_ENGINE_TOKEN", // SCM Engine Native
+					"GITHUB_TOKEN",     // GitHub Actions
 				},
 			},
 			&cli.StringFlag{
@@ -66,7 +75,8 @@ func main() {
 				Value: "https://gitlab.com/",
 				EnvVars: []string{
 					"GITLAB_BASEURL",
-					"CI_SERVER_URL",
+					"CI_SERVER_URL",  // GitLab CI
+					"GITHUB_API_URL", // GitHub Actions
 				},
 			},
 			&cli.BoolFlag{
@@ -83,13 +93,22 @@ func main() {
 				ArgsUsage: " [mr_id, mr_id, ...]",
 				Action:    cmd.Evaluate,
 				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:  cmd.FlagUpdatePipeline,
+						Usage: "Update the CI pipeline status with progress",
+						Value: false,
+						EnvVars: []string{
+							"SCM_ENGINE_UPDATE_PIPELINE",
+						},
+					},
 					&cli.StringFlag{
 						Name:     cmd.FlagSCMProject,
 						Usage:    "GitLab project (example: 'gitlab-org/gitlab')",
 						Required: true,
 						EnvVars: []string{
 							"GITLAB_PROJECT",
-							"CI_PROJECT_PATH",
+							"CI_PROJECT_PATH",   // GitLab CI
+							"GITHUB_REPOSITORY", // GitHub Actions
 						},
 					},
 					&cli.StringFlag{
@@ -104,14 +123,7 @@ func main() {
 						Usage: "The git commit sha",
 						EnvVars: []string{
 							"CI_COMMIT_SHA", // GitLab CI
-						},
-					},
-					&cli.BoolFlag{
-						Name:  cmd.FlagUpdatePipeline,
-						Usage: "Update the CI pipeline status with progress",
-						Value: false,
-						EnvVars: []string{
-							"SCM_ENGINE_UPDATE_PIPELINE",
+							"GITHUB_SHA",    // GitHub Actions
 						},
 					},
 				},
@@ -161,4 +173,20 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func detectProviderFromEnv() string {
+	if _, ok := os.LookupEnv("SCM_ENGINE_DONT_DETECT_PROVIDER"); ok {
+		return ""
+	}
+
+	if _, ok := os.LookupEnv("GITHUB_ACTIONS"); ok {
+		return "github"
+	}
+
+	if _, ok := os.LookupEnv("GITLAB_CI"); ok {
+		return "gitlab"
+	}
+
+	return ""
 }

@@ -14,6 +14,9 @@ tasks:
 
   setup:
     desc: Install dependencies
+    vars:
+      # don't use the automatic provider detection in CI
+      SCM_ENGINE_DONT_DETECT_PROVIDER: 1
     cmds:
       - go mod tidy
       - go generate ./...

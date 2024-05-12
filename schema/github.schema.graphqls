@@ -1,0 +1,434 @@
+# @generated fields are constructed in Go, and do not come from the GraphQL endpoint.
+directive @generated on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# @internal is not exposed in expr scope, and is only available within Go code
+# this is often used when needing to grab data from GraphQL, but not wanting to expose
+# it directly (e.g. due to nesting)
+directive @internal on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# @expr changes the name of the field when its exposed to expr scope.
+# When omitted (and @internal is not used) we automatically convert the field
+# from "CamelCaseName" to "snake_case_name" in code generation step
+directive @expr(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# @graph changes the name (and query) of the field when sending it to the GraphQL server.
+# This case be used to impose limits in "connections" or providing filtering keys.
+directive @graphql(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+# Add time.Time support
+scalar Time
+
+# Add time.Duration support
+scalar Duration
+
+# Add 'any' type for Event
+scalar Any
+
+"The repository's visibility level"
+enum RepositoryVisibility {
+  "The repository is visible only to those with explicit access"
+  PRIVATE
+  "The repository is visible to everyone"
+  PUBLIC
+  "The repository is visible only to users in the same business"
+  INTERNAL
+}
+
+"The possible reasons that an issue or Pull Request was locked"
+enum LockReason {
+  "The issue or Pull Request was locked because the conversation was off-topic"
+  OFF_TOPIC
+  "The issue or Pull Request was locked because the conversation was too heated"
+  TOO_HEATED
+  "The issue or Pull Request was locked because the conversation was resolved"
+  RESOLVED
+  "The issue or Pull Request was locked because the conversation was spam"
+  SPAM
+}
+
+"Detailed information about the current Pull Request merge state status"
+enum MergeStateStatus {
+  "The merge commit cannot be cleanly created"
+  DIRTY
+  "The state cannot currently be determined"
+  UNKNOWN
+  "The merge is blocked"
+  BLOCKED
+  "The head ref is out of date"
+  BEHIND
+  "Mergeable with non-passing commit status"
+  UNSTABLE
+  "Mergeable with passing commit status and pre-receive hooks"
+  HAS_HOOKS
+  "Mergeable and passing commit status"
+  CLEAN
+}
+
+"Whether or not a PullRequest can be merged"
+enum MergeableState {
+  "The Pull Request can be merged"
+  MERGEABLE
+  "The Pull Request cannot be merged due to merge conflicts"
+  CONFLICTING
+  "The mergeability of the Pull Request is still being calculated"
+  UNKNOWN
+}
+
+"The possible states of a Pull Request"
+enum PullRequestState {
+  "A Pull Request that is still open"
+  OPEN
+  "A Pull Request that has been closed without being merged"
+  CLOSED
+  "A Pull Request that has been closed by being merged"
+  MERGED
+}
+
+"The possible types of patch statuses"
+enum PatchStatus {
+  "The file was added. Git status 'A'"
+  ADDED
+  "The file was deleted. Git status 'D'"
+  DELETED
+  "The file was renamed. Git status 'R'"
+  RENAMED
+  "The file was copied. Git status 'C'"
+  COPIED
+  "The file's contents were changed. Git status 'M'"
+  MODIFIED
+  "The file's type was changed. Git status 'T'"
+  CHANGED
+}
+
+"The review status of a Pull Request"
+enum PullRequestReviewDecision {
+  "Changes have been requested on the Pull Request"
+  CHANGES_REQUESTED
+  "The Pull Request has received an approving review"
+  APPROVED
+  "A review is required before the Pull Request can be merged"
+  REVIEW_REQUIRED
+}
+
+type Context {
+  "The project the Pull Request belongs to"
+  Repository: ContextRepository!
+    @graphql(key: "repository(owner: $owner, name: $repo)")
+
+  "The project owner"
+  Owner: ContextUser! @graphql(key: "user(login: $owner)")
+
+  "Information about the Pull Request"
+  PullRequest: ContextPullRequest @generated
+
+  "Get information about current user"
+  Viewer: ContextUser!
+
+  "Information about the event that triggered the evaluation. Empty when not using webhook server."
+  WebhookEvent: Any @generated @expr(key: "webhook_event")
+}
+
+type ContextUser {
+  "The username used to login"
+  Login: String!
+}
+
+type PullRequestChangedFile {
+  "The number of additions to the file"
+  Additions: Int!
+  "How the file was changed in this PullRequest"
+  ChangeType: PatchStatus!
+  "The number of deletions to the file"
+  Deletions: Int!
+  "The path of the file"
+  Path: String!
+}
+
+"A list of nodes"
+type PullRequestChangedFileConnection {
+  Nodes: [PullRequestChangedFile!]
+}
+
+type GitActor {
+  "The timestamp of the Git action (authoring or committing)"
+  Date: Time
+  "The email in the Git commit"
+  Email: String
+  "The name in the Git commit"
+  Name: String
+  "The GitHub user corresponding to the email field. Null if no such user exists"
+  User: ContextUser
+}
+
+"Represents a Git commit"
+type ContextCommit {
+  "The number of additions in this commit"
+  Additions: Int!
+  "Authorship details of the commit"
+  Author: GitActor
+  "Check if the committer and the author match"
+  AuthoredByCommitter: Boolean!
+  "The datetime when this commit was authored"
+  AuthoredDate: Time!
+  "The number of changed files in this commit. If GitHub is unable to calculate the number of changed files (for example due to a timeout), this will return null. We recommend using this field instead of changedFiles"
+  ChangedFilesIfAvailable: Int
+  "The HTTP path for this Git object"
+  CommitResourcePath: String!
+  "The HTTP URL for this Git object"
+  CommitUrl: String!
+  "The datetime when this commit was committed"
+  CommittedDate: Time!
+  "Check if committed via GitHub web UI"
+  CommittedViaWeb: Boolean!
+  "Committer details of the commit"
+  Committer: GitActor
+  "The number of deletions in this commit"
+  Deletions: Int!
+  "The Git commit message"
+  Message: String!
+  "The Git commit message body"
+  MessageBody: String!
+  "The Git commit message headline"
+  MessageHeadline: String!
+  "The HTTP URL for this commit"
+  URL: String!
+}
+
+"Represents a Git commit part of a Pull Request"
+type PullRequestCommit {
+  "The Git commit object"
+  Commit: ContextCommit!
+}
+
+# Internal only, used to de-nest connections
+type ContextCommitsNode {
+  Nodes: [PullRequestCommit!] @internal
+}
+
+"Lookup a given repository by the owner and repository name"
+type ContextRepository {
+  "Whether or not a Pull Request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging"
+  AllowUpdateBranch: Boolean!
+  "Identifies the date and time when the repository was archived"
+  ArchivedAt: Time
+  "Whether or not Auto-merge can be enabled on Pull Requests in this repository"
+  AutoMergeAllowed: Boolean!
+  "Identifies the date and time when the object was created"
+  CreatedAt: Time!
+
+  # DefaultBranchRef:
+
+  "Whether or not branches are automatically deleted when merged in this repository"
+  DeleteBranchOnMerge: Boolean!
+  "The description of the repository"
+  Description: String
+  "Indicates if the repository has the Discussions feature enabled"
+  HasDiscussionsEnabled: Boolean!
+  "Indicates if the repository has issues feature enabled"
+  HasIssuesEnabled: Boolean!
+  "Indicates if the repository has the Projects feature enabled"
+  HasProjectsEnabled: Boolean!
+  "Indicates if the repository has wiki feature enabled"
+  HasWikiEnabled: Boolean!
+  "The Node ID of the Repository object"
+  ID: String!
+  "Indicates if the repository is unmaintained"
+  IsArchived: Boolean!
+  "Returns true if blank issue creation is allowed"
+  IsBlankIssuesEnabled: Boolean!
+  "Returns whether or not this repository disabled"
+  IsDisabled: Boolean!
+  "Identifies if the repository is a fork"
+  IsFork: Boolean!
+  "Indicates if the repository has been locked or not"
+  IsLocked: Boolean!
+  "Identifies if the repository is a mirror"
+  IsMirror: Boolean!
+  "Identifies if the repository is private or internal"
+  IsPrivate: Boolean!
+  "Identifies if the repository is a template that can be used to generate new repositories"
+  IsTemplate: Boolean!
+  "Is this repository a user configuration repository"
+  IsUserConfigurationRepository: Boolean!
+
+  # label(name: string)
+  # labels()
+  # latestRelease
+
+  "Whether or not PRs are merged with a merge commit on this repository"
+  MergeCommitAllowed: Boolean!
+  "The name of the repository"
+  Name: String!
+  "The repository's name with owner"
+  NameWithOwner: String!
+  "Identifies the date and time when the repository was last pushed to"
+  PushedAt: Time
+  "Whether or not rebase-merging is enabled on this repository"
+  RebaseMergeAllowed: Boolean!
+  "The HTTP path for this repository"
+  ResourcePath: String!
+  "Whether or not squash-merging is enabled on this repository"
+  SquashMergeAllowed: Boolean!
+  "Returns a count of how many stargazers there are on this object"
+  StargazerCount: Int!
+  "Identifies the date and time when the object was last updated"
+  UpdatedAt: Time!
+  "The HTTP URL for this repository"
+  URL: String!
+  "Indicates the repository's visibility level"
+  Visibility: RepositoryVisibility!
+
+  # Connections
+
+  PullRequest: ContextPullRequest @graphql(key: "pullRequest(number: $pr)") @internal
+}
+
+"A label for categorizing Issues, Pull Requests, Milestones, or Discussions with a given Repository"
+type ContextLabel {
+  "Identifies the label color"
+  Color: String!
+  "Identifies the date and time when the label was created"
+  CreatedAt: Time
+  "A brief description of this label"
+  Description: String
+  "The Node ID of the Label object"
+  ID: String!
+  "Indicates whether or not this is a default label"
+  IsDefault: Boolean!
+  "Identifies the label name"
+  Name: String!
+  "Identifies the date and time when the label was last updated"
+  UpdatedAt: Time!
+}
+
+# Internal only, used to de-nest connections
+type ContextLabelConnection {
+  Nodes: [ContextLabel!] @internal
+}
+
+"A repository Pull Request"
+type ContextPullRequest {
+  "Reason that the conversation was locked"
+  ActiveLockReason: LockReason
+  "The number of additions in this Pull Request"
+  Additions: Int!
+
+  # assignees()
+
+  "The actor who authored the comment"
+  Author: ContextUser
+
+  # autoMergeRequest()?
+  # baseRef()?
+
+  "Identifies the name of the base Ref associated with the Pull Request, even if the ref has been deleted"
+  BaseRefName: String!
+  "The body as Markdown"
+  Body: String!
+  "Whether or not the Pull Request is rebaseable"
+  CanBeRebased: Boolean!
+  "The number of changed files in this Pull Request"
+  ChangedFiles: Int!
+  "`true` if the Pull Request is closed"
+  Closed: Boolean!
+  "Identifies the date and time when the object was closed"
+  ClosedAt: Time
+
+  # comments()?
+  # commits()?
+
+  "Identifies the date and time when the object was created"
+  CreatedAt: Time!
+  "Check if this comment was created via an email reply"
+  CreatedViaEmail: Boolean!
+  "The number of deletions in this Pull Request"
+  Deletions: Int!
+
+  # editor: Actor ?? The actor who edited this Pull Request's body.
+  # headRef(?
+
+  "Identifies the name of the head Ref associated with the Pull Request, even if the ref has been deleted"
+  HeadRefName: String!
+
+  "The Node ID of the PullRequest object"
+  ID: String!
+  "Check if this comment was edited and includes an edit with the creation data"
+  IncludesCreatedEdit: Boolean!
+  "The head and base repositories are different"
+  IsCrossRepository: Boolean!
+  "Identifies if the Pull Request is a draft"
+  IsDraft: Boolean!
+  "Indicates whether the Pull Request is in a merge queue"
+  IsInMergeQueue: Boolean!
+  "Indicates whether the Pull Request's base ref has a merge queue enabled"
+  IsMergeQueueEnabled: Boolean!
+  "The moment the editor made the last edit"
+  LastEditedAt: Time
+  "`true` if the Pull Request is locked"
+  Locked: Boolean!
+  "Indicates whether maintainers can modify the Pull Request"
+  MaintainerCanModify: Boolean!
+
+  # mergeCommit: Commit?
+
+  "Detailed information about the current Pull Request merge state status"
+  MergeStateStatus: MergeStateStatus!
+  "Whether or not the Pull Request can be merged based on the existence of merge conflicts"
+  Mergeable: MergeableState!
+  "Whether or not the Pull Request was merged"
+  Merged: Boolean!
+  "The date and time that the Pull Request was merged"
+  MergedAt: Time
+  "The actor who merged the Pull Request"
+  mergedBy: ContextUser
+
+  # milestone: Milestone
+
+  "Identifies the Pull Request number"
+  Number: Int!
+  "The permalink to the Pull Request"
+  Permalink: String!
+  "Identifies when the comment was published at"
+  PublishedAt: Time
+  "The HTTP path for this Pull Request"
+  ResourcePath: String!
+  "The current status of this Pull Request with respect to code review"
+  ReviewDecision: PullRequestReviewDecision!
+  "Identifies the state of the Pull Request"
+  State: PullRequestState!
+  "Identifies the Pull Request title"
+  Title: String!
+  "Returns a count of how many comments this Pull Request has received"
+  TotalCommentsCount: Int
+  "Identifies the date and time when the object was last updated"
+  UpdatedAt: Time!
+  "The HTTP URL for this Pull Request"
+  URL: String!
+
+
+  #
+  # Connections
+  #
+
+  Files: [PullRequestChangedFile!] @generated
+  ResponseFiles: PullRequestChangedFileConnection
+    @graphql(key: "files(first:100)")
+    @internal
+
+  "Information about the first commit made"
+  FirstCommit: ContextCommit @generated()
+  "Information about the last commit made"
+  LastCommit: ContextCommit @generated()
+  "Duration between first and last commit made"
+  TimeBetweenFirstAndLastCommit: Duration @generated()
+  "Duration (from 'now') since the first commit was made"
+  TimeSinceFirstCommit: Duration @generated()
+  "Duration (from 'now') since the last commit was made"
+  TimeSinceLastCommit: Duration @generated()
+  "Labels available on this project"
+  Labels: [ContextLabel!] @generated
+
+  ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
+  ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")
+  ResponseLabels: ContextLabelConnection @internal @graphql(key: "labels(first:100)")
+}

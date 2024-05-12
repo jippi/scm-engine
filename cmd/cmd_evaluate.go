@@ -5,15 +5,18 @@ import (
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
-	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/urfave/cli/v2"
 )
 
 func Evaluate(cCtx *cli.Context) error {
 	ctx := state.WithProjectID(cCtx.Context, cCtx.String(FlagSCMProject))
+	ctx = state.WithBaseURL(ctx, cCtx.String(FlagSCMBaseURL))
 	ctx = state.WithCommitSHA(ctx, cCtx.String(FlagCommitSHA))
 	ctx = state.WithDryRun(ctx, cCtx.Bool(FlagDryRun))
+	ctx = state.WithProvider(ctx, cCtx.String(FlagProvider))
+	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
+	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline))
 
 	cfg, err := config.LoadFile(cCtx.String(FlagConfigFile))
@@ -21,7 +24,7 @@ func Evaluate(cCtx *cli.Context) error {
 		return err
 	}
 
-	client, err := gitlab.NewClient(cCtx.String(FlagAPIToken), cCtx.String(FlagSCMBaseURL))
+	client, err := getClient(ctx)
 	if err != nil {
 		return err
 	}

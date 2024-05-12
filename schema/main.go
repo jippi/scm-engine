@@ -1,5 +1,4 @@
-//go:build ignore
-
+//nolint:dupl,varnamelen
 package main
 
 import (
@@ -31,9 +30,15 @@ var (
 )
 
 func main() {
+	process("github")
+	process("gitlab")
+}
+
+func process(scm string) {
+	Props = []*Property{}
 	PropMap = make(map[string]*Property)
 
-	cfg, err := config.LoadConfig(getRootPath() + "/schema/gitlab.gqlgen.yml")
+	cfg, err := config.LoadConfig(getRootPath() + "/schema/" + scm + ".gqlgen.yml")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "failed to load config", err.Error())
 
@@ -54,14 +59,14 @@ func main() {
 
 	nest(Props)
 
-	var index bytes.Buffer
 	tmpl := template.Must(template.New("index").Parse(docs))
 
+	var index bytes.Buffer
 	if err := tmpl.Execute(&index, Props[0]); err != nil {
 		panic(err)
 	}
 
-	if err := os.WriteFile(getRootPath()+"/docs/gitlab/script-attributes.md", []byte(index.String()), 0600); err != nil {
+	if err := os.WriteFile(getRootPath()+"/docs/"+scm+"/script-attributes.md", []byte(index.String()), 0o600); err != nil {
 		panic(err)
 	}
 
@@ -214,6 +219,7 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 						fieldProperty.IsEnum = true
 						fieldProperty.Enum = enum
 					}
+
 					fieldProperty.IsCustomType = !fieldProperty.IsEnum
 
 					fieldType = strcase.ToSnake(fieldType)

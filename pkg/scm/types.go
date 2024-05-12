@@ -1,8 +1,11 @@
 package scm
 
 import (
+	"context"
 	"net/http"
+	"strings"
 
+	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/types"
 )
 
@@ -160,7 +163,7 @@ type EvaluationActionResult struct {
 	Then []EvaluationActionStep
 }
 
-func (local EvaluationResult) IsEqual(remote *Label) bool {
+func (local EvaluationResult) IsEqual(ctx context.Context, remote *Label) bool {
 	if local.Name != remote.Name {
 		return false
 	}
@@ -169,18 +172,23 @@ func (local EvaluationResult) IsEqual(remote *Label) bool {
 		return false
 	}
 
-	if local.Color != remote.Color {
+	// Compare labels without the "#" in the color since GitHub doesn't allow those
+	if strings.TrimPrefix(local.Color, "#") != strings.TrimPrefix(remote.Color, "#") {
 		return false
 	}
 
-	// Priority must agree on being NULL or not
-	if local.Priority.Valid != remote.Priority.Valid {
-		return false
-	}
+	// GitLab supports label priorities, so compare those; however other providers
+	// doesn't support this, so they will ignore it
+	if state.Provider(ctx) == "gitlab" {
+		// Priority must agree on being NULL or not
+		if local.Priority.Valid != remote.Priority.Valid {
+			return false
+		}
 
-	// Priority must agree on their value
-	if local.Priority.ValueOrZero() != remote.Priority.ValueOrZero() {
-		return false
+		// Priority must agree on their value
+		if local.Priority.ValueOrZero() != remote.Priority.ValueOrZero() {
+			return false
+		}
 	}
 
 	return true
