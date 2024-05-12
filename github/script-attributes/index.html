@@ -1,0 +1,1600 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://jippi.github.io/scm-engine/github/script-attributes/">
+      
+      
+        <link rel="prev" href="../setup/">
+      
+      
+        <link rel="next" href="../script-functions/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
+    
+    
+      
+        <title>Script Attributes - SCM Engine Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.732c4fb1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Script Attributes - SCM Engine Docs" >
+      
+        <meta  property="og:description"  content="None" >
+      
+        <meta  property="og:image"  content="https://jippi.github.io/scm-engine/assets/images/social/github/script-attributes.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://jippi.github.io/scm-engine/github/script-attributes/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Script Attributes - SCM Engine Docs" >
+      
+        <meta  name="twitter:description"  content="None" >
+      
+        <meta  name="twitter:image"  content="https://jippi.github.io/scm-engine/assets/images/social/github/script-attributes.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#script-attributes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SCM Engine Docs" class="md-header__button md-logo" aria-label="SCM Engine Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SCM Engine Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Script Attributes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8v2m9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.71-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5M7 15a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/jippi/scm-engine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jippi/scm-engine
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SCM Engine Docs" class="md-nav__button md-logo" aria-label="SCM Engine Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    SCM Engine Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/jippi/scm-engine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jippi/scm-engine
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration file
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Commands
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Commands
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/evaluate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluate
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    <svg style="vertical-align: sub" aria-hidden="true" viewBox="0 0 16 16" version="1.1" data-view-component="true" class="octicon octicon-mark-github v-align-middle">
+  <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+</svg>
+GitHub (WIP)
+
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            <svg style="vertical-align: sub" aria-hidden="true" viewBox="0 0 16 16" version="1.1" data-view-component="true" class="octicon octicon-mark-github v-align-middle">
+  <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+</svg>
+GitHub (WIP)
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Script Attributes
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Script Attributes
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      owner
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pull_request" class="md-nav__link">
+    <span class="md-ellipsis">
+      pull_request
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="pull_request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.files[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      first_commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="first_commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.author" class="md-nav__link">
+    <span class="md-ellipsis">
+      author
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="author">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.author.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.committer" class="md-nav__link">
+    <span class="md-ellipsis">
+      committer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="committer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.committer.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      last_commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="last_commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.author" class="md-nav__link">
+    <span class="md-ellipsis">
+      author
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="author">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.author.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.committer" class="md-nav__link">
+    <span class="md-ellipsis">
+      committer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="committer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.committer.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.merged_by" class="md-nav__link">
+    <span class="md-ellipsis">
+      merged_by
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.author" class="md-nav__link">
+    <span class="md-ellipsis">
+      author
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.labels[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      labels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      viewer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#webhook_event" class="md-nav__link">
+    <span class="md-ellipsis">
+      webhook_event
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../script-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Script Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    <svg style="enable-background:new 0 0 100 92;vertical-align: sub;" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 92" xml:space="preserve"> <style type="text/css">
+  .st0{fill:#E24329;}
+  .st1{fill:#FC6D26;}
+  .st2{fill:#FCA326;}
+</style> <desc>Created with Sketch.</desc> <g>
+  <path class="st0" d="M95.9,36.5l-0.1-0.3L82.8,2.4c-0.3-0.7-0.7-1.2-1.3-1.6c-0.6-0.4-1.3-0.6-2-0.5c-0.7,0-1.4,0.3-2,0.7
+    c-0.6,0.4-1,1.1-1.1,1.7l-8.7,26.7H32.3L23.6,2.7C23.4,2.1,23,1.4,22.5,1c-0.6-0.4-1.2-0.7-2-0.7c-0.7,0-1.4,0.1-2,0.5
+    c-0.6,0.4-1.1,0.9-1.3,1.6L4.2,36.1l-0.1,0.3c-3.8,10-0.6,21.3,8,27.7c0,0,0,0,0,0l0.1,0.1l19.7,14.7l9.7,7.4l5.9,4.5
+    c1.4,1.1,3.4,1.1,4.8,0l5.9-4.5l9.7-7.4l19.8-14.8c0,0,0,0,0.1,0C96.5,57.8,99.7,46.5,95.9,36.5z"/>
+  <path class="st1" d="M95.9,36.5l-0.1-0.3c-6.4,1.3-12.3,4-17.4,7.8C78.3,44,63,55.6,50,65.4c9.7,7.3,18.1,13.7,18.1,13.7l19.8-14.8
+    c0,0,0,0,0.1,0C96.5,57.8,99.7,46.5,95.9,36.5z"/>
+  <path class="st2" d="M31.9,79.1l9.7,7.4l5.9,4.5c1.4,1.1,3.4,1.1,4.8,0l5.9-4.5l9.7-7.4c0,0-8.4-6.4-18.1-13.7
+    C40.3,72.7,31.9,79.1,31.9,79.1z"/>
+  <path class="st1" d="M21.6,43.9c-5.1-3.8-11-6.5-17.4-7.8l-0.1,0.3c-3.8,10-0.6,21.3,8,27.7c0,0,0,0,0,0l0.1,0.1l19.7,14.7
+    c0,0,8.4-6.4,18.1-13.7C37,55.6,21.7,44,21.6,43.9z"/>
+</g> </svg>
+GitLab
+
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            <svg style="enable-background:new 0 0 100 92;vertical-align: sub;" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 92" xml:space="preserve"> <style type="text/css">
+  .st0{fill:#E24329;}
+  .st1{fill:#FC6D26;}
+  .st2{fill:#FCA326;}
+</style> <desc>Created with Sketch.</desc> <g>
+  <path class="st0" d="M95.9,36.5l-0.1-0.3L82.8,2.4c-0.3-0.7-0.7-1.2-1.3-1.6c-0.6-0.4-1.3-0.6-2-0.5c-0.7,0-1.4,0.3-2,0.7
+    c-0.6,0.4-1,1.1-1.1,1.7l-8.7,26.7H32.3L23.6,2.7C23.4,2.1,23,1.4,22.5,1c-0.6-0.4-1.2-0.7-2-0.7c-0.7,0-1.4,0.1-2,0.5
+    c-0.6,0.4-1.1,0.9-1.3,1.6L4.2,36.1l-0.1,0.3c-3.8,10-0.6,21.3,8,27.7c0,0,0,0,0,0l0.1,0.1l19.7,14.7l9.7,7.4l5.9,4.5
+    c1.4,1.1,3.4,1.1,4.8,0l5.9-4.5l9.7-7.4l19.8-14.8c0,0,0,0,0.1,0C96.5,57.8,99.7,46.5,95.9,36.5z"/>
+  <path class="st1" d="M95.9,36.5l-0.1-0.3c-6.4,1.3-12.3,4-17.4,7.8C78.3,44,63,55.6,50,65.4c9.7,7.3,18.1,13.7,18.1,13.7l19.8-14.8
+    c0,0,0,0,0.1,0C96.5,57.8,99.7,46.5,95.9,36.5z"/>
+  <path class="st2" d="M31.9,79.1l9.7,7.4l5.9,4.5c1.4,1.1,3.4,1.1,4.8,0l5.9-4.5l9.7-7.4c0,0-8.4-6.4-18.1-13.7
+    C40.3,72.7,31.9,79.1,31.9,79.1z"/>
+  <path class="st1" d="M21.6,43.9c-5.1-3.8-11-6.5-17.4-7.8l-0.1,0.3c-3.8,10-0.6,21.3,8,27.7c0,0,0,0,0,0l0.1,0.1l19.7,14.7
+    c0,0,8.4-6.4,18.1-13.7C37,55.6,21.7,44,21.6,43.9z"/>
+</g> </svg>
+GitLab
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gitlab/setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gitlab/examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gitlab/script-attributes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Script Attributes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gitlab/script-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Script Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      owner
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pull_request" class="md-nav__link">
+    <span class="md-ellipsis">
+      pull_request
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="pull_request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.files[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      first_commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="first_commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.author" class="md-nav__link">
+    <span class="md-ellipsis">
+      author
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="author">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.author.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.committer" class="md-nav__link">
+    <span class="md-ellipsis">
+      committer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="committer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.first_commit.committer.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      last_commit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="last_commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.author" class="md-nav__link">
+    <span class="md-ellipsis">
+      author
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="author">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.author.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.committer" class="md-nav__link">
+    <span class="md-ellipsis">
+      committer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="committer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.last_commit.committer.user" class="md-nav__link">
+    <span class="md-ellipsis">
+      user
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.merged_by" class="md-nav__link">
+    <span class="md-ellipsis">
+      merged_by
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.author" class="md-nav__link">
+    <span class="md-ellipsis">
+      author
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull_request.labels[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      labels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      viewer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#webhook_event" class="md-nav__link">
+    <span class="md-ellipsis">
+      webhook_event
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/jippi/scm-engine/edit/main/docs/github/script-attributes.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/jippi/scm-engine/raw/main/docs/github/script-attributes.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="script-attributes">Script Attributes<a class="headerlink" href="#script-attributes" title="Permanent link">&para;</a></h1>
+<div class="admonition tip">
+<p class="admonition-title">The <a href="https://expr-lang.org/docs/language-definition">Expr Language Definition</a> is a great resource to learn more about the language</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Missing an attribute? The <code>schema/gitlab.schema.graphqls</code> file are what is used to query GitLab, adding the missing <code>field</code> to the right <code>type</code> should make it accessible. Please open an issue or Pull Request if something is missing.</p>
+</div>
+<p>The following attributes are available in <code>script</code> fields.</p>
+<p>They can be accessed exactly as shown in this list.</p>
+<h2 id="repository"><code>repository</code><a class="headerlink" href="#repository" title="Permanent link">&para;</a></h2>
+<p>The project the Pull Request belongs to</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">allow_update_branch</span></code> ; <code>boolean</code>. Whether or not a Pull Request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">archived_at</span></code> ; <code>optional time</code>. Identifies the date and time when the repository was archived</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">auto_merge_allowed</span></code> ; <code>boolean</code>. Whether or not Auto-merge can be enabled on Pull Requests in this repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">created_at</span></code> ; <code>time</code>. Identifies the date and time when the object was created</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">delete_branch_on_merge</span></code> ; <code>boolean</code>. Whether or not branches are automatically deleted when merged in this repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">description</span></code> ; <code>optional string</code>. The description of the repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">has_discussions_enabled</span></code> ; <code>boolean</code>. Indicates if the repository has the Discussions feature enabled</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">has_issues_enabled</span></code> ; <code>boolean</code>. Indicates if the repository has issues feature enabled</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">has_projects_enabled</span></code> ; <code>boolean</code>. Indicates if the repository has the Projects feature enabled</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">has_wiki_enabled</span></code> ; <code>boolean</code>. Indicates if the repository has wiki feature enabled</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. The Node ID of the Repository object</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_archived</span></code> ; <code>boolean</code>. Indicates if the repository is unmaintained</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_blank_issues_enabled</span></code> ; <code>boolean</code>. Returns true if blank issue creation is allowed</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_disabled</span></code> ; <code>boolean</code>. Returns whether or not this repository disabled</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_fork</span></code> ; <code>boolean</code>. Identifies if the repository is a fork</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_locked</span></code> ; <code>boolean</code>. Indicates if the repository has been locked or not</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_mirror</span></code> ; <code>boolean</code>. Identifies if the repository is a mirror</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_private</span></code> ; <code>boolean</code>. Identifies if the repository is private or internal</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_template</span></code> ; <code>boolean</code>. Identifies if the repository is a template that can be used to generate new repositories</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">is_user_configuration_repository</span></code> ; <code>boolean</code>. Is this repository a user configuration repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">merge_commit_allowed</span></code> ; <code>boolean</code>. Whether or not PRs are merged with a merge commit on this repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">name</span></code> ; <code>string</code>. The name of the repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">name_with_owner</span></code> ; <code>string</code>. The repository's name with owner</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">pushed_at</span></code> ; <code>optional time</code>. Identifies the date and time when the repository was last pushed to</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">rebase_merge_allowed</span></code> ; <code>boolean</code>. Whether or not rebase-merging is enabled on this repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">resource_path</span></code> ; <code>string</code>. The HTTP path for this repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">squash_merge_allowed</span></code> ; <code>boolean</code>. Whether or not squash-merging is enabled on this repository</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">stargazer_count</span></code> ; <code>int</code>. Returns a count of how many stargazers there are on this object</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">updated_at</span></code> ; <code>time</code>. Identifies the date and time when the object was last updated</li>
+<li><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">url</span></code> ; <code>string</code>. The HTTP URL for this repository</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">repository</span><span class="p">.</span><span class="nc">visibility</span></code> (enum) Indicates the repository's visibility level</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>PRIVATE</code> The repository is visible only to those with explicit access</li>
+<li><code>PUBLIC</code> The repository is visible to everyone</li>
+<li><code>INTERNAL</code> The repository is visible only to users in the same business</li>
+</ul>
+</li>
+</ul>
+<h2 id="owner"><code>owner</code><a class="headerlink" href="#owner" title="Permanent link">&para;</a></h2>
+<p>The project owner</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">owner</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h2 id="pull_request"><code>pull_request</code><a class="headerlink" href="#pull_request" title="Permanent link">&para;</a></h2>
+<p>Information about the Pull Request</p>
+<ul>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">active_lock_reason</span></code> (optional enum) Reason that the conversation was locked</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>OFF_TOPIC</code> The issue or Pull Request was locked because the conversation was off-topic</li>
+<li><code>TOO_HEATED</code> The issue or Pull Request was locked because the conversation was too heated</li>
+<li><code>RESOLVED</code> The issue or Pull Request was locked because the conversation was resolved</li>
+<li><code>SPAM</code> The issue or Pull Request was locked because the conversation was spam</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">additions</span></code> ; <code>int</code>. The number of additions in this Pull Request</p>
+</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">base_ref_name</span></code> ; <code>string</code>. Identifies the name of the base Ref associated with the Pull Request, even if the ref has been deleted</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">body</span></code> ; <code>string</code>. The body as Markdown</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">can_be_rebased</span></code> ; <code>boolean</code>. Whether or not the Pull Request is rebaseable</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">changed_files</span></code> ; <code>int</code>. The number of changed files in this Pull Request</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">closed</span></code> ; <code>boolean</code>. <code>true</code> if the Pull Request is closed</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">closed_at</span></code> ; <code>optional time</code>. Identifies the date and time when the object was closed</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">created_at</span></code> ; <code>time</code>. Identifies the date and time when the object was created</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">created_via_email</span></code> ; <code>boolean</code>. Check if this comment was created via an email reply</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">deletions</span></code> ; <code>int</code>. The number of deletions in this Pull Request</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">head_ref_name</span></code> ; <code>string</code>. Identifies the name of the head Ref associated with the Pull Request, even if the ref has been deleted</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. The Node ID of the PullRequest object</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">includes_created_edit</span></code> ; <code>boolean</code>. Check if this comment was edited and includes an edit with the creation data</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">is_cross_repository</span></code> ; <code>boolean</code>. The head and base repositories are different</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">is_draft</span></code> ; <code>boolean</code>. Identifies if the Pull Request is a draft</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">is_in_merge_queue</span></code> ; <code>boolean</code>. Indicates whether the Pull Request is in a merge queue</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">is_merge_queue_enabled</span></code> ; <code>boolean</code>. Indicates whether the Pull Request's base ref has a merge queue enabled</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_edited_at</span></code> ; <code>optional time</code>. The moment the editor made the last edit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">locked</span></code> ; <code>boolean</code>. <code>true</code> if the Pull Request is locked</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">maintainer_can_modify</span></code> ; <code>boolean</code>. Indicates whether maintainers can modify the Pull Request</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">merge_state_status</span></code> (enum) Detailed information about the current Pull Request merge state status</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>DIRTY</code> The merge commit cannot be cleanly created</li>
+<li><code>UNKNOWN</code> The state cannot currently be determined</li>
+<li><code>BLOCKED</code> The merge is blocked</li>
+<li><code>BEHIND</code> The head ref is out of date</li>
+<li><code>UNSTABLE</code> Mergeable with non-passing commit status</li>
+<li><code>HAS_HOOKS</code> Mergeable with passing commit status and pre-receive hooks</li>
+<li><code>CLEAN</code> Mergeable and passing commit status</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">mergeable</span></code> (enum) Whether or not the Pull Request can be merged based on the existence of merge conflicts</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>MERGEABLE</code> The Pull Request can be merged</li>
+<li><code>CONFLICTING</code> The Pull Request cannot be merged due to merge conflicts</li>
+<li><code>UNKNOWN</code> The mergeability of the Pull Request is still being calculated</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">merged</span></code> ; <code>boolean</code>. Whether or not the Pull Request was merged</p>
+</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">merged_at</span></code> ; <code>optional time</code>. The date and time that the Pull Request was merged</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">number</span></code> ; <code>int</code>. Identifies the Pull Request number</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">permalink</span></code> ; <code>string</code>. The permalink to the Pull Request</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">published_at</span></code> ; <code>optional time</code>. Identifies when the comment was published at</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">resource_path</span></code> ; <code>string</code>. The HTTP path for this Pull Request</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">review_decision</span></code> (enum) The current status of this Pull Request with respect to code review</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>CHANGES_REQUESTED</code> Changes have been requested on the Pull Request</li>
+<li><code>APPROVED</code> The Pull Request has received an approving review</li>
+<li><code>REVIEW_REQUIRED</code> A review is required before the Pull Request can be merged</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">state</span></code> (enum) Identifies the state of the Pull Request</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>OPEN</code> A Pull Request that is still open</li>
+<li><code>CLOSED</code> A Pull Request that has been closed without being merged</li>
+<li><code>MERGED</code> A Pull Request that has been closed by being merged</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">time_between_first_and_last_commit</span></code> ; <code>optional duration</code>. Duration between first and last commit made</p>
+</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">time_since_first_commit</span></code> ; <code>optional duration</code>. Duration (from 'now') since the first commit was made</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">time_since_last_commit</span></code> ; <code>optional duration</code>. Duration (from 'now') since the last commit was made</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">title</span></code> ; <code>string</code>. Identifies the Pull Request title</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">total_comments_count</span></code> ; <code>optional int</code>. Returns a count of how many comments this Pull Request has received</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">updated_at</span></code> ; <code>time</code>. Identifies the date and time when the object was last updated</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">url</span></code> ; <code>string</code>. The HTTP URL for this Pull Request</li>
+</ul>
+<h3 id="pull_request.files[]"><code>pull_request.files[]</code><a class="headerlink" href="#pull_request.files[]" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">files</span><span class="o">[]</span><span class="p">.</span><span class="nc">additions</span></code> ; <code>int</code>. The number of additions to the file</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">files</span><span class="o">[]</span><span class="p">.</span><span class="nc">change_type</span></code> (enum) How the file was changed in this PullRequest</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>ADDED</code> The file was added. Git status 'A'</li>
+<li><code>DELETED</code> The file was deleted. Git status 'D'</li>
+<li><code>RENAMED</code> The file was renamed. Git status 'R'</li>
+<li><code>COPIED</code> The file was copied. Git status 'C'</li>
+<li><code>MODIFIED</code> The file's contents were changed. Git status 'M'</li>
+<li><code>CHANGED</code> The file's type was changed. Git status 'T'</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">files</span><span class="o">[]</span><span class="p">.</span><span class="nc">deletions</span></code> ; <code>int</code>. The number of deletions to the file</p>
+</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">files</span><span class="o">[]</span><span class="p">.</span><span class="nc">path</span></code> ; <code>string</code>. The path of the file</li>
+</ul>
+<h3 id="pull_request.first_commit"><code>pull_request.first_commit</code><a class="headerlink" href="#pull_request.first_commit" title="Permanent link">&para;</a></h3>
+<p>Information about the first commit made</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">additions</span></code> ; <code>int</code>. The number of additions in this commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">authored_by_committer</span></code> ; <code>boolean</code>. Check if the committer and the author match</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">authored_date</span></code> ; <code>time</code>. The datetime when this commit was authored</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">changed_files_if_available</span></code> ; <code>optional int</code>. The number of changed files in this commit. If GitHub is unable to calculate the number of changed files (for example due to a timeout), this will return null. We recommend using this field instead of changedFiles</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">commit_resource_path</span></code> ; <code>string</code>. The HTTP path for this Git object</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">commit_url</span></code> ; <code>string</code>. The HTTP URL for this Git object</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">committed_date</span></code> ; <code>time</code>. The datetime when this commit was committed</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">committed_via_web</span></code> ; <code>boolean</code>. Check if committed via GitHub web UI</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">deletions</span></code> ; <code>int</code>. The number of deletions in this commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">message</span></code> ; <code>string</code>. The Git commit message</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">message_body</span></code> ; <code>string</code>. The Git commit message body</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">message_headline</span></code> ; <code>string</code>. The Git commit message headline</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">url</span></code> ; <code>string</code>. The HTTP URL for this commit</li>
+</ul>
+<h4 id="pull_request.first_commit.author"><code>pull_request.first_commit.author</code><a class="headerlink" href="#pull_request.first_commit.author" title="Permanent link">&para;</a></h4>
+<p>Authorship details of the commit</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">date</span></code> ; <code>optional time</code>. The timestamp of the Git action (authoring or committing)</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">email</span></code> ; <code>optional string</code>. The email in the Git commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">name</span></code> ; <code>optional string</code>. The name in the Git commit</li>
+</ul>
+<h5 id="pull_request.first_commit.author.user"><code>pull_request.first_commit.author.user</code><a class="headerlink" href="#pull_request.first_commit.author.user" title="Permanent link">&para;</a></h5>
+<p>The GitHub user corresponding to the email field. Null if no such user exists</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">user</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h4 id="pull_request.first_commit.committer"><code>pull_request.first_commit.committer</code><a class="headerlink" href="#pull_request.first_commit.committer" title="Permanent link">&para;</a></h4>
+<p>Committer details of the commit</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">date</span></code> ; <code>optional time</code>. The timestamp of the Git action (authoring or committing)</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">email</span></code> ; <code>optional string</code>. The email in the Git commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">name</span></code> ; <code>optional string</code>. The name in the Git commit</li>
+</ul>
+<h5 id="pull_request.first_commit.committer.user"><code>pull_request.first_commit.committer.user</code><a class="headerlink" href="#pull_request.first_commit.committer.user" title="Permanent link">&para;</a></h5>
+<p>The GitHub user corresponding to the email field. Null if no such user exists</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">user</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h3 id="pull_request.last_commit"><code>pull_request.last_commit</code><a class="headerlink" href="#pull_request.last_commit" title="Permanent link">&para;</a></h3>
+<p>Information about the last commit made</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">additions</span></code> ; <code>int</code>. The number of additions in this commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">authored_by_committer</span></code> ; <code>boolean</code>. Check if the committer and the author match</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">authored_date</span></code> ; <code>time</code>. The datetime when this commit was authored</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">changed_files_if_available</span></code> ; <code>optional int</code>. The number of changed files in this commit. If GitHub is unable to calculate the number of changed files (for example due to a timeout), this will return null. We recommend using this field instead of changedFiles</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">commit_resource_path</span></code> ; <code>string</code>. The HTTP path for this Git object</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">commit_url</span></code> ; <code>string</code>. The HTTP URL for this Git object</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">committed_date</span></code> ; <code>time</code>. The datetime when this commit was committed</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">committed_via_web</span></code> ; <code>boolean</code>. Check if committed via GitHub web UI</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">deletions</span></code> ; <code>int</code>. The number of deletions in this commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">message</span></code> ; <code>string</code>. The Git commit message</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">message_body</span></code> ; <code>string</code>. The Git commit message body</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">message_headline</span></code> ; <code>string</code>. The Git commit message headline</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">url</span></code> ; <code>string</code>. The HTTP URL for this commit</li>
+</ul>
+<h4 id="pull_request.last_commit.author"><code>pull_request.last_commit.author</code><a class="headerlink" href="#pull_request.last_commit.author" title="Permanent link">&para;</a></h4>
+<p>Authorship details of the commit</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">date</span></code> ; <code>optional time</code>. The timestamp of the Git action (authoring or committing)</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">email</span></code> ; <code>optional string</code>. The email in the Git commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">name</span></code> ; <code>optional string</code>. The name in the Git commit</li>
+</ul>
+<h5 id="pull_request.last_commit.author.user"><code>pull_request.last_commit.author.user</code><a class="headerlink" href="#pull_request.last_commit.author.user" title="Permanent link">&para;</a></h5>
+<p>The GitHub user corresponding to the email field. Null if no such user exists</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">user</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h4 id="pull_request.last_commit.committer"><code>pull_request.last_commit.committer</code><a class="headerlink" href="#pull_request.last_commit.committer" title="Permanent link">&para;</a></h4>
+<p>Committer details of the commit</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">date</span></code> ; <code>optional time</code>. The timestamp of the Git action (authoring or committing)</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">email</span></code> ; <code>optional string</code>. The email in the Git commit</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">name</span></code> ; <code>optional string</code>. The name in the Git commit</li>
+</ul>
+<h5 id="pull_request.last_commit.committer.user"><code>pull_request.last_commit.committer.user</code><a class="headerlink" href="#pull_request.last_commit.committer.user" title="Permanent link">&para;</a></h5>
+<p>The GitHub user corresponding to the email field. Null if no such user exists</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">committer</span><span class="p">.</span><span class="nc">user</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h3 id="pull_request.merged_by"><code>pull_request.merged_by</code><a class="headerlink" href="#pull_request.merged_by" title="Permanent link">&para;</a></h3>
+<p>The actor who merged the Pull Request</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">merged_by</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h3 id="pull_request.author"><code>pull_request.author</code><a class="headerlink" href="#pull_request.author" title="Permanent link">&para;</a></h3>
+<p>The actor who authored the comment</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h3 id="pull_request.labels[]"><code>pull_request.labels[]</code><a class="headerlink" href="#pull_request.labels[]" title="Permanent link">&para;</a></h3>
+<p>Labels available on this project</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">color</span></code> ; <code>string</code>. Identifies the label color</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">created_at</span></code> ; <code>optional time</code>. Identifies the date and time when the label was created</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">description</span></code> ; <code>optional string</code>. A brief description of this label</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. The Node ID of the Label object</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">is_default</span></code> ; <code>boolean</code>. Indicates whether or not this is a default label</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">name</span></code> ; <code>string</code>. Identifies the label name</li>
+<li><code class="language-css highlight"><span class="nt">pull_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">updated_at</span></code> ; <code>time</code>. Identifies the date and time when the label was last updated</li>
+</ul>
+<h2 id="viewer"><code>viewer</code><a class="headerlink" href="#viewer" title="Permanent link">&para;</a></h2>
+<p>Get information about current user</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">viewer</span><span class="p">.</span><span class="nc">login</span></code> ; <code>string</code>. The username used to login</li>
+</ul>
+<h2 id="webhook_event"><code>webhook_event</code><a class="headerlink" href="#webhook_event" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title"><code>webhook_event</code> attribute is only available in <code>server</code> mode</p>
+<p>You have access to the raw webhook event payload via <code>webhook_event.*</code> attributes (not listed below) in Expr script fields when using <a href="../../commands/server/"><code>server</code></a> mode.</p>
+<p>See the <a href="https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html">GitLab Webhook Events documentation</a> for available fields.</p>
+<p>The attributes are named <em>exactly</em> as documented in the GitLab documentation.</p>
+</div>
+<ul>
+<li><a href="https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#comment-events"><code>Comments</code></a> - A comment is made or edited on an issue or merge request.</li>
+<li><a href="https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#merge-request-events"><code>Merge request events</code></a> - A merge request is created, updated, or merged.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "navigation.expand", "navigation.instant", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.5cfa9459.min.js"></script>
+      
+    
+  </body>
+</html>
