@@ -30,6 +30,19 @@ tasks:
     generates:
       - ./scm-engine
 
+  docs:generate:
+    desc: "Generate docs"
+    cmds:
+      - mkdir -p docs/github/_partials
+      - go run . -h > docs/github/_partials/cmd-root.md
+      - go run . github -h > docs/github/_partials/cmd-github.md
+      - go run . github evaluate -h > docs/github/_partials/cmd-github-evaluate.md
+
+      - mkdir -p docs/gitlab/_partials
+      - go run . -h > docs/gitlab/_partials/cmd-root.md
+      - go run . gitlab -h > docs/gitlab/_partials/cmd-gitlab.md
+      - go run . gitlab evaluate -h > docs/gitlab/_partials/cmd-gitlab-evaluate.md
+      - go run . gitlab server -h > docs/gitlab/_partials/cmd-gitlab-server.md
   docs:server:
     desc: Run Docs dev server with live preview
     cmds:

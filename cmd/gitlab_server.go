@@ -56,11 +56,7 @@ func errHandler(ctx context.Context, w http.ResponseWriter, code int, err error)
 
 func Server(cCtx *cli.Context) error {
 	// Initialize context
-	ctx := state.WithDryRun(cCtx.Context, cCtx.Bool(FlagDryRun))
-	ctx = state.WithBaseURL(ctx, cCtx.String(FlagSCMBaseURL))
-	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
-	ctx = state.WithProvider(ctx, cCtx.String(FlagProvider))
-	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline))
+	ctx := state.WithUpdatePipeline(cCtx.Context, cCtx.Bool(FlagUpdatePipeline))
 
 	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen", cCtx.String(FlagServerListen)))
 

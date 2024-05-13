@@ -6,7 +6,6 @@ const (
 	FlagConfigFile     = "config"
 	FlagDryRun         = "dry-run"
 	FlagMergeRequestID = "id"
-	FlagProvider       = "provider"
 	FlagSCMBaseURL     = "base-url"
 	FlagSCMProject     = "project"
 	FlagServerListen   = "listen"
