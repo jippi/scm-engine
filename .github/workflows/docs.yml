@@ -31,5 +31,8 @@ jobs:
       - name: setup
         run: task setup
 
+      - name: generate
+        run: task docs:generate
+
       - name: deploy
         run: task docs:deploy

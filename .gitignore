@@ -18,3 +18,5 @@
 /scm-engine.exe
 /docs/gitlab/script-attributes.md
 /docs/github/script-attributes.md
+/docs/github/_partials/cmd-*
+/docs/gitlab/_partials/cmd-*

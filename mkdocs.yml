@@ -12,9 +12,8 @@ nav:
   - index.md
   - install.md
   - configuration.md
-  - ... | commands/*.md
-  - ... | github/*.md
   - ... | gitlab/*.md
+  - ... | github/*.md
 
 plugins:
   - awesome-pages: # pip install mkdocs-awesome-pages-plugin

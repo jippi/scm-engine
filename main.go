@@ -8,6 +8,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/jippi/scm-engine/cmd"
+	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/tui"
 	"github.com/urfave/cli/v2"
 	slogctx "github.com/veqryn/slog-context"
@@ -37,8 +38,12 @@ func main() {
 			},
 		},
 		Before: func(cCtx *cli.Context) error {
+			// Setup global state
 			cCtx.Context = tui.NewContext(cCtx.Context, cCtx.App.Writer, cCtx.App.ErrWriter)
 			cCtx.Context = slogctx.With(cCtx.Context, "scm_engine_version", version)
+
+			// Write global flags to context
+			cCtx.Context = state.WithDryRun(cCtx.Context, cCtx.Bool(cmd.FlagDryRun))
 
 			return nil
 		},
@@ -52,33 +57,6 @@ func main() {
 					"SCM_ENGINE_CONFIG_FILE",
 				},
 			},
-			&cli.StringFlag{
-				Name:  cmd.FlagProvider,
-				Usage: `SCM provider to use. Must be either "github" or "gitlab". SCM Engine will automatically detect "github" if "GITHUB_ACTIONS" environment variable is set (e.g., inside GitHub Actions) and detect "gitlab" if "GITLAB_CI" environment variable is set (e.g., inside GitLab CI).`,
-				Value: detectProviderFromEnv(),
-				EnvVars: []string{
-					"SCM_ENGINE_PROVIDER",
-				},
-			},
-			&cli.StringFlag{
-				Name:     cmd.FlagAPIToken,
-				Usage:    "GitHub/GitLab API token",
-				Required: true,
-				EnvVars: []string{
-					"SCM_ENGINE_TOKEN", // SCM Engine Native
-					"GITHUB_TOKEN",     // GitHub Actions
-				},
-			},
-			&cli.StringFlag{
-				Name:  cmd.FlagSCMBaseURL,
-				Usage: "Base URL for the SCM instance",
-				Value: "https://gitlab.com/",
-				EnvVars: []string{
-					"GITLAB_BASEURL",
-					"CI_SERVER_URL",  // GitLab CI
-					"GITHUB_API_URL", // GitHub Actions
-				},
-			},
 			&cli.BoolFlag{
 				Name:  cmd.FlagDryRun,
 				Usage: "Dry run, don't actually _do_ actions, just print them",
@@ -86,13 +64,40 @@ func main() {
 			},
 		},
 		Commands: []*cli.Command{
+			cmd.GitLab,
+			cmd.GitHub,
+			// DEPRECATED COMMANDS
 			{
 				Name:      "evaluate",
 				Usage:     "Evaluate a Merge Request",
+				Hidden:    true, // DEPRECATED
 				Args:      true,
 				ArgsUsage: " [mr_id, mr_id, ...]",
 				Action:    cmd.Evaluate,
+				Before: func(cCtx *cli.Context) error {
+					cCtx.Context = state.WithBaseURL(cCtx.Context, cCtx.String(cmd.FlagSCMBaseURL))
+					cCtx.Context = state.WithProvider(cCtx.Context, "gitlab")
+					cCtx.Context = state.WithToken(cCtx.Context, cCtx.String(cmd.FlagAPIToken))
+
+					return nil
+				},
 				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  cmd.FlagAPIToken,
+						Usage: "GitLab API token",
+						EnvVars: []string{
+							"SCM_ENGINE_TOKEN", // SCM Engine Native
+						},
+					},
+					&cli.StringFlag{
+						Name:  cmd.FlagSCMBaseURL,
+						Usage: "Base URL for the SCM instance",
+						Value: "https://gitlab.com/",
+						EnvVars: []string{
+							"SCM_ENGINE_BASE_URL", // SCM Engine Native
+							"CI_SERVER_URL",       // GitLab CI
+						},
+					},
 					&cli.BoolFlag{
 						Name:  cmd.FlagUpdatePipeline,
 						Usage: "Update the CI pipeline status with progress",
@@ -107,8 +112,7 @@ func main() {
 						Required: true,
 						EnvVars: []string{
 							"GITLAB_PROJECT",
-							"CI_PROJECT_PATH",   // GitLab CI
-							"GITHUB_REPOSITORY", // GitHub Actions
+							"CI_PROJECT_PATH", // GitLab CI
 						},
 					},
 					&cli.StringFlag{
@@ -123,37 +127,6 @@ func main() {
 						Usage: "The git commit sha",
 						EnvVars: []string{
 							"CI_COMMIT_SHA", // GitLab CI
-							"GITHUB_SHA",    // GitHub Actions
-						},
-					},
-				},
-			},
-			{
-				Name:   "server",
-				Usage:  "Start HTTP server for webhook event driven usage",
-				Action: cmd.Server,
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:  cmd.FlagWebhookSecret,
-						Usage: "Used to validate received payloads. Sent with the request in the X-Gitlab-Token HTTP header",
-						EnvVars: []string{
-							"SCM_ENGINE_WEBHOOK_SECRET",
-						},
-					},
-					&cli.StringFlag{
-						Name:  cmd.FlagServerListen,
-						Usage: "IP + Port that the HTTP server should listen on",
-						Value: "0.0.0.0:3000",
-						EnvVars: []string{
-							"SCM_ENGINE_LISTEN",
-						},
-					},
-					&cli.BoolFlag{
-						Name:  cmd.FlagUpdatePipeline,
-						Usage: "Update the CI pipeline status with progress",
-						Value: true,
-						EnvVars: []string{
-							"SCM_ENGINE_UPDATE_PIPELINE",
 						},
 					},
 				},
