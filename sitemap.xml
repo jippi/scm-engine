@@ -16,12 +16,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://jippi.github.io/scm-engine/commands/evaluate/</loc>
-         <lastmod>2024-05-13</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://jippi.github.io/scm-engine/commands/server/</loc>
+         <loc>https://jippi.github.io/scm-engine/github/commands/</loc>
          <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -37,6 +32,11 @@
     </url>
     <url>
          <loc>https://jippi.github.io/scm-engine/github/setup/</loc>
+         <lastmod>2024-05-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://jippi.github.io/scm-engine/gitlab/commands/</loc>
          <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
