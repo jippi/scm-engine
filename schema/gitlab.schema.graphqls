@@ -86,11 +86,14 @@ input ListMergeRequestsQueryInput {
 
 type ListMergeRequestsQuery {
   "The project the Merge Request belongs to"
-  Project: ListMergeRequestsProject @graphql(key: "project(fullPath: $project_id)")
+  Project: ListMergeRequestsProject
+    @graphql(key: "project(fullPath: $project_id)")
 }
 
 type ListMergeRequestsProject {
-  MergeRequests: ListMergeRequestsProjectMergeRequestNodes @graphql(key: "mergeRequests(state: $state, first: $first)") @internal
+  MergeRequests: ListMergeRequestsProjectMergeRequestNodes
+    @graphql(key: "mergeRequests(state: $state, first: $first)")
+    @internal
 }
 
 type ListMergeRequestsProjectMergeRequestNodes {
@@ -98,8 +101,8 @@ type ListMergeRequestsProjectMergeRequestNodes {
 }
 
 type ListMergeRequestsProjectMergeRequest {
-  ID:          String! @graphql(key: "iid")         @internal
-  DiffHeadSha: String  @graphql(key: "diffHeadSha") @internal
+  ID: String! @graphql(key: "iid") @internal
+  DiffHeadSha: String @graphql(key: "diffHeadSha") @internal
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#project
@@ -136,9 +139,11 @@ type ContextProject {
   "Labels available on this project"
   Labels: [ContextLabel!] @generated
 
-  ResponseLabels: ContextLabelNode    @internal @graphql(key: "labels(first: 200)")
-  MergeRequest:   ContextMergeRequest @internal @graphql(key: "mergeRequest(iid: $mr_id)")
-  ResponseGroup:  ContextGroup        @internal @graphql(key: "group")
+  ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
+  MergeRequest: ContextMergeRequest
+    @internal
+    @graphql(key: "mergeRequest(iid: $mr_id)")
+  ResponseGroup: ContextGroup @internal @graphql(key: "group")
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#group
@@ -261,15 +266,15 @@ type ContextMergeRequest {
   Notes: [ContextNote!] @generated
 
   "Information about the first commit made"
-  FirstCommit: ContextCommit @generated()
+  FirstCommit: ContextCommit @generated
   "Information about the last commit made"
-  LastCommit: ContextCommit @generated()
+  LastCommit: ContextCommit @generated
   "Duration between first and last commit made"
-  TimeBetweenFirstAndLastCommit: Duration @generated()
+  TimeBetweenFirstAndLastCommit: Duration @generated
   "Duration (from 'now') since the first commit was made"
-  TimeSinceFirstCommit: Duration @generated()
+  TimeSinceFirstCommit: Duration @generated
   "Duration (from 'now') since the last commit was made"
-  TimeSinceLastCommit: Duration @generated()
+  TimeSinceLastCommit: Duration @generated
 
   #
   # scm-engine internal
@@ -277,8 +282,12 @@ type ContextMergeRequest {
 
   CurrentUser: ContextUser! @generated @internal
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
-  ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
-  ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")
+  ResponseFirstCommits: ContextCommitsNode
+    @internal
+    @graphql(key: "first_commit: commits(first:1)")
+  ResponseLastCommits: ContextCommitsNode
+    @internal
+    @graphql(key: "last_commit: commits(last:1)")
   ResponseNotes: ContextNotesNode @internal @graphql(key: "notes(last: 10)")
 }
 

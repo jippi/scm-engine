@@ -280,7 +280,9 @@ type ContextRepository {
 
   # Connections
 
-  PullRequest: ContextPullRequest @graphql(key: "pullRequest(number: $pr)") @internal
+  PullRequest: ContextPullRequest
+    @graphql(key: "pullRequest(number: $pr)")
+    @internal
 }
 
 "A label for categorizing Issues, Pull Requests, Milestones, or Discussions with a given Repository"
@@ -405,7 +407,6 @@ type ContextPullRequest {
   "The HTTP URL for this Pull Request"
   URL: String!
 
-
   #
   # Connections
   #
@@ -416,19 +417,25 @@ type ContextPullRequest {
     @internal
 
   "Information about the first commit made"
-  FirstCommit: ContextCommit @generated()
+  FirstCommit: ContextCommit @generated
   "Information about the last commit made"
-  LastCommit: ContextCommit @generated()
+  LastCommit: ContextCommit @generated
   "Duration between first and last commit made"
-  TimeBetweenFirstAndLastCommit: Duration @generated()
+  TimeBetweenFirstAndLastCommit: Duration @generated
   "Duration (from 'now') since the first commit was made"
-  TimeSinceFirstCommit: Duration @generated()
+  TimeSinceFirstCommit: Duration @generated
   "Duration (from 'now') since the last commit was made"
-  TimeSinceLastCommit: Duration @generated()
+  TimeSinceLastCommit: Duration @generated
   "Labels available on this project"
   Labels: [ContextLabel!] @generated
 
-  ResponseFirstCommits: ContextCommitsNode @internal @graphql(key: "first_commit: commits(first:1)")
-  ResponseLastCommits: ContextCommitsNode @internal @graphql(key: "last_commit: commits(last:1)")
-  ResponseLabels: ContextLabelConnection @internal @graphql(key: "labels(first:100)")
+  ResponseFirstCommits: ContextCommitsNode
+    @internal
+    @graphql(key: "first_commit: commits(first:1)")
+  ResponseLastCommits: ContextCommitsNode
+    @internal
+    @graphql(key: "last_commit: commits(last:1)")
+  ResponseLabels: ContextLabelConnection
+    @internal
+    @graphql(key: "labels(first:100)")
 }
