@@ -14,15 +14,15 @@ The script will warn at 21 days mark that the Merge Request will be closed, with
 
 ```{.yaml linenums=1}
 label:
-  - name: "mark MR as stale" # (1)!
+  - name: "stale" # (1)!
     color: $red # (11)!
     script: |1 # (2)!
-        --8<-- "docs/configuration/snippets/close-merge-request/label-script.expr"
+        --8<-- "docs/gitlab/snippets/close-merge-request/label-script.expr"
 
 actions:
   - name: "warn" #(5)!
     if: |1 # (3)!
-        --8<-- "docs/configuration/snippets/close-merge-request/warn-if.expr"
+        --8<-- "docs/gitlab/snippets/close-merge-request/warn-if.expr"
     then:
       - action: add_label # (6)!
         name: stale
@@ -39,7 +39,7 @@ actions:
 
   - name: "close" # (10)!
     if: |1 # (4)!
-        --8<-- "docs/configuration/snippets/close-merge-request/close-if.expr"
+        --8<-- "docs/gitlab/snippets/close-merge-request/close-if.expr"
     then:
       - action: close # (8)!
 
@@ -61,19 +61,19 @@ actions:
 2. Syntax highlighted `script`
 
     ```css
-    --8<-- "docs/configuration/snippets/close-merge-request/label-script.expr"
+    --8<-- "docs/gitlab/snippets/close-merge-request/label-script.expr"
     ```
 
 3. Syntax highlighted `if`
 
     ```css
-    --8<-- "docs/configuration/snippets/close-merge-request/warn-if.expr"
+    --8<-- "docs/gitlab/snippets/close-merge-request/warn-if.expr"
     ```
 
 4. Syntax highlighted `if`
 
     ```css
-    --8<-- "docs/configuration/snippets/close-merge-request/close-if.expr"
+    --8<-- "docs/gitlab/snippets/close-merge-request/close-if.expr"
     ```
 
 5. Send "warning" about the MR being inactive
