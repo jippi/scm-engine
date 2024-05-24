@@ -4,7 +4,7 @@ go 1.22.3
 
 require (
 	github.com/99designs/gqlgen v0.17.47
-	github.com/charmbracelet/lipgloss v0.10.0
+	github.com/charmbracelet/lipgloss v0.11.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/expr-lang/expr v1.16.7
 	github.com/fatih/structtag v1.2.0
@@ -30,6 +30,7 @@ require (
 require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
+	github.com/charmbracelet/x/ansi v0.1.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
@@ -41,7 +42,6 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/samber/lo v1.38.1 // indirect
