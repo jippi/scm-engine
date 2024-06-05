@@ -27,6 +27,10 @@
       versioning: "go",
       groupName: "go",
     },
+    {
+      matchDatasources: ["golang-version"],
+      prPriority: 999,
+    },
   ],
   customManagers: [
     {
