@@ -1,6 +1,6 @@
 module github.com/jippi/scm-engine
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/99designs/gqlgen v0.17.47
