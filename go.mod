@@ -3,7 +3,7 @@ module github.com/jippi/scm-engine
 go 1.22.4
 
 require (
-	github.com/99designs/gqlgen v0.17.47
+	github.com/99designs/gqlgen v0.17.48
 	github.com/charmbracelet/lipgloss v0.11.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/expr-lang/expr v1.16.9
