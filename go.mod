@@ -11,7 +11,7 @@ require (
 	github.com/golang-cz/devslog v0.0.8
 	github.com/google/go-github/v62 v62.0.0
 	github.com/guregu/null/v5 v5.0.0
-	github.com/hasura/go-graphql-client v0.12.1
+	github.com/hasura/go-graphql-client v0.12.2
 	github.com/iancoleman/strcase v0.3.0
 	github.com/lmittmann/tint v1.0.4
 	github.com/muesli/termenv v0.15.2
