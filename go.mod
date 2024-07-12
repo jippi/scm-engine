@@ -13,7 +13,7 @@ require (
 	github.com/guregu/null/v5 v5.0.0
 	github.com/hasura/go-graphql-client v0.12.2
 	github.com/iancoleman/strcase v0.3.0
-	github.com/lmittmann/tint v1.0.4
+	github.com/lmittmann/tint v1.0.5
 	github.com/muesli/termenv v0.15.2
 	github.com/samber/slog-multi v1.2.0
 	github.com/teacat/noire v1.1.0
