@@ -17,7 +17,7 @@ require (
 	github.com/muesli/termenv v0.15.2
 	github.com/samber/slog-multi v1.2.0
 	github.com/teacat/noire v1.1.0
-	github.com/urfave/cli/v2 v2.27.2
+	github.com/urfave/cli/v2 v2.27.3
 	github.com/vektah/gqlparser/v2 v2.5.16
 	github.com/veqryn/slog-context v0.7.0
 	github.com/veqryn/slog-dedup v0.5.0
@@ -44,7 +44,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/samber/lo v1.38.1 // indirect
 	github.com/sosodev/duration v1.3.1 // indirect
-	github.com/xrash/smetrics v0.0.0-20240312152122-5f08fbb34913 // indirect
+	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
