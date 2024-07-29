@@ -50,8 +50,8 @@ github.com/hashicorp/go-retryablehttp v0.7.7 h1:C8hUCYzor8PIfXHa4UrZkU4VvK8o9ISH
 github.com/hashicorp/go-retryablehttp v0.7.7/go.mod h1:pkQpWZeYWskR+D1tR2O5OcBFOxfA7DoAO6xtkuQnHTk=
 github.com/hashicorp/golang-lru/v2 v2.0.7 h1:a+bsQ5rvGLjzHuww6tVxozPZFVghXaHOwFs4luLUK2k=
 github.com/hashicorp/golang-lru/v2 v2.0.7/go.mod h1:QeFd9opnmA6QUJc5vARoKUSoFhyfM2/ZepoAG6RGpeM=
-github.com/hasura/go-graphql-client v0.12.2 h1:cYeQK/CELtvFy2jvik4kG0b5UMGngQRYWTTXQkbGHDo=
-github.com/hasura/go-graphql-client v0.12.2/go.mod h1:17qYcHgGSensF/wMAHKUhtMYaRZwZa3TyD7biqH9L3k=
+github.com/hasura/go-graphql-client v0.13.0 h1:mPYtqToLttIk/89hIHJYQgPShdBffrloCk6Pn4QqNfo=
+github.com/hasura/go-graphql-client v0.13.0/go.mod h1:17qYcHgGSensF/wMAHKUhtMYaRZwZa3TyD7biqH9L3k=
 github.com/iancoleman/strcase v0.3.0 h1:nTXanmYxhfFAMjZL34Ov6gkzEsSJZ5DbhxWjvSASxEI=
 github.com/iancoleman/strcase v0.3.0/go.mod h1:iwCmte+B7n89clKwxIoIXy/HfoL7AsD47ZCWhYzw7ho=
 github.com/lmittmann/tint v1.0.5 h1:NQclAutOfYsqs2F1Lenue6OoWCajs5wJcP3DfWVpePw=
