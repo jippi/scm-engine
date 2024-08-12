@@ -17,7 +17,7 @@ require (
 	github.com/muesli/termenv v0.15.2
 	github.com/samber/slog-multi v1.2.0
 	github.com/teacat/noire v1.1.0
-	github.com/urfave/cli/v2 v2.27.3
+	github.com/urfave/cli/v2 v2.27.4
 	github.com/vektah/gqlparser/v2 v2.5.16
 	github.com/veqryn/slog-context v0.7.0
 	github.com/veqryn/slog-dedup v0.5.0
