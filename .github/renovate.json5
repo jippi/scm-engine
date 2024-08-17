@@ -6,16 +6,16 @@
     "default:pinDigestsDisabled",
   ],
   schedule: [
-    "* */8 * * *", // every 8 hours (4 times a day)
+    "* */1 * * *", // every 1 hour
   ],
+  postUpdateOptions: ["gomodTidy", "gomodUpdateImportPaths"],
   commitMessageSuffix: " in {{packageFile}}",
   dependencyDashboardAutoclose: true,
   automerge: true,
   baseBranches: ["main"],
   platformAutomerge: true,
   labels: ["dependencies"],
-  postUpdateOptions: ["gomodTidy", "gomodUpdateImportPaths"],
-  prHourlyLimit: 2,
+  prHourlyLimit: 1,
   osvVulnerabilityAlerts: true,
   vulnerabilityAlerts: {
     enabled: true,
@@ -28,8 +28,13 @@
       groupName: "go",
     },
     {
-      matchDatasources: ["golang-version"],
+      matchDepTypes: ["golang-version"],
       prPriority: 999,
+    },
+    {
+      description: "Group charmbracelet packages",
+      groupName: "charmbracelet",
+      matchPackagePrefixes: ["github.com/charmbracelet/"],
     },
   ],
   customManagers: [
@@ -45,14 +50,6 @@
         // # renovate: datasource=github-releases depName=open-policy-agent/conftest
         // ARG DEFAULT_CONFTEST_VERSION=x.x.x
         "renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s(ARG|ENV) .*?_VERSION=(?<currentValue>.*)\\s",
-      ],
-      versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
-    },
-    {
-      customType: "regex",
-      fileMatch: [".*go$"],
-      matchStrings: [
-        '\\sconst .*Version = "(?<currentValue>.*)"\\s// renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s',
       ],
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
