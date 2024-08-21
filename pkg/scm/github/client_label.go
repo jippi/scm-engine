@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"strings"
 
-	go_github "github.com/google/go-github/v63/github"
+	go_github "github.com/google/go-github/v64/github"
 	"github.com/jippi/scm-engine/pkg/scm"
 	slogctx "github.com/veqryn/slog-context"
 )
