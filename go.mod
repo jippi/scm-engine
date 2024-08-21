@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/99designs/gqlgen v0.17.49
-	github.com/charmbracelet/lipgloss v0.12.1
+	github.com/charmbracelet/lipgloss v0.13.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/expr-lang/expr v1.16.9
 	github.com/fatih/structtag v1.2.0
