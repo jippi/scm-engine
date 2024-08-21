@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	go_github "github.com/google/go-github/v63/github"
+	go_github "github.com/google/go-github/v64/github"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 )
