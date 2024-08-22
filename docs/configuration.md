@@ -39,7 +39,9 @@ The list of operations to take if the [`#!css action.if`](#actions.if) returned 
 This key controls what kind of action that should be taken.
 
 - `#!yaml approve` to approve the Merge Request.
+- `#!yaml unapprove` to approve the Merge Request.
 - `#!yaml close` to close the Merge Request.
+- `#!yaml reopen` to reopen the Merge Request.
 - `#!yaml comment` to add a comment to the Merge Request
 
       *Additional fields:*
@@ -53,10 +55,7 @@ This key controls what kind of action that should be taken.
       ```
 
 - `#!yaml lock_discussion` to prevent further discussions on the Merge Request.
-- `#!yaml reopen` to reopen the Merge Request.
-- `#!yaml unapprove` to approve the Merge Request.
 - `#!yaml unlock_discussion` to allow discussions on the Merge Request.
-- `#!yaml update_description` to update the Merge Request description
 - `#!yaml add_label` to add *an existing* label to the Merge Request
 
       *Additional fields:*
