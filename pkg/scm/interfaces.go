@@ -29,6 +29,7 @@ type MergeRequestClient interface {
 type EvalContext interface {
 	IsValid() bool
 	SetWebhookEvent(in any)
+	SetContext(ctx context.Context)
 	GetDescription() string
 }
 

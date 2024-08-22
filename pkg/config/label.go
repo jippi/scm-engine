@@ -1,11 +1,13 @@
 package config
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"reflect"
 
 	"github.com/expr-lang/expr"
+	"github.com/expr-lang/expr/patcher"
 	"github.com/expr-lang/expr/vm"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/stdlib"
@@ -23,7 +25,7 @@ const (
 
 type Labels []*Label
 
-func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
+func (labels Labels) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
 	var results []scm.EvaluationResult
 
 	// Evaluate labels
@@ -155,6 +157,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 		opts = append(opts, expr.Env(evalContext))
 		opts = append(opts, stdlib.FunctionRenamer)
 		opts = append(opts, stdlib.Functions...)
+		opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 
 		p.scriptCompiled, err = expr.Compile(p.Script, opts...)
 		if err != nil {
@@ -170,6 +173,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 		opts = append(opts, expr.Env(evalContext))
 		opts = append(opts, stdlib.FunctionRenamer)
 		opts = append(opts, stdlib.Functions...)
+		opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 
 		p.skipIfCompiled, err = expr.Compile(p.SkipIf, opts...)
 		if err != nil {

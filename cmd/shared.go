@@ -28,6 +28,9 @@ func getClient(ctx context.Context) (scm.Client, error) {
 }
 
 func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event any) (err error) {
+	// Write the config to context so we can pull it out later
+	ctx = config.WithConfig(ctx, cfg)
+
 	// Stop the pipeline when we leave this func
 	defer func() {
 		if stopErr := client.Stop(ctx, err); stopErr != nil {
@@ -61,6 +64,9 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	}
 
 	evalContext.SetWebhookEvent(event)
+	// Add our "ctx" to evalContext so Expr-Lang functions can reference them
+	// when they need to read our "cfg"
+	evalContext.SetContext(ctx)
 
 	slogctx.Info(ctx, "Evaluating context")
 

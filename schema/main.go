@@ -6,6 +6,7 @@ import (
 	"cmp"
 	_ "embed"
 	"fmt"
+	"go/types"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -243,6 +244,17 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 
 			field.Tag = tags.String()
 		} // end fields loop
+
+		// Manually inject certain "expr env" fields that we can't reasonable create in graphql schema
+		if model.Name == "Context" {
+			model.Fields = append(model.Fields, &modelgen.Field{
+				Name:        "Context",
+				Description: "Go context used to pass around configuration (do not use directly!)",
+				GoName:      "Context",
+				Type:        types.NewNamed(types.NewTypeName(0, types.NewPackage("context", "context"), "Context", nil), nil, nil),
+				Tag:         `expr:"ctx" graphql:"-"`,
+			})
+		}
 
 		if strings.HasSuffix(model.Name, "Node") || model.Name == "Query" {
 			continue

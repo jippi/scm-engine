@@ -94,6 +94,10 @@ func (c *Context) SetWebhookEvent(in any) {
 	c.WebhookEvent = in
 }
 
+func (c *Context) SetContext(ctx context.Context) {
+	c.Context = ctx
+}
+
 func (c *Context) GetDescription() string {
 	if c.MergeRequest.Description == nil {
 		return ""

@@ -1,9 +1,11 @@
 package gitlab
 
 import (
+	"context"
 	"fmt"
 	"time"
 
+	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/stdlib"
 )
@@ -51,63 +53,61 @@ func (e ContextMergeRequest) StateIsNot(anyOf ...string) bool {
 }
 
 // has_no_activity_within
-func (e ContextMergeRequest) HasNoActivityWithin(input any) bool {
-	return !e.HasAnyActivityWithin(input)
+func (e ContextMergeRequest) HasNoActivityWithin(ctx context.Context, input any) bool {
+	return !e.HasAnyActivityWithin(ctx, input)
 }
 
 // has_any_activity_within
-func (e ContextMergeRequest) HasAnyActivityWithin(input any) bool {
+func (e ContextMergeRequest) HasAnyActivityWithin(ctx context.Context, input any) bool {
 	dur := stdlib.ToDuration(input)
 	now := time.Now()
+	cfg := config.FromContext(ctx)
 
 	for _, note := range e.Notes {
+		// Check if we should ignore the actor (user) activity
+		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActorMatcher()) {
+			continue
+		}
+
+		// Check is within the configured duration
 		if now.Sub(note.UpdatedAt) < dur {
 			return true
 		}
 	}
 
-	if e.LastCommit != nil {
-		if now.Sub(*e.LastCommit.CommittedDate) < dur {
-			return true
-		}
-	}
-
-	return false
+	// If we have a recent commit, check if its within the duration
+	return e.LastCommit != nil && now.Sub(*e.LastCommit.CommittedDate) < dur
 }
 
 // has_no_user_activity_within
-func (e ContextMergeRequest) HasNoUserActivityWithin(input any) bool {
-	return !e.HasUserActivityWithin(input)
+func (e ContextMergeRequest) HasNoUserActivityWithin(ctx context.Context, input any) bool {
+	return !e.HasUserActivityWithin(ctx, input)
 }
 
 // has_user_activity_within
-func (e ContextMergeRequest) HasUserActivityWithin(input any) bool {
+func (e ContextMergeRequest) HasUserActivityWithin(ctx context.Context, input any) bool {
 	dur := stdlib.ToDuration(input)
 	now := time.Now()
+	cfg := config.FromContext(ctx)
 
 	for _, note := range e.Notes {
-		// Ignore "my" activity
+		// Check if we should ignore the actor (user) activity
+		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActorMatcher()) {
+			continue
+		}
+
+		// Ignore "scm-engine" activity since we shouldn't consider ourself a user
 		if e.CurrentUser.Username == note.Author.Username {
 			continue
 		}
 
-		// Ignore bots
-		if e.Author.Bot {
-			continue
-		}
-
 		if now.Sub(note.UpdatedAt) < dur {
 			return true
 		}
 	}
 
-	if e.LastCommit != nil {
-		if now.Sub(*e.LastCommit.CommittedDate) < dur {
-			return true
-		}
-	}
-
-	return false
+	// If we have a recent commit, check if its within the duration
+	return e.LastCommit != nil && now.Sub(*e.LastCommit.CommittedDate) < dur
 }
 
 func (e ContextMergeRequest) ModifiedFilesList(patterns ...string) []string {

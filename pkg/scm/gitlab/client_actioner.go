@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/expr-lang/expr"
+	"github.com/expr-lang/expr/patcher"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/stdlib"
@@ -64,6 +65,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			opts = append(opts, expr.Env(evalContext))
 			opts = append(opts, stdlib.FunctionRenamer)
 			opts = append(opts, stdlib.Functions...)
+			opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 
 			program, err := expr.Compile(fmt.Sprintf("%s", script), opts...)
 			if err != nil {

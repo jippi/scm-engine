@@ -16,12 +16,15 @@ directive @expr(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 directive @graphql(key: String!) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 # Add time.Time support
+# See: https://gqlgen.com/reference/scalars/#time
 scalar Time
 
 # Add time.Duration support
+# See: https://gqlgen.com/reference/scalars/#duration
 scalar Duration
 
 # Add 'any' type for Event
+# See: https://gqlgen.com/reference/scalars/#any
 scalar Any
 
 type Context {
