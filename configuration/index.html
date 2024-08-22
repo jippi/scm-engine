@@ -379,6 +379,48 @@
         <li class="md-nav__item">
   <a href="#actions" class="md-nav__link">
     <span class="md-ellipsis">
+      ignore_activity_from
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ignore_activity_from">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      bots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      usernames
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      emails
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
       actions
     </span>
   </a>
@@ -901,6 +943,48 @@ GitHub (WIP)
         <li class="md-nav__item">
   <a href="#actions" class="md-nav__link">
     <span class="md-ellipsis">
+      ignore_activity_from
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ignore_activity_from">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      bots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      usernames
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      emails
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
       actions
     </span>
   </a>
@@ -1091,6 +1175,20 @@ GitHub (WIP)
 <h1 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h1>
 <p>The default configuration filename is <code>.scm-engine.yml</code>, either in current working directory, or if you are in a Git repository, the root of the project.</p>
 <p>The file path can be changed via <code>--config</code> CLI flag and <code class="language-css highlight"><span class="o">$</span><span class="nt">SCM_ENGINE_CONFIG_FILE</span></code> environment variable.</p>
+<h2 id="actions"><code>ignore_activity_from</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h2>
+<div class="admonition question">
+<p class="admonition-title">What is 'activity'?</p>
+</div>
+<p>SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.</p>
+<p><em>Generally</em>, <code>activity</code> is what you see in the Merge/Pull Request <code>timeline</code> in the browser UI.</p>
+<p>Configure what users that should be ignored when considering activity on a Merge Request</p>
+<h3 id="actions"><code>ignore_activity_from.bots</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h3>
+<p>Should <code>bot</code> users be ignored when considering activity? Default: <code>false</code></p>
+<h3 id="actions"><code>ignore_activity_from.usernames[]</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h3>
+<p>A list of usernames that should be ignored when considering user activity. Default: <code>[]</code></p>
+<h3 id="actions"><code>ignore_activity_from.emails[]</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h3>
+<p>A list of emails that should be ignored when considering user activity. Default: <code>[]</code></p>
+<p><strong>NOTE:</strong> If a user do not have a public email configured on their profile, that users activity will never match this rule.</p>
 <h2 id="actions"><code>actions[]</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h2>
 <div class="admonition question">
 <p class="admonition-title">What are actions?</p>
