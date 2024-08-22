@@ -84,3 +84,7 @@ func (c *Context) IsValid() bool {
 func (c *Context) SetWebhookEvent(in any) {
 	c.WebhookEvent = in
 }
+
+func (c *Context) GetDescription() string {
+	return c.PullRequest.Body
+}

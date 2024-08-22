@@ -36,6 +36,20 @@ func (e ContextMergeRequest) StateIs(anyOf ...string) bool {
 	return false
 }
 
+func (e ContextMergeRequest) StateIsNot(anyOf ...string) bool {
+	for _, state := range anyOf {
+		if !MergeRequestState(state).IsValid() {
+			panic(fmt.Errorf("unknown state value: %q", state))
+		}
+
+		if state == e.State {
+			return false
+		}
+	}
+
+	return true
+}
+
 // has_no_activity_within
 func (e ContextMergeRequest) HasNoActivityWithin(input any) bool {
 	return !e.HasAnyActivityWithin(input)

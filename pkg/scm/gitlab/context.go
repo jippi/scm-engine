@@ -93,3 +93,11 @@ func (c *Context) IsValid() bool {
 func (c *Context) SetWebhookEvent(in any) {
 	c.WebhookEvent = in
 }
+
+func (c *Context) GetDescription() string {
+	if c.MergeRequest.Description == nil {
+		return ""
+	}
+
+	return *c.MergeRequest.Description
+}

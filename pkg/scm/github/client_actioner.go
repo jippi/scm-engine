@@ -12,7 +12,7 @@ import (
 	slogctx "github.com/veqryn/slog-context"
 )
 
-func (c *Client) ApplyStep(ctx context.Context, update *scm.UpdateMergeRequestOptions, step scm.EvaluationActionStep) error {
+func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.EvaluationActionStep) error {
 	owner, repo := ownerAndRepo(ctx)
 
 	action, ok := step["action"]

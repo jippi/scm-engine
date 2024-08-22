@@ -20,6 +20,22 @@ merge_request.state_is("merged")
 merge_request.state_is("opened", "locked")
 ```
 
+### `merge_request.state_is_not(string...) -> boolean` {: #merge_request.state_is data-toc-label="state_is"}
+
+Check if the `merge_request` state is NOT any of the provided states
+
+**Valid options**:
+
+- `closed` - In closed state
+- `locked` - Discussion has been locked
+- `merged` - Merge request has been merged
+- `opened` - Opened merge request
+
+```css
+merge_request.state_is_not("merged")
+merge_request.state_is_not("opened", "locked")
+```
+
 ### `merge_request.has_user_activity_within(duration|string...) -> boolean` {: #merge_request.has_user_activity_within data-toc-label="has_user_activity_within"}
 
 !!! info "This function *EXCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_no_activity_within`](#merge_request.has_no_activity_within) if you want to include those"

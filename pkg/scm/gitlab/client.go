@@ -56,12 +56,7 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 
 // EvalContext creates a new evaluation context for GitLab specific usage
 func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) {
-	res, err := NewContext(ctx, graphqlBaseURL(client.wrapped.BaseURL()), state.Token(ctx))
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return NewContext(ctx, graphqlBaseURL(client.wrapped.BaseURL()), state.Token(ctx))
 }
 
 // Start pipeline

@@ -38,13 +38,14 @@ The list of operations to take if the [`#!css action.if`](#actions.if) returned 
 
 This key controls what kind of action that should be taken.
 
-- `#!yaml close` to close the Merge Request.
-- `#!yaml reopen` to reopen the Merge Request.
-- `#!yaml lock_discussion` to prevent further discussions on the Merge Request.
-- `#!yaml unlock_discussion` to allow discussions on the Merge Request.
 - `#!yaml approve` to approve the Merge Request.
-- `#!yaml unapprove` to approve the Merge Request.
+- `#!yaml close` to close the Merge Request.
 - `#!yaml comment` to add a comment to the Merge Request
+- `#!yaml lock_discussion` to prevent further discussions on the Merge Request.
+- `#!yaml reopen` to reopen the Merge Request.
+- `#!yaml unapprove` to approve the Merge Request.
+- `#!yaml unlock_discussion` to allow discussions on the Merge Request.
+- `#!yaml update_description` to update the Merge Request description
 
       *Additional fields:*
 
@@ -76,6 +77,18 @@ This key controls what kind of action that should be taken.
       ```{.yaml title="remove_label example"}
       - action: remove_label
         label: example
+      ```
+
+- `#!yaml update_description` updates the Merge Request Description
+
+      *Additional fields:*
+
+      - (required) `#!css replace` A list of key/value pairs to replace in the description. The `key` is the raw string to replace in the Merge Request description. The `value` is an Expr Lang expression returning a `string` that `key` will be replaced with - all Script Attributes and Script Functions are available within the script.
+
+      ```{.yaml title="update_description example"}
+      - action: update_description
+        replace:
+          "${{CI_MERGE_REQUEST_IID}}": "merge_request.iid"
       ```
 
 ## `label[]` {#label data-toc-label="label"}

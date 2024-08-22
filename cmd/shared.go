@@ -95,7 +95,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	slogctx.Info(ctx, "Applying actions")
 
-	if err := runActions(ctx, client, update, actions); err != nil {
+	if err := runActions(ctx, evalContext, client, update, actions); err != nil {
 		return err
 	}
 
@@ -120,10 +120,10 @@ func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.Upda
 	return err
 }
 
-func runActions(ctx context.Context, client scm.Client, update *scm.UpdateMergeRequestOptions, actions []config.Action) error {
+func runActions(ctx context.Context, evalContext scm.EvalContext, client scm.Client, update *scm.UpdateMergeRequestOptions, actions []config.Action) error {
 	for _, action := range actions {
 		for _, task := range action.Then {
-			if err := client.ApplyStep(ctx, update, task); err != nil {
+			if err := client.ApplyStep(ctx, evalContext, update, task); err != nil {
 				return err
 			}
 		}

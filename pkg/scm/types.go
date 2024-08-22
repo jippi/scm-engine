@@ -155,12 +155,12 @@ type EvaluationResult struct {
 	Matched bool
 }
 
-type EvaluationActionStep map[string]any
+type EvaluationActionStep = map[string]any
 
 type EvaluationActionResult struct {
-	Name string `yaml:"name"`
-	If   string `yaml:"if"`
-	Then []EvaluationActionStep
+	Name string                 `yaml:"name"`
+	If   string                 `yaml:"if"`
+	Then []EvaluationActionStep `yaml:"then"`
 }
 
 func (local EvaluationResult) IsEqual(ctx context.Context, remote *Label) bool {
