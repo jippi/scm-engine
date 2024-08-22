@@ -6,9 +6,9 @@ The file path can be changed via `--config` CLI flag and `#!css $SCM_ENGINE_CONF
 
 ## `ignore_activity_from` {#actions data-toc-label="ignore_activity_from"}
 
-!!! question "What are activity?"
+!!! question "What is 'activity'?"
 
-  SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar.
+  SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.
 
   *Generally*, `activity` is what you see in the Merge/Pull Request `timeline` in the browser UI.
 
