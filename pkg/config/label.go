@@ -1,7 +1,6 @@
 package config
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"reflect"
@@ -25,7 +24,7 @@ const (
 
 type Labels []*Label
 
-func (labels Labels) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
+func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
 	var results []scm.EvaluationResult
 
 	// Evaluate labels

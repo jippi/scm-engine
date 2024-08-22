@@ -17,7 +17,7 @@ type Config struct {
 func (c Config) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, []Action, error) {
 	slogctx.Info(ctx, "Evaluating labels")
 
-	labels, err := c.Labels.Evaluate(ctx, evalContext)
+	labels, err := c.Labels.Evaluate(evalContext)
 	if err != nil {
 		return nil, nil, fmt.Errorf("evaluation failed: %w", err)
 	}
