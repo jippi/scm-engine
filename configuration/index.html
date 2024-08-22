@@ -1120,14 +1120,15 @@ GitHub (WIP)
 <h4 id="actions.if.then.action"><code>actions[].if.then[].action</code><a class="headerlink" href="#actions.if.then.action" title="Permanent link">&para;</a></h4>
 <p>This key controls what kind of action that should be taken.</p>
 <ul>
-<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">close</span></code> to close the Merge Request.</li>
-<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">reopen</span></code> to reopen the Merge Request.</li>
-<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">lock_discussion</span></code> to prevent further discussions on the Merge Request.</li>
-<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">unlock_discussion</span></code> to allow discussions on the Merge Request.</li>
 <li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">approve</span></code> to approve the Merge Request.</li>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">close</span></code> to close the Merge Request.</li>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">comment</span></code> to add a comment to the Merge Request</li>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">lock_discussion</span></code> to prevent further discussions on the Merge Request.</li>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">reopen</span></code> to reopen the Merge Request.</li>
 <li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">unapprove</span></code> to approve the Merge Request.</li>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">unlock_discussion</span></code> to allow discussions on the Merge Request.</li>
 <li>
-<p><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">comment</span></code> to add a comment to the Merge Request</p>
+<p><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">update_description</span></code> to update the Merge Request description</p>
 <p><em>Additional fields:</em></p>
 <ul>
 <li>(required) <code class="language-css highlight"><span class="nt">message</span></code> The message that will be commented on the Merge Request.</li>
@@ -1155,6 +1156,17 @@ GitHub (WIP)
 </ul>
 <div class="language-yaml highlight"><span class="filename">remove_label example</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove_label</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span>
+</code></pre></div>
+</li>
+<li>
+<p><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">update_description</span></code> updates the Merge Request Description</p>
+<p><em>Additional fields:</em></p>
+<ul>
+<li>(required) <code class="language-css highlight"><span class="nt">replace</span></code> A list of key/value pairs to replace in the description. The <code>key</code> is the raw string to replace in the Merge Request description. The <code>value</code> is an Expr Lang expression returning a <code>string</code> that <code>key</code> will be replaced with - all Script Attributes and Script Functions are available within the script.</li>
+</ul>
+<div class="language-yaml highlight"><span class="filename">update_description example</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update_description</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">replace</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">&quot;${{CI_MERGE_REQUEST_IID}}&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;merge_request.iid&quot;</span>
 </code></pre></div>
 </li>
 </ul>
