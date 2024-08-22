@@ -1,10 +1,6 @@
 package config
 
-type Actor struct {
-	Username string
-	Email    *string
-	IsBot    bool
-}
+import "github.com/jippi/scm-engine/pkg/scm"
 
 type IgnoreActivityFrom struct {
 	IsBot     bool     `yaml:"bots"`
@@ -12,7 +8,7 @@ type IgnoreActivityFrom struct {
 	Emails    []string `yaml:"emails"`
 }
 
-func (i IgnoreActivityFrom) Matches(actor Actor) bool {
+func (i IgnoreActivityFrom) Matches(actor scm.Actor) bool {
 	// If actor is bot and we ignore bot activity
 	if actor.IsBot && i.IsBot {
 		return true
