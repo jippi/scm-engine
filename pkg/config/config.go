@@ -9,8 +9,9 @@ import (
 )
 
 type Config struct {
-	Labels  Labels  `yaml:"label"`
-	Actions Actions `yaml:"actions"`
+	Labels             Labels             `yaml:"label"`
+	Actions            Actions            `yaml:"actions"`
+	IgnoreActivityFrom IgnoreActivityFrom `yaml:"ignore_activity_from"`
 }
 
 func (c Config) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, []Action, error) {

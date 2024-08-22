@@ -9,6 +9,12 @@ import (
 	"github.com/jippi/scm-engine/pkg/types"
 )
 
+type Actor struct {
+	Username string
+	Email    *string
+	IsBot    bool
+}
+
 // Label represents a GitLab label.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/labels.html

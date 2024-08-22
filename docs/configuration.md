@@ -4,6 +4,30 @@ The default configuration filename is `.scm-engine.yml`, either in current worki
 
 The file path can be changed via `--config` CLI flag and `#!css $SCM_ENGINE_CONFIG_FILE` environment variable.
 
+## `ignore_activity_from` {#actions data-toc-label="ignore_activity_from"}
+
+!!! question "What is 'activity'?"
+
+  SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.
+
+  *Generally*, `activity` is what you see in the Merge/Pull Request `timeline` in the browser UI.
+
+Configure what users that should be ignored when considering activity on a Merge Request
+
+### `ignore_activity_from.bots` {#actions data-toc-label="bots"}
+
+Should `bot` users be ignored when considering activity? Default: `false`
+
+### `ignore_activity_from.usernames[]` {#actions data-toc-label="usernames"}
+
+A list of usernames that should be ignored when considering user activity. Default: `[]`
+
+### `ignore_activity_from.emails[]` {#actions data-toc-label="emails"}
+
+A list of emails that should be ignored when considering user activity. Default: `[]`
+
+**NOTE:** If a user do not have a public email configured on their profile, that users activity will never match this rule.
+
 ## `actions[]` {#actions data-toc-label="actions"}
 
 !!! question "What are actions?"

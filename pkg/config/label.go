@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"github.com/expr-lang/expr"
+	"github.com/expr-lang/expr/patcher"
 	"github.com/expr-lang/expr/vm"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/stdlib"
@@ -155,6 +156,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 		opts = append(opts, expr.Env(evalContext))
 		opts = append(opts, stdlib.FunctionRenamer)
 		opts = append(opts, stdlib.Functions...)
+		opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 
 		p.scriptCompiled, err = expr.Compile(p.Script, opts...)
 		if err != nil {
@@ -170,6 +172,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 		opts = append(opts, expr.Env(evalContext))
 		opts = append(opts, stdlib.FunctionRenamer)
 		opts = append(opts, stdlib.Functions...)
+		opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 
 		p.skipIfCompiled, err = expr.Compile(p.SkipIf, opts...)
 		if err != nil {

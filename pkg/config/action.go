@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/expr-lang/expr"
+	"github.com/expr-lang/expr/patcher"
 	"github.com/expr-lang/expr/vm"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/stdlib"
@@ -47,6 +48,7 @@ func (p *Action) initialize(evalContext scm.EvalContext) (*vm.Program, error) {
 	opts = append(opts, expr.Env(evalContext))
 	opts = append(opts, stdlib.FunctionRenamer)
 	opts = append(opts, stdlib.Functions...)
+	opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 
 	return expr.Compile(p.If, opts...)
 }

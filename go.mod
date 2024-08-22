@@ -16,6 +16,7 @@ require (
 	github.com/lmittmann/tint v1.0.5
 	github.com/muesli/termenv v0.15.2
 	github.com/samber/slog-multi v1.2.0
+	github.com/stretchr/testify v1.9.0
 	github.com/teacat/noire v1.1.0
 	github.com/urfave/cli/v2 v2.27.4
 	github.com/vektah/gqlparser/v2 v2.5.16
@@ -40,6 +41,7 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/samber/lo v1.38.1 // indirect
