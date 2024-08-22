@@ -65,7 +65,7 @@ func (e ContextMergeRequest) HasAnyActivityWithin(ctx context.Context, input any
 
 	for _, note := range e.Notes {
 		// Check if we should ignore the actor (user) activity
-		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActorMatcher()) {
+		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActor()) {
 			continue
 		}
 
@@ -92,7 +92,7 @@ func (e ContextMergeRequest) HasUserActivityWithin(ctx context.Context, input an
 
 	for _, note := range e.Notes {
 		// Check if we should ignore the actor (user) activity
-		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActorMatcher()) {
+		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActor()) {
 			continue
 		}
 

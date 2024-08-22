@@ -1,6 +1,6 @@
 package config
 
-type ActorMatcher struct {
+type Actor struct {
 	Username string
 	Email    *string
 	IsBot    bool
@@ -12,7 +12,7 @@ type IgnoreActivityFrom struct {
 	Emails    []string `yaml:"emails"`
 }
 
-func (i IgnoreActivityFrom) Matches(actor ActorMatcher) bool {
+func (i IgnoreActivityFrom) Matches(actor Actor) bool {
 	// If actor is bot and we ignore bot activity
 	if actor.IsBot && i.IsBot {
 		return true
