@@ -75,7 +75,7 @@ func Server(cCtx *cli.Context) error {
 	mux.HandleFunc("GET /_status", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		slogctx.Info(ctx, "GET /_status")
+		slogctx.Debug(ctx, "GET /_status")
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("scm-engine status: OK\n\nNOTE: this is a static 'OK', no actual checks are being made"))
