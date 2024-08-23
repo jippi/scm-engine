@@ -61,6 +61,9 @@ func Server(cCtx *cli.Context) error {
 	// Initialize context
 	ctx := state.WithUpdatePipeline(cCtx.Context, cCtx.Bool(FlagUpdatePipeline))
 
+	// Add BaseURL env to ctx
+	ctx = slogctx.With(ctx, slog.String("gitlab-url", cCtx.String(FlagSCMBaseURL)))
+
 	listenAddr := net.JoinHostPort(cCtx.String(FlagServerListenHost), cCtx.String(FlagServerListenPort))
 
 	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen_address", listenAddr))
