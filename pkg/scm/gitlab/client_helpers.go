@@ -2,7 +2,6 @@ package gitlab
 
 import (
 	"fmt"
-	"net/url"
 	"strconv"
 
 	"github.com/jippi/scm-engine/pkg/scm"
@@ -17,7 +16,7 @@ func ParseID(id interface{}) (string, error) { //nolint:varnamelen
 		return strconv.Itoa(v), nil
 
 	case string:
-		return url.QueryEscape(v), nil // escape so "platform/letsgo" becomes "platform%2F/letsgo"
+		return v, nil
 
 	default:
 		return "", fmt.Errorf("invalid ID type %#v, the ID must be an int or a string", id)
