@@ -144,6 +144,8 @@ func Server(cCtx *cli.Context) error {
 
 		default:
 			errHandler(ctx, w, http.StatusInternalServerError, fmt.Errorf("unknown event type: %s", payload.EventType))
+
+			return
 		}
 
 		// Build context for rest of the pipeline

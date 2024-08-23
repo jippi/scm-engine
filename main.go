@@ -150,19 +150,3 @@ func main() {
 		log.Fatal(err)
 	}
 }
-
-func detectProviderFromEnv() string {
-	if _, ok := os.LookupEnv("SCM_ENGINE_DONT_DETECT_PROVIDER"); ok {
-		return ""
-	}
-
-	if _, ok := os.LookupEnv("GITHUB_ACTIONS"); ok {
-		return "github"
-	}
-
-	if _, ok := os.LookupEnv("GITLAB_CI"); ok {
-		return "gitlab"
-	}
-
-	return ""
-}
