@@ -73,6 +73,10 @@ func Server(cCtx *cli.Context) error {
 	}
 
 	mux.HandleFunc("GET /_status", func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+
+		slogctx.Info(ctx, "GET /_status")
+
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("scm-engine status: OK\n\nNOTE: this is a static 'OK', no actual checks are being made"))
 	})
@@ -80,7 +84,7 @@ func Server(cCtx *cli.Context) error {
 	mux.HandleFunc("POST /gitlab", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		slogctx.Info(ctx, "Handling /gitlab request")
+		slogctx.Info(ctx, "GET /gitlab request")
 
 		// Check if the webhook secret is set (and if its matching)
 		if len(ourSecret) > 0 {
