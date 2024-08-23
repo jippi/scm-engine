@@ -204,7 +204,7 @@ func Server(cCtx *cli.Context) error {
 
 	go func() {
 		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			slogctx.Error(ctx, "HTTP server error", slogctx.Err(err))
+			slogctx.Error(ctx, "HTTP server error", slog.Any("error", err))
 
 			os.Exit(1)
 		}
@@ -222,7 +222,7 @@ func Server(cCtx *cli.Context) error {
 	defer shutdownRelease()
 
 	if err := server.Shutdown(shutdownCtx); err != nil {
-		slogctx.Error(ctx, "HTTP shutdown error", slogctx.Err(err))
+		slogctx.Error(ctx, "HTTP shutdown error", slog.Any("error", err))
 
 		os.Exit(1)
 	}
