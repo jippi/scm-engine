@@ -72,6 +72,11 @@ func Server(cCtx *cli.Context) error {
 		return err
 	}
 
+	mux.HandleFunc("GET /_status", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("scm-engine status: OK\n\nNOTE: this is a static 'OK', no actual checks are being made"))
+	})
+
 	mux.HandleFunc("POST /gitlab", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
