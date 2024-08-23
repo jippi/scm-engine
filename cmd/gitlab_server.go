@@ -10,7 +10,10 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
@@ -199,5 +202,32 @@ func Server(cCtx *cli.Context) error {
 		},
 	}
 
-	return server.ListenAndServe()
+	go func() {
+		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+			slogctx.Error(ctx, "HTTP server error", slogctx.Err(err))
+
+			os.Exit(1)
+		}
+
+		slogctx.Info(ctx, "Stopped serving new connections.")
+	}()
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
+
+	slogctx.Info(ctx, "Got SIGINT/SIGTERM, starting graceful shutdown.")
+
+	shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 10*time.Second)
+	defer shutdownRelease()
+
+	if err := server.Shutdown(shutdownCtx); err != nil {
+		slogctx.Error(ctx, "HTTP shutdown error", slogctx.Err(err))
+
+		os.Exit(1)
+	}
+
+	slogctx.Info(ctx, "Graceful shutdown complete.")
+
+	return nil
 }
