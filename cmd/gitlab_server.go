@@ -58,7 +58,9 @@ func Server(cCtx *cli.Context) error {
 	// Initialize context
 	ctx := state.WithUpdatePipeline(cCtx.Context, cCtx.Bool(FlagUpdatePipeline))
 
-	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen", cCtx.String(FlagServerListen)))
+	listenAddr := fmt.Sprintf("%s:%d", cCtx.String(FlagServerListenHost), cCtx.Int(FlagServerListenPort))
+
+	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen_address", listenAddr))
 
 	mux := http.NewServeMux()
 
@@ -176,7 +178,7 @@ func Server(cCtx *cli.Context) error {
 	})
 
 	server := &http.Server{
-		Addr:         cCtx.String(FlagServerListen),
+		Addr:         listenAddr,
 		Handler:      http.Handler(mux),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,

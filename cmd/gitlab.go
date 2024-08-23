@@ -87,11 +87,20 @@ var GitLab = &cli.Command{
 					},
 				},
 				&cli.StringFlag{
-					Name:  FlagServerListen,
-					Usage: "IP + Port that the HTTP server should listen on",
-					Value: "0.0.0.0:3000",
+					Name:  FlagServerListenHost,
+					Usage: "IP that the HTTP server should listen on",
+					Value: "0.0.0.0",
 					EnvVars: []string{
-						"SCM_ENGINE_LISTEN",
+						"SCM_ENGINE_LISTEN_ADDR",
+					},
+				},
+				&cli.IntFlag{
+					Name:  FlagServerListenPort,
+					Usage: "Port that the HTTP server should listen on",
+					Value: 3000,
+					EnvVars: []string{
+						"SCM_ENGINE_LISTEN_PORT",
+						"PORT",
 					},
 				},
 				&cli.BoolFlag{
