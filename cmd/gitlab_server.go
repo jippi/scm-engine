@@ -152,6 +152,7 @@ func Server(cCtx *cli.Context) error {
 		ctx = state.WithCommitSHA(ctx, gitSha)
 		ctx = state.ContextWithMergeRequestID(ctx, id)
 		ctx = slogctx.With(ctx, slog.String("event_type", payload.EventType))
+		ctx = slogctx.With(ctx, slog.String("config_file", cCtx.String(FlagConfigFile)))
 
 		// Get the remote config file
 		file, err := client.MergeRequests().GetRemoteConfig(ctx, cCtx.String(FlagConfigFile), gitSha)

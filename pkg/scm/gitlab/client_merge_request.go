@@ -51,12 +51,12 @@ func (client *MergeRequestClient) Update(ctx context.Context, opt *scm.UpdateMer
 func (client *MergeRequestClient) GetRemoteConfig(ctx context.Context, filename, ref string) (io.Reader, error) {
 	project, err := ParseID(state.ProjectID(ctx))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not parse project id: %w", err)
 	}
 
 	file, _, err := client.client.wrapped.RepositoryFiles.GetRawFile(project, filename, &go_gitlab.GetRawFileOptions{Ref: scm.Ptr(ref)})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to read remote raw file: %w", err)
 	}
 
 	return bytes.NewReader(file), nil
