@@ -61,6 +61,9 @@ func main() {
 				Name:  cmd.FlagDryRun,
 				Usage: "Dry run, don't actually _do_ actions, just print them",
 				Value: false,
+				EnvVars: []string{
+					"SCM_ENGINE_DRY_RUN",
+				},
 			},
 		},
 		Commands: []*cli.Command{
