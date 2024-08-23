@@ -35,6 +35,13 @@ func ParseLogLevel(name string, fallback slog.Level) slog.Level {
 func logHandler(out io.Writer) slog.Handler {
 	logLevel := ParseLogLevel(os.Getenv("LOG_LEVEL"), slog.LevelInfo)
 
+	if val, ok := os.LookupEnv("LOG_FORMAT"); ok && val == "json" {
+		return slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			Level:     logLevel,
+			AddSource: logLevel == slog.LevelDebug,
+		})
+	}
+
 	if _, ok := os.LookupEnv("CI"); ok {
 		return tint.NewHandler(
 			out,
