@@ -187,14 +187,14 @@ aurs:
       # man pages
       # install -Dm644 "./manpages/scm-engine.1.gz" "${pkgdir}/usr/share/man/man1/scm-engine.1.gz"
 
-scoops:
-  - repository:
-      owner: jippi
-      name: scoop-bucket
-    directory: bucket
-    homepage: https://github.com/jippi/scm-engine
-    description: Make working with .env files easier
-    license: MIT
+# scoops:
+#   - repository:
+#       owner: jippi
+#       name: scoop-bucket
+#     directory: bucket
+#     homepage: https://github.com/jippi/scm-engine
+#     description: Make working with .env files easier
+#     license: MIT
 
 nfpms:
   - id: packages_for_gemfury
