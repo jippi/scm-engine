@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"time"
+
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/urfave/cli/v2"
 )
@@ -103,12 +105,27 @@ var GitLab = &cli.Command{
 						"PORT",
 					},
 				},
+				&cli.DurationFlag{
+					Name:  FlagServerTimeout,
+					Usage: "Timeout for webhook requests",
+					Value: 5 * time.Second,
+					EnvVars: []string{
+						"SCM_ENGINE_TIMEOUT",
+					},
+				},
 				&cli.BoolFlag{
 					Name:  FlagUpdatePipeline,
 					Usage: "Update the CI pipeline status with progress",
 					Value: true,
 					EnvVars: []string{
 						"SCM_ENGINE_UPDATE_PIPELINE",
+					},
+				},
+				&cli.StringFlag{
+					Name:  FlagUpdatePipelineURL,
+					Usage: "(Optional) URL to where logs can be found for the pipeline",
+					EnvVars: []string{
+						"SCM_ENGINE_UPDATE_PIPELINE_URL",
 					},
 				},
 			},

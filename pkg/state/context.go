@@ -16,6 +16,7 @@ const (
 	mergeRequestID
 	commitSha
 	updatePipeline
+	updatePipelineURL
 	provider
 	token
 	baseURL
@@ -70,9 +71,10 @@ func WithDryRun(ctx context.Context, dry bool) context.Context {
 	return ctx
 }
 
-func WithUpdatePipeline(ctx context.Context, update bool) context.Context {
+func WithUpdatePipeline(ctx context.Context, update bool, pattern string) context.Context {
 	ctx = slogctx.With(ctx, slog.Bool("update_pipeline", update))
 	ctx = context.WithValue(ctx, updatePipeline, update)
+	ctx = context.WithValue(ctx, updatePipelineURL, pattern)
 
 	return ctx
 }
@@ -95,8 +97,11 @@ func IsDryRun(ctx context.Context) bool {
 	return ctx.Value(dryRun).(bool) //nolint:forcetypeassert
 }
 
-func ShouldUpdatePipeline(ctx context.Context) bool {
-	return !IsDryRun(ctx) && ctx.Value(updatePipeline).(bool) //nolint:forcetypeassert
+func ShouldUpdatePipeline(ctx context.Context) (bool, string) {
+	shouldUpdatePipeline := !IsDryRun(ctx) && ctx.Value(updatePipeline).(bool) //nolint:forcetypeassert
+	shouldUpdatePipelineURL := ctx.Value(updatePipelineURL).(string)           //nolint:forcetypeassert
+
+	return shouldUpdatePipeline, shouldUpdatePipelineURL
 }
 
 func MergeRequestID(ctx context.Context) string {

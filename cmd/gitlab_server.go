@@ -16,63 +16,28 @@ import (
 	slogctx "github.com/veqryn/slog-context"
 )
 
-type Commit struct {
-	ID string `json:"id"`
-}
-
-type MergeRequest struct {
-	IID        int    `json:"iid"`
-	LastCommit Commit `json:"last_commit"`
-}
-
-type Project struct {
-	PathWithNamespace string `json:"path_with_namespace"`
-}
-
-type Payload struct {
-	EventType        string        `json:"event_type"`
-	Project          Project       `json:"project"`                     // "project" is sent for all events
-	ObjectAttributes *MergeRequest `json:"object_attributes,omitempty"` // "object_attributes" is sent on "merge_request" events
-	MergeRequest     *MergeRequest `json:"merge_request,omitempty"`     // "merge_request" is sent on "note" activity
-}
-
-func errHandler(ctx context.Context, w http.ResponseWriter, code int, err error) {
-	switch code {
-	case http.StatusOK:
-		slogctx.Info(ctx, "Server response", slog.Int("response_code", code), slog.Any("response_message", err))
-
-	default:
-		slogctx.Error(ctx, "Server response", slog.Int("response_code", code), slog.Any("response_message", err))
-	}
-
-	w.WriteHeader(code)
-	w.Write([]byte(err.Error()))
-
-	return
-}
-
 func Server(cCtx *cli.Context) error {
-	// Initialize context
-	ctx := state.WithUpdatePipeline(cCtx.Context, cCtx.Bool(FlagUpdatePipeline))
+	// Setup context configuration
+	ctx := state.WithUpdatePipeline(cCtx.Context, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 
-	// Add BaseURL env to ctx
+	// Add logging context key/value pairs
 	ctx = slogctx.With(ctx, slog.String("gitlab_url", cCtx.String(FlagSCMBaseURL)))
 	ctx = slogctx.With(ctx, slog.String("config_file", cCtx.String(FlagConfigFile)))
+	ctx = slogctx.With(ctx, slog.Duration("server_timeout", cCtx.Duration(FlagServerTimeout)))
 
 	listenAddr := net.JoinHostPort(cCtx.String(FlagServerListenHost), cCtx.String(FlagServerListenPort))
 
 	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen_address", listenAddr))
 
 	mux := http.NewServeMux()
-
 	mux.HandleFunc("GET /_status", GitLabStatusHandler)
 	mux.HandleFunc("POST /gitlab", GitLabWebhookHandler(ctx, cCtx.String(FlagWebhookSecret), cCtx.String(FlagConfigFile)))
 
 	server := &http.Server{
 		Addr:         listenAddr,
-		Handler:      http.Handler(mux),
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 5 * time.Second,
+		Handler:      mux,
+		ReadTimeout:  cCtx.Duration(FlagServerTimeout),
+		WriteTimeout: cCtx.Duration(FlagServerTimeout),
 		BaseContext: func(l net.Listener) context.Context {
 			return ctx
 		},

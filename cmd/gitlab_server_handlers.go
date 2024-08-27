@@ -68,7 +68,7 @@ func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string)
 		}
 
 		// Decode request payload
-		var payload Payload
+		var payload GitlabWebhookPayload
 		if err := json.NewDecoder(bytes.NewReader(body)).Decode(&payload); err != nil {
 			errHandler(ctx, w, http.StatusBadRequest, fmt.Errorf("could not decode POST body into Payload struct: %w", err))
 

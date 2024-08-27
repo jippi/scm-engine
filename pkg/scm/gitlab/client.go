@@ -61,14 +61,26 @@ func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) 
 
 // Start pipeline
 func (client *Client) Start(ctx context.Context) error {
-	if !state.ShouldUpdatePipeline(ctx) {
+	ok, pattern := state.ShouldUpdatePipeline(ctx)
+	if !ok {
 		return nil
+	}
+
+	var targetURL *string
+
+	if len(pattern) != 0 {
+		link := pattern
+		link = strings.ReplaceAll(link, "%PROJECT_ID%", state.ProjectID(ctx))
+		link = strings.ReplaceAll(link, "%MR_ID%", state.MergeRequestID(ctx))
+
+		targetURL = &link
 	}
 
 	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       go_gitlab.Running,
 		Context:     pipelineName,
 		Description: scm.Ptr("Currently evaluating MR"),
+		TargetURL:   targetURL,
 	})
 
 	switch response.StatusCode {
@@ -86,8 +98,19 @@ func (client *Client) Start(ctx context.Context) error {
 
 // Stop pipeline
 func (client *Client) Stop(ctx context.Context, err error) error {
-	if !state.ShouldUpdatePipeline(ctx) {
+	ok, pattern := state.ShouldUpdatePipeline(ctx)
+	if !ok {
 		return nil
+	}
+
+	var targetURL *string
+
+	if len(pattern) != 0 {
+		link := pattern
+		link = strings.ReplaceAll(link, "%PROJECT_ID%", state.ProjectID(ctx))
+		link = strings.ReplaceAll(link, "%MR_ID%", state.MergeRequestID(ctx))
+
+		targetURL = &link
 	}
 
 	status := go_gitlab.Success
@@ -102,6 +125,7 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 		State:       status,
 		Context:     pipelineName,
 		Description: scm.Ptr(message),
+		TargetURL:   targetURL,
 	})
 
 	switch response.StatusCode {
