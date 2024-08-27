@@ -70,8 +70,8 @@ func (client *Client) Start(ctx context.Context) error {
 
 	if len(pattern) != 0 {
 		link := pattern
-		link = strings.ReplaceAll(link, "%PROJECT_ID%", state.ProjectID(ctx))
-		link = strings.ReplaceAll(link, "%MR_ID%", state.MergeRequestID(ctx))
+		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
+		link = strings.ReplaceAll(link, "__MR_ID__", state.MergeRequestID(ctx))
 
 		targetURL = &link
 	}
@@ -107,8 +107,8 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 
 	if len(pattern) != 0 {
 		link := pattern
-		link = strings.ReplaceAll(link, "%PROJECT_ID%", state.ProjectID(ctx))
-		link = strings.ReplaceAll(link, "%MR_ID%", state.MergeRequestID(ctx))
+		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
+		link = strings.ReplaceAll(link, "__MR_ID__", state.MergeRequestID(ctx))
 
 		targetURL = &link
 	}

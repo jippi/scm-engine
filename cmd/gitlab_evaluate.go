@@ -13,7 +13,7 @@ func Evaluate(cCtx *cli.Context) error {
 	ctx := state.WithProjectID(cCtx.Context, cCtx.String(FlagSCMProject))
 	ctx = state.WithCommitSHA(ctx, cCtx.String(FlagCommitSHA))
 	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
-	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline))
+	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 
 	cfg, err := config.LoadFile(cCtx.String(FlagConfigFile))
 	if err != nil {
