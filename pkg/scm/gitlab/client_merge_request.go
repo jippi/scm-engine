@@ -10,7 +10,6 @@ import (
 	"github.com/hasura/go-graphql-client"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
-	slogctx "github.com/veqryn/slog-context"
 	go_gitlab "github.com/xanzy/go-gitlab"
 	"golang.org/x/oauth2"
 )
@@ -54,8 +53,6 @@ func (client *MergeRequestClient) GetRemoteConfig(ctx context.Context, filename,
 	if err != nil {
 		return nil, fmt.Errorf("could not parse project id: %w", err)
 	}
-
-	slogctx.Info(ctx, fmt.Sprintf("GetRemoteConfig: project: %s; filename: %s; ref: %s", project, filename, ref))
 
 	file, _, err := client.client.wrapped.RepositoryFiles.GetRawFile(project, filename, &go_gitlab.GetRawFileOptions{Ref: scm.Ptr(ref)})
 	if err != nil {
