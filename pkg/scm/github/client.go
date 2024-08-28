@@ -45,7 +45,7 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 	return client.mergeRequests
 }
 
-func (client *Client) FindMergeRequestsForPeriodicEvaluation(context.Context, scm.ProjectListFilter) ([]scm.PeriodicEvaluationMergeRequest, error) {
+func (client *Client) FindMergeRequestsForPeriodicEvaluation(context.Context, scm.MergeRequestListFilters) ([]scm.PeriodicEvaluationMergeRequest, error) {
 	return nil, errors.New("not implemented yet")
 }
 

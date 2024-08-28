@@ -13,13 +13,15 @@ import (
 	slogctx "github.com/veqryn/slog-context"
 )
 
-func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter scm.ProjectListFilter, wg *sync.WaitGroup) {
+func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter scm.MergeRequestListFilters, wg *sync.WaitGroup) {
 	// Empty interval means disabling
 	if interval == 0 {
 		slogctx.Warn(ctx, "scm-engine will not be doing periodic evaluation since interval is '0'. Set 'SCM_ENGINE_PERIODIC_EVALUATION_INTERVAL' or '--periodic-evaluation-interval'  to a non-zero duration to activate")
 
 		return
 	}
+
+	wg.Add(1) // +1: Periodic Evaluation
 
 	// I can't think of a good reason why anyone would want to have it running more frequently than every 15m, so enforcing a floor value.
 	//
@@ -43,8 +45,6 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 		slog.Duration("periodic_evaluation_interval", interval),
 		slog.Any("periodic_evaluation_filters", filter.AsGraphqlVariables()),
 	)
-
-	wg.Add(1) // +1: Periodic Evaluation
 
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done() // -1: Periodic Evaluation
@@ -91,6 +91,7 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 						continue
 					}
 
+					// Process the Merge Request
 					if err := ProcessMR(ctx, client, cfg, nil); err != nil {
 						slogctx.Error(ctx, "failed to process MR", slog.Any("error", err))
 

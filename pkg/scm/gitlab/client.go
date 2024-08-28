@@ -58,7 +58,7 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 
 // FindMergeRequestsForPeriodicEvaluation will find all Merge Requests legible for
 // periodic re-evaluation.
-func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters scm.ProjectListFilter) ([]scm.PeriodicEvaluationMergeRequest, error) {
+func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters scm.MergeRequestListFilters) ([]scm.PeriodicEvaluationMergeRequest, error) {
 	httpClient := oauth2.NewClient(
 		ctx,
 		oauth2.StaticTokenSource(

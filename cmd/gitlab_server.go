@@ -19,6 +19,8 @@ import (
 )
 
 func Server(cCtx *cli.Context) error {
+	var wg sync.WaitGroup
+
 	// Setup context configuration
 	ctx := state.WithUpdatePipeline(cCtx.Context, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 
@@ -27,22 +29,28 @@ func Server(cCtx *cli.Context) error {
 	ctx = slogctx.With(ctx, slog.String("config_file", cCtx.String(FlagConfigFile)))
 	ctx = slogctx.With(ctx, slog.Duration("server_timeout", cCtx.Duration(FlagServerTimeout)))
 
-	listenAddr := net.JoinHostPort(cCtx.String(FlagServerListenHost), cCtx.String(FlagServerListenPort))
+	//
+	// Setup periodic evaluation logic
+	//
 
-	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen_address", listenAddr))
+	slogctx.Info(ctx, "Starting periodic evaluation server")
 
-	filter := scm.ProjectListFilter{
-		IgnoreMergeRequestLabels: cCtx.StringSlice(FlagPeriodicEvaluationIgnoreMergeRequestsWithLabel),
-		OnlyProjectMembership:    cCtx.Bool(FlagPeriodicEvaluationOnlyProjectsWithMembership),
-		ProjectTopics:            cCtx.StringSlice(FlagPeriodicEvaluationOnlyProjectsWithTopics),
-		SCMConfigurationFilePath: cCtx.String(FlagConfigFile),
+	filter := scm.MergeRequestListFilters{
+		IgnoreMergeRequestWithLabels: cCtx.StringSlice(FlagPeriodicEvaluationIgnoreMergeRequestsWithLabel),
+		OnlyProjectsWithMembership:   cCtx.Bool(FlagPeriodicEvaluationOnlyProjectsWithMembership),
+		OnlyProjectsWithTopics:       cCtx.StringSlice(FlagPeriodicEvaluationOnlyProjectsWithTopics),
+		SCMConfigurationFilePath:     cCtx.String(FlagConfigFile),
 	}
 
-	var wg sync.WaitGroup
-
-	// Setup periodic evaluation logic
 	evalCtx, stopPeriodicEvaluation := context.WithCancel(ctx)
 	startPeriodicEvaluation(evalCtx, cCtx.Duration(FlagPeriodicEvaluationInterval), filter, &wg)
+
+	//
+	// Setup HTTP server
+	//
+
+	listenAddr := net.JoinHostPort(cCtx.String(FlagServerListenHost), cCtx.String(FlagServerListenPort))
+	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen_address", listenAddr))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /_status", GitLabStatusHandler)

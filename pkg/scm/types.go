@@ -200,18 +200,18 @@ func (local EvaluationResult) IsEqual(ctx context.Context, remote *Label) bool {
 	return true
 }
 
-type ProjectListFilter struct {
-	IgnoreMergeRequestLabels []string
-	OnlyProjectMembership    bool
-	ProjectTopics            []string
-	SCMConfigurationFilePath string
+type MergeRequestListFilters struct {
+	IgnoreMergeRequestWithLabels []string
+	OnlyProjectsWithMembership   bool
+	OnlyProjectsWithTopics       []string
+	SCMConfigurationFilePath     string
 }
 
-func (filter *ProjectListFilter) AsGraphqlVariables() map[string]any {
+func (filter *MergeRequestListFilters) AsGraphqlVariables() map[string]any {
 	output := map[string]any{
-		"mr_ignore_labels":     filter.IgnoreMergeRequestLabels,
-		"project_membership":   filter.OnlyProjectMembership,
-		"project_topics":       filter.ProjectTopics,
+		"mr_ignore_labels":     filter.IgnoreMergeRequestWithLabels,
+		"project_membership":   filter.OnlyProjectsWithMembership,
+		"project_topics":       filter.OnlyProjectsWithTopics,
 		"scm_config_file_path": filter.SCMConfigurationFilePath,
 	}
 
@@ -219,11 +219,11 @@ func (filter *ProjectListFilter) AsGraphqlVariables() map[string]any {
 		output["scm_config_file_path"] = ".scm-engine.yml"
 	}
 
-	if len(filter.ProjectTopics) == 0 {
+	if len(filter.OnlyProjectsWithTopics) == 0 {
 		output["project_topics"] = []string{}
 	}
 
-	if len(filter.IgnoreMergeRequestLabels) == 0 {
+	if len(filter.IgnoreMergeRequestWithLabels) == 0 {
 		output["mr_ignore_labels"] = []string{}
 	}
 
