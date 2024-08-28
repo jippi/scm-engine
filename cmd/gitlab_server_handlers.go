@@ -101,7 +101,7 @@ func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string)
 
 		// Build context for rest of the pipeline
 		ctx = state.WithCommitSHA(ctx, gitSha)
-		ctx = state.ContextWithMergeRequestID(ctx, id)
+		ctx = state.WithMergeRequestID(ctx, id)
 		ctx = slogctx.With(ctx, slog.String("event_type", payload.EventType))
 
 		// Get the remote config file

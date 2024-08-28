@@ -34,7 +34,7 @@ func Evaluate(cCtx *cli.Context) error {
 		}
 
 		for _, mr := range res {
-			ctx := state.ContextWithMergeRequestID(ctx, mr.ID)
+			ctx := state.WithMergeRequestID(ctx, mr.ID)
 			ctx = state.WithCommitSHA(ctx, mr.SHA)
 
 			if err := ProcessMR(ctx, client, cfg, nil); err != nil {
@@ -44,7 +44,7 @@ func Evaluate(cCtx *cli.Context) error {
 
 	// If the flag is set, use that for evaluation
 	case cCtx.String(FlagMergeRequestID) != "":
-		ctx = state.ContextWithMergeRequestID(ctx, cCtx.String(FlagMergeRequestID))
+		ctx = state.WithMergeRequestID(ctx, cCtx.String(FlagMergeRequestID))
 
 		return ProcessMR(ctx, client, cfg, nil)
 
@@ -54,7 +54,7 @@ func Evaluate(cCtx *cli.Context) error {
 
 	default:
 		for _, mr := range cCtx.Args().Slice() {
-			ctx = state.ContextWithMergeRequestID(ctx, mr)
+			ctx = state.WithMergeRequestID(ctx, mr)
 
 			if err := ProcessMR(ctx, client, cfg, nil); err != nil {
 				return err

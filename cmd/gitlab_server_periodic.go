@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
@@ -12,63 +13,91 @@ import (
 	slogctx "github.com/veqryn/slog-context"
 )
 
-func ServerPeriodicEvaluation(ctx context.Context, interval time.Duration, filter scm.ProjectListFilter) {
+func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter scm.ProjectListFilter, wg *sync.WaitGroup) {
+	// Empty interval means disabling
 	if interval == 0 {
 		slogctx.Warn(ctx, "scm-engine will not be doing periodic evaluation since interval is '0'. Set 'SCM_ENGINE_PERIODIC_EVALUATION_INTERVAL' or '--periodic-evaluation-interval'  to a non-zero duration to activate")
 
 		return
 	}
 
-	// Initialize GitLab client
+	// I can't think of a good reason why anyone would want to have it running more frequently than every 15m, so enforcing a floor value.
+	//
+	// If you are reading this code and need more frequent periodic evaluations then please open a PR or issue with use-case
+	// and I will happily re-evaluate this logic.
+	if interval < 15*time.Minute {
+		slogctx.Warn(ctx, "'SCM_ENGINE_PERIODIC_EVALUATION_INTERVAL' / '--periodic-evaluation-interval' is set to a value less than '15 minutes'; changing the value to '15m'")
+
+		interval = 15 * time.Minute
+	}
+
+	// Initialize the SCM-Engine client
 	client, err := getClient(ctx)
 	if err != nil {
 		panic(err)
 	}
 
+	// Configure logger and custom fields
 	ctx = slogctx.With(ctx,
 		slog.String("subsystem", "periodic_evaluation"),
 		slog.Duration("periodic_evaluation_interval", interval),
 		slog.Any("periodic_evaluation_filters", filter.AsGraphqlVariables()),
 	)
 
-	go func() {
-		timer := time.NewTicker(interval)
+	wg.Add(1) // +1: Periodic Evaluation
+
+	go func(wg *sync.WaitGroup) {
+		defer wg.Done() // -1: Periodic Evaluation
+
+		ticker := time.NewTicker(interval)
+		defer ticker.Stop()
+
+		slogctx.Info(ctx, "Waiting for first evaluation cycle tick to happen")
 
 		for {
-			slogctx.Info(ctx, "Waiting for next periodic evaluation")
-			<-timer.C
-			slogctx.Info(ctx, "Starting periodic evaluation cycle")
+			select {
+			case <-ctx.Done():
+				slogctx.Info(ctx, "Stopping periodic evaluation as scm-engine is shutting down")
 
-			results, err := client.FindMergeRequestsForPeriodicEvaluation(ctx, filter)
-			if err != nil {
-				slogctx.Error(ctx, "Failed to generate merge request list to evaluate", slog.Any("error", err))
+				return
 
-				continue
-			}
+			case <-ticker.C:
+				slogctx.Info(ctx, "Starting periodic evaluation cycle")
 
-			for _, mergeRequest := range results {
-				ctx := state.ContextWithMergeRequestID(ctx, mergeRequest.MergeRequestID)
-				ctx = state.WithProjectID(ctx, mergeRequest.Project)
-				ctx = state.WithCommitSHA(ctx, mergeRequest.SHA)
-
-				if len(mergeRequest.ConfigBlob) == 0 {
-					slogctx.Warn(ctx, "Could not find the scm-engine configuration file in the repository, skipping...")
-
-					continue
-				}
-
-				// Parse the file
-				cfg, err := config.ParseFile(strings.NewReader(mergeRequest.ConfigBlob))
+				results, err := client.FindMergeRequestsForPeriodicEvaluation(ctx, filter)
 				if err != nil {
-					slogctx.Error(ctx, "could not parse config file", slog.Any("error", err))
+					slogctx.Error(ctx, "Failed to generate merge request list to evaluate", slog.Any("error", err))
 
 					continue
 				}
 
-				ProcessMR(ctx, client, cfg, nil)
-			}
+				for _, mergeRequest := range results {
+					ctx := ctx // make sure we define a
+					ctx = state.WithCommitSHA(ctx, mergeRequest.SHA)
+					ctx = state.WithMergeRequestID(ctx, mergeRequest.MergeRequestID)
+					ctx = state.WithProjectID(ctx, mergeRequest.Project)
 
-			panic("end)")
-		}
-	}()
+					if len(mergeRequest.ConfigBlob) == 0 {
+						slogctx.Warn(ctx, "Could not find the scm-engine configuration file in the repository, skipping...")
+
+						continue
+					}
+
+					// Parse the file
+					cfg, err := config.ParseFile(strings.NewReader(mergeRequest.ConfigBlob))
+					if err != nil {
+						slogctx.Error(ctx, "could not parse config file", slog.Any("error", err))
+
+						continue
+					}
+
+					if err := ProcessMR(ctx, client, cfg, nil); err != nil {
+						slogctx.Error(ctx, "failed to process MR", slog.Any("error", err))
+
+						continue
+					}
+				} // end loop results
+			} // end select
+		} // end loop
+	}(wg)
 }
