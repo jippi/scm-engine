@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/urfave/cli/v2"
 	slogctx "github.com/veqryn/slog-context"
@@ -28,6 +29,15 @@ func Server(cCtx *cli.Context) error {
 	listenAddr := net.JoinHostPort(cCtx.String(FlagServerListenHost), cCtx.String(FlagServerListenPort))
 
 	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen_address", listenAddr))
+
+	filter := scm.ProjectListFilter{
+		OnlyProjectMembership:    cCtx.Bool(FlagPeriodicEvaluationOnlyProjectsWithMembership),
+		ProjectTopics:            cCtx.StringSlice(FlagPeriodicEvaluationOnlyProjectsWithTopics),
+		IgnoreMergeRequestLabels: cCtx.StringSlice(FlagPeriodicEvaluationIgnoreMergeRequestsWithLabel),
+		SCMConfigurationFilePath: cCtx.String(FlagConfigFile),
+	}
+
+	ServerPeriodicEvaluation(ctx, cCtx.Duration(FlagPeriodicEvaluationInterval), filter)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /_status", GitLabStatusHandler)

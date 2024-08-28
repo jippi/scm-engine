@@ -128,6 +128,35 @@ var GitLab = &cli.Command{
 						"SCM_ENGINE_UPDATE_PIPELINE_URL",
 					},
 				},
+				&cli.DurationFlag{
+					Name:  FlagPeriodicEvaluationInterval,
+					Usage: "(Optional) Frequency of which to evaluate all Merge Requests regardless of user activity",
+					EnvVars: []string{
+						"SCM_ENGINE_PERIODIC_EVALUATION_INTERVAL",
+					},
+				},
+				&cli.StringSliceFlag{
+					Name:  FlagPeriodicEvaluationIgnoreMergeRequestsWithLabel,
+					Usage: "(Optional) Ignore MR with these labels",
+					EnvVars: []string{
+						"SCM_ENGINE_PERIODIC_EVALUATION_IGNORE_MR_WITH_LABELS",
+					},
+				},
+				&cli.StringSliceFlag{
+					Name:  FlagPeriodicEvaluationOnlyProjectsWithTopics,
+					Usage: "(Optional) Only evaluate projects with these topics",
+					EnvVars: []string{
+						"SCM_ENGINE_PERIODIC_EVALUATION_REQUIRE_PROJECT_TOPICS",
+					},
+				},
+				&cli.BoolFlag{
+					Name:  FlagPeriodicEvaluationOnlyProjectsWithMembership,
+					Usage: "(Optional) Only evaluate projects with membership",
+					Value: true,
+					EnvVars: []string{
+						"SCM_ENGINE_PERIODIC_EVALUATION_ONLY_PROJECTS_WITH_MEMBERSHIP",
+					},
+				},
 			},
 		},
 	},

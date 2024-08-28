@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"errors"
 
 	go_github "github.com/google/go-github/v64/github"
 	"github.com/jippi/scm-engine/pkg/scm"
@@ -42,6 +43,10 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 	}
 
 	return client.mergeRequests
+}
+
+func (client *Client) FindMergeRequestsForPeriodicEvaluation(context.Context, scm.ProjectListFilter) ([]scm.PeriodicEvaluationMergeRequest, error) {
+	return nil, errors.New("not implemented yet")
 }
 
 // EvalContext creates a new evaluation context for GitLab specific usage

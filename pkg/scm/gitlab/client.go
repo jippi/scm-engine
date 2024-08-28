@@ -7,10 +7,12 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/hasura/go-graphql-client"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
 	go_gitlab "github.com/xanzy/go-gitlab"
+	"golang.org/x/oauth2"
 )
 
 var pipelineName = scm.Ptr("scm-engine")
@@ -52,6 +54,51 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 	}
 
 	return client.mergeRequests
+}
+
+// FindMergeRequestsForPeriodicEvaluation will find all Merge Requests legible for
+// periodic re-evaluation.
+func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters scm.ProjectListFilter) ([]scm.PeriodicEvaluationMergeRequest, error) {
+	httpClient := oauth2.NewClient(
+		ctx,
+		oauth2.StaticTokenSource(
+			&oauth2.Token{
+				AccessToken: state.Token(ctx),
+			},
+		),
+	)
+
+	gClient := graphql.NewClient(
+		graphqlBaseURL(client.wrapped.BaseURL())+"/api/graphql",
+		httpClient,
+	)
+
+	var response PeriodicEvaluationResult
+
+	if err := gClient.Query(ctx, &response, filters.AsGraphqlVariables()); err != nil {
+		return nil, err
+	}
+
+	var result []scm.PeriodicEvaluationMergeRequest
+
+	for _, project := range response.Projects.Nodes {
+		for _, mr := range project.MergeRequests.Nodes {
+			item := scm.PeriodicEvaluationMergeRequest{
+				Project:        project.FullPath,
+				MergeRequestID: mr.IID,
+				SHA:            mr.SHA,
+			}
+
+			// Only set the ConfigBlob struct if the config file exists in the repository
+			if len(project.Repository.Blobs.Nodes) == 1 {
+				item.ConfigBlob = project.Repository.Blobs.Nodes[0].Blob
+			}
+
+			result = append(result, item)
+		}
+	}
+
+	return result, nil
 }
 
 // EvalContext creates a new evaluation context for GitLab specific usage
