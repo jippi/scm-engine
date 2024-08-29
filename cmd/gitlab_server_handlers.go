@@ -35,8 +35,6 @@ func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string)
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		slogctx.Info(ctx, "GET /gitlab request")
-
 		// Check if the webhook secret is set (and if its matching)
 		if len(ourSecret) > 0 {
 			theirSecret := r.Header.Get("X-Gitlab-Token")
@@ -98,6 +96,8 @@ func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string)
 
 			return
 		}
+
+		slogctx.Info(ctx, "GET /gitlab webhook")
 
 		// Build context for rest of the pipeline
 		ctx = state.WithCommitSHA(ctx, gitSha)
