@@ -45,6 +45,8 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	slogctx.Info(ctx, "Processing MR")
 
+	slogctx.Debug(ctx, "webhook event data", slog.Any("event", event))
+
 	remoteLabels, err := client.Labels().List(ctx)
 	if err != nil {
 		return err
@@ -62,6 +64,8 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 		return nil
 	}
+
+	slogctx.Debug(ctx, "eval context data", slog.Any("eval_context", evalContext))
 
 	evalContext.SetWebhookEvent(event)
 	// Add our "ctx" to evalContext so Expr-Lang functions can reference them
