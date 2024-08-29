@@ -62,6 +62,11 @@ func (e ContextMergeRequest) HasActivityWithin(ctx context.Context, input any) b
 	return e.HasAnyActivityWithin(ctx, input)
 }
 
+// updatedWithinDuration checks if the MR has been updated within the provided duration
+func (e ContextMergeRequest) updatedWithinDuration(dur time.Duration) bool {
+	return time.Now().Sub(e.UpdatedAt) < dur
+}
+
 // has_any_activity_within
 func (e ContextMergeRequest) HasAnyActivityWithin(ctx context.Context, input any) bool {
 	dur := stdlib.ToDuration(input)
@@ -69,7 +74,7 @@ func (e ContextMergeRequest) HasAnyActivityWithin(ctx context.Context, input any
 	cfg := config.FromContext(ctx)
 
 	// If the MR UpdatedAt has been updated within the duration, then we got some kind of activity
-	if now.Sub(e.UpdatedAt) < dur {
+	if e.updatedWithinDuration(dur) {
 		return true
 	}
 
