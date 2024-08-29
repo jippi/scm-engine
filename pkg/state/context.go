@@ -86,7 +86,7 @@ func WithCommitSHA(ctx context.Context, sha string) context.Context {
 	return ctx
 }
 
-func ContextWithMergeRequestID(ctx context.Context, id string) context.Context {
+func WithMergeRequestID(ctx context.Context, id string) context.Context {
 	ctx = slogctx.With(ctx, "merge_request_id", id)
 	ctx = context.WithValue(ctx, mergeRequestID, id)
 

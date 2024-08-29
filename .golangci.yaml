@@ -179,6 +179,7 @@ linters-settings:
       - i
       - id
       - ok
+      - wg
       - r
       - w
 

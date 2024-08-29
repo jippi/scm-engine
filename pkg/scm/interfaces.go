@@ -8,6 +8,7 @@ import (
 type Client interface {
 	Labels() LabelClient
 	MergeRequests() MergeRequestClient
+	FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters MergeRequestListFilters) ([]PeriodicEvaluationMergeRequest, error)
 	EvalContext(ctx context.Context) (EvalContext, error)
 	ApplyStep(ctx context.Context, evalContext EvalContext, update *UpdateMergeRequestOptions, step EvaluationActionStep) error
 	Start(ctx context.Context) error
@@ -32,7 +33,3 @@ type EvalContext interface {
 	SetContext(ctx context.Context)
 	GetDescription() string
 }
-
-type EvalContextualizer struct{}
-
-func (e EvalContextualizer) _isEvalContext() {}

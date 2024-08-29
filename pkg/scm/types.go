@@ -199,3 +199,44 @@ func (local EvaluationResult) IsEqual(ctx context.Context, remote *Label) bool {
 
 	return true
 }
+
+type MergeRequestListFilters struct {
+	IgnoreMergeRequestWithLabels []string
+	OnlyProjectsWithMembership   bool
+	OnlyProjectsWithTopics       []string
+	SCMConfigurationFilePath     string
+}
+
+func (filter *MergeRequestListFilters) AsGraphqlVariables() map[string]any {
+	output := map[string]any{
+		"mr_ignore_labels":     filter.IgnoreMergeRequestWithLabels,
+		"project_membership":   filter.OnlyProjectsWithMembership,
+		"project_topics":       filter.OnlyProjectsWithTopics,
+		"scm_config_file_path": filter.SCMConfigurationFilePath,
+	}
+
+	if len(filter.SCMConfigurationFilePath) == 0 {
+		output["scm_config_file_path"] = ".scm-engine.yml"
+	}
+
+	if len(filter.OnlyProjectsWithTopics) == 0 {
+		output["project_topics"] = []string{}
+	}
+
+	if len(filter.IgnoreMergeRequestWithLabels) == 0 {
+		output["mr_ignore_labels"] = []string{}
+	}
+
+	return output
+}
+
+type PeriodicEvaluationMergeRequest struct {
+	Project        string
+	MergeRequestID string
+	SHA            string
+	ConfigBlob     string
+}
+
+type EvalContextualizer struct{}
+
+func (e EvalContextualizer) _isEvalContext() {}
