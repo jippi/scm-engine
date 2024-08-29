@@ -57,6 +57,11 @@ func (e ContextMergeRequest) HasNoActivityWithin(ctx context.Context, input any)
 	return !e.HasAnyActivityWithin(ctx, input)
 }
 
+// has_activity_within (alias)
+func (e ContextMergeRequest) HasActivityWithin(ctx context.Context, input any) bool {
+	return e.HasAnyActivityWithin(ctx, input)
+}
+
 // has_any_activity_within
 func (e ContextMergeRequest) HasAnyActivityWithin(ctx context.Context, input any) bool {
 	dur := stdlib.ToDuration(input)
@@ -93,6 +98,11 @@ func (e ContextMergeRequest) HasUserActivityWithin(ctx context.Context, input an
 	for _, note := range e.Notes {
 		// Check if we should ignore the actor (user) activity
 		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActor()) {
+			continue
+		}
+
+		// Ignore all bots when considering 'user' activity
+		if note.Author.Bot {
 			continue
 		}
 

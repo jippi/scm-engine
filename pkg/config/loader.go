@@ -24,11 +24,11 @@ func ParseFile(f io.Reader) (*Config, error) {
 
 	buf := new(bytes.Buffer)
 	if _, err := buf.ReadFrom(f); err != nil {
-		return config, err
+		return nil, err
 	}
 
 	if err := yaml.Unmarshal(buf.Bytes(), config); err != nil {
-		return config, err
+		return nil, err
 	}
 
 	return config, nil
