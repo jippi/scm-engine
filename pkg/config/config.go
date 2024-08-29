@@ -17,14 +17,14 @@ type Config struct {
 func (c Config) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, []Action, error) {
 	slogctx.Info(ctx, "Evaluating labels")
 
-	labels, err := c.Labels.Evaluate(evalContext)
+	labels, err := c.Labels.Evaluate(ctx, evalContext)
 	if err != nil {
 		return nil, nil, fmt.Errorf("evaluation failed: %w", err)
 	}
 
 	slogctx.Info(ctx, "Evaluating Actions")
 
-	actions, err := c.Actions.Evaluate(evalContext)
+	actions, err := c.Actions.Evaluate(ctx, evalContext)
 	if err != nil {
 		return nil, nil, err
 	}

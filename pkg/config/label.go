@@ -1,8 +1,10 @@
 package config
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"reflect"
 
 	"github.com/expr-lang/expr"
@@ -12,6 +14,7 @@ import (
 	"github.com/jippi/scm-engine/pkg/stdlib"
 	"github.com/jippi/scm-engine/pkg/tui"
 	"github.com/jippi/scm-engine/pkg/types"
+	slogctx "github.com/veqryn/slog-context"
 )
 
 // labelType is a custom type for our enum
@@ -24,19 +27,27 @@ const (
 
 type Labels []*Label
 
-func (labels Labels) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
+func (labels Labels) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
 	var results []scm.EvaluationResult
 
 	// Evaluate labels
 	for _, label := range labels {
-		evaluationResult, err := label.Evaluate(evalContext)
+		ctx := slogctx.With(ctx, slog.String("label_name", label.Name))
+
+		slogctx.Debug(ctx, "Evaluating label")
+
+		evaluationResult, err := label.Evaluate(ctx, evalContext)
 		if err != nil {
 			return nil, fmt.Errorf("label: %s; %w", label.Name, err)
 		}
 
 		if evaluationResult == nil {
+			slogctx.Debug(ctx, "Label evaluated negatively, skipping")
+
 			continue
 		}
+
+		slogctx.Debug(ctx, "Label evaluation done", slog.Any("label_eval_result", evaluationResult))
 
 		results = append(results, evaluationResult...)
 	}
@@ -183,21 +194,21 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 	return nil
 }
 
-func (p *Label) ShouldSkip(evalContext scm.EvalContext) (bool, error) {
+func (p *Label) ShouldSkip(ctx context.Context, evalContext scm.EvalContext) (bool, error) {
 	if err := p.initialize(evalContext); err != nil {
 		return true, err
 	}
 
-	return runAndCheckBool(p.skipIfCompiled, evalContext)
+	return runAndCheckBool(ctx, p.skipIfCompiled, evalContext)
 }
 
-func (p *Label) Evaluate(evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
+func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
 	if err := p.initialize(evalContext); err != nil {
 		return nil, fmt.Errorf("failed to initialize expr script engine: %w", err)
 	}
 
 	// Check if the label should be skipped
-	if skip, err := p.ShouldSkip(evalContext); err != nil || skip {
+	if skip, err := p.ShouldSkip(ctx, evalContext); err != nil || skip {
 		return nil, err
 	}
 
@@ -260,7 +271,7 @@ func (p Label) resultForLabel(name string, matched bool) scm.EvaluationResult {
 	}
 }
 
-func runAndCheckBool(program *vm.Program, evalContext scm.EvalContext) (bool, error) {
+func runAndCheckBool(ctx context.Context, program *vm.Program, evalContext scm.EvalContext) (bool, error) {
 	if program == nil {
 		return false, nil
 	}
@@ -272,6 +283,8 @@ func runAndCheckBool(program *vm.Program, evalContext scm.EvalContext) (bool, er
 
 	switch outputValue := output.(type) {
 	case bool:
+		slogctx.Debug(ctx, "script eval done", slog.Bool("script_outcome", outputValue))
+
 		return outputValue, nil
 
 	default:
