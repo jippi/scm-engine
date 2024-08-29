@@ -45,8 +45,6 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	slogctx.Info(ctx, "Processing MR")
 
-	slogctx.Debug(ctx, "webhook event data", slog.Any("event", event))
-
 	remoteLabels, err := client.Labels().List(ctx)
 	if err != nil {
 		return err
@@ -64,8 +62,6 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 		return nil
 	}
-
-	slogctx.Debug(ctx, "eval context data", slog.Any("eval_context", evalContext))
 
 	evalContext.SetWebhookEvent(event)
 	// Add our "ctx" to evalContext so Expr-Lang functions can reference them
@@ -132,8 +128,13 @@ func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.Upda
 
 func runActions(ctx context.Context, evalContext scm.EvalContext, client scm.Client, update *scm.UpdateMergeRequestOptions, actions []config.Action) error {
 	for _, action := range actions {
+		ctx := slogctx.With(ctx, slog.String("action_name", action.Name))
+		slogctx.Info(ctx, "Applying action")
+
 		for _, task := range action.Then {
 			if err := client.ApplyStep(ctx, evalContext, update, task); err != nil {
+				slogctx.Error(ctx, "failed to apply action step", slog.Any("error", err))
+
 				return err
 			}
 		}
