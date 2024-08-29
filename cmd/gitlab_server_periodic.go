@@ -41,9 +41,9 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 
 	// Configure logger and custom fields
 	ctx = slogctx.With(ctx,
-		slog.String("subsystem", "periodic_evaluation"),
-		slog.Duration("periodic_evaluation_interval", interval),
 		slog.Any("periodic_evaluation_filters", filter.AsGraphqlVariables()),
+		slog.Duration("periodic_evaluation_interval", interval),
+		slog.String("event_type", "periodic_evaluation"),
 	)
 
 	go func(wg *sync.WaitGroup) {
