@@ -28,6 +28,8 @@ func getClient(ctx context.Context) (scm.Client, error) {
 }
 
 func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event any) (err error) {
+	defer state.LockForProcessing(ctx)()
+
 	// Write the config to context so we can pull it out later
 	ctx = config.WithConfig(ctx, cfg)
 
