@@ -72,7 +72,7 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 				}
 
 				for _, mergeRequest := range results {
-					ctx := ctx // make sure we define a
+					ctx := ctx // make sure we define a fresh GC-able context per merge request so we don't append to the existing forever
 					ctx = state.WithCommitSHA(ctx, mergeRequest.SHA)
 					ctx = state.WithMergeRequestID(ctx, mergeRequest.MergeRequestID)
 					ctx = state.WithProjectID(ctx, mergeRequest.Project)
