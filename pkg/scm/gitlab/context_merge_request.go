@@ -68,6 +68,16 @@ func (e ContextMergeRequest) HasAnyActivityWithin(ctx context.Context, input any
 	now := time.Now()
 	cfg := config.FromContext(ctx)
 
+	// If the MR UpdatedAt has been updated within the duration, then we got some kind of activity
+	if now.Sub(e.UpdatedAt) < dur {
+		return true
+	}
+
+	// If we have a recent commit, check if its within the duration
+	if e.LastCommit != nil && now.Sub(*e.LastCommit.CommittedDate) < dur {
+		return true
+	}
+
 	for _, note := range e.Notes {
 		// Check if we should ignore the actor (user) activity
 		if cfg.IgnoreActivityFrom.Matches(note.Author.ToActor()) {
@@ -80,8 +90,8 @@ func (e ContextMergeRequest) HasAnyActivityWithin(ctx context.Context, input any
 		}
 	}
 
-	// If we have a recent commit, check if its within the duration
-	return e.LastCommit != nil && now.Sub(*e.LastCommit.CommittedDate) < dur
+	// No positive matches, so we conclude there was no activity
+	return false
 }
 
 // has_no_user_activity_within
@@ -111,10 +121,15 @@ func (e ContextMergeRequest) HasUserActivityWithin(ctx context.Context, input an
 			continue
 		}
 
+		// Check if the note is within the duration
 		if now.Sub(note.UpdatedAt) < dur {
 			return true
 		}
 	}
+
+	// NOTE: we can't use the "UpdatedAt" timestamp on the MergeRequest because we
+	//       can't guarantee it was a user activity change that bumped the timestamp;
+	//       use the "has_any_activity_within" function instead for that
 
 	// If we have a recent commit, check if its within the duration
 	return e.LastCommit != nil && now.Sub(*e.LastCommit.CommittedDate) < dur
