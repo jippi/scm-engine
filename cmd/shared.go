@@ -77,6 +77,8 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		return err
 	}
 
+	slogctx.Debug(ctx, "Evaluation complete", slog.Int("number_of_labels", len(labels)), slog.Int("number_of_actions", len(actions)))
+
 	slogctx.Info(ctx, "Sync labels")
 
 	if err := syncLabels(ctx, client, remoteLabels, labels); err != nil {
@@ -107,13 +109,9 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		return err
 	}
 
-	slogctx.Info(ctx, "Updating MR")
+	slogctx.Info(ctx, "Updating Merge Request")
 
-	if err := updateMergeRequest(ctx, client, update); err != nil {
-		return err
-	}
-
-	return nil
+	return updateMergeRequest(ctx, client, update)
 }
 
 func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.UpdateMergeRequestOptions) error {
@@ -123,12 +121,20 @@ func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.Upda
 		return nil
 	}
 
+	slogctx.Debug(ctx, "Applying Merge Request changes", slog.Any("changes", update))
+
 	_, err := client.MergeRequests().Update(ctx, update)
 
 	return err
 }
 
 func runActions(ctx context.Context, evalContext scm.EvalContext, client scm.Client, update *scm.UpdateMergeRequestOptions, actions []config.Action) error {
+	if len(actions) == 0 {
+		slogctx.Debug(ctx, "No actions evaluated to true, skipping")
+
+		return nil
+	}
+
 	for _, action := range actions {
 		ctx := slogctx.With(ctx, slog.String("action_name", action.Name))
 		slogctx.Info(ctx, "Applying action")
