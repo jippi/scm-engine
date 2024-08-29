@@ -18,6 +18,7 @@ require (
 	github.com/samber/slog-multi v1.2.1
 	github.com/stretchr/testify v1.9.0
 	github.com/teacat/noire v1.1.0
+	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/urfave/cli/v2 v2.27.4
 	github.com/vektah/gqlparser/v2 v2.5.16
 	github.com/veqryn/slog-context v0.7.0

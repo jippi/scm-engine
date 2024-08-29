@@ -11,8 +11,11 @@ import (
 	"github.com/jippi/scm-engine/pkg/scm/github"
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
+	"github.com/teris-io/shortid"
 	slogctx "github.com/veqryn/slog-context"
 )
+
+var sid = shortid.MustNew(1, shortid.DefaultABC, 2342)
 
 func getClient(ctx context.Context) (scm.Client, error) {
 	switch state.Provider(ctx) {
@@ -28,6 +31,9 @@ func getClient(ctx context.Context) (scm.Client, error) {
 }
 
 func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event any) (err error) {
+	// Attach unique eval id to the logs so they are easy to filter on later
+	ctx = slogctx.With(ctx, slog.String("eval_id", sid.MustGenerate()))
+
 	defer state.LockForProcessing(ctx)()
 
 	// Write the config to context so we can pull it out later

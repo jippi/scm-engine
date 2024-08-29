@@ -118,3 +118,14 @@ func MergeRequestIDInt(ctx context.Context) int {
 
 	return number
 }
+
+func MergeRequestIDUint(ctx context.Context) uint64 {
+	val := MergeRequestID(ctx)
+
+	number, err := strconv.Atoi(val)
+	if err != nil {
+		panic(err)
+	}
+
+	return uint64(number)
+}
