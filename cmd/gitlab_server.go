@@ -38,6 +38,7 @@ func Server(cCtx *cli.Context) error {
 
 	filter := scm.MergeRequestListFilters{
 		IgnoreMergeRequestWithLabels: cCtx.StringSlice(FlagPeriodicEvaluationIgnoreMergeRequestsWithLabel),
+		OnlyMergeRequestsWithLabels:  cCtx.StringSlice(FlagPeriodicEvaluationRequireMergeRequestsWithLabel),
 		OnlyProjectsWithMembership:   cCtx.Bool(FlagPeriodicEvaluationOnlyProjectsWithMembership),
 		OnlyProjectsWithTopics:       cCtx.StringSlice(FlagPeriodicEvaluationOnlyProjectsWithTopics),
 		SCMConfigurationFilePath:     cCtx.String(FlagConfigFile),

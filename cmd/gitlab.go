@@ -150,6 +150,13 @@ var GitLab = &cli.Command{
 					},
 				},
 				&cli.StringSliceFlag{
+					Name:  FlagPeriodicEvaluationRequireMergeRequestsWithLabel,
+					Usage: "(Optional) Only process MR with these labels",
+					EnvVars: []string{
+						"SCM_ENGINE_PERIODIC_EVALUATION_REQUIRE_MR_WITH_LABELS",
+					},
+				},
+				&cli.StringSliceFlag{
 					Name:  FlagPeriodicEvaluationOnlyProjectsWithTopics,
 					Usage: "(Optional) Only evaluate projects with these topics",
 					EnvVars: []string{

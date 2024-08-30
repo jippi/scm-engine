@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"strings"
 	"sync"
@@ -71,6 +72,8 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 					continue
 				}
 
+				slogctx.Info(ctx, fmt.Sprintf("Found %d merge requests to evaluate", len(results)), slog.Int("number_of_projects", len(results)))
+
 				for _, mergeRequest := range results {
 					ctx := ctx // make sure we define a fresh GC-able context per merge request so we don't append to the existing forever
 					ctx = state.WithCommitSHA(ctx, mergeRequest.SHA)
@@ -98,6 +101,8 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 						continue
 					}
 				} // end loop results
+
+				slogctx.Info(ctx, "Completed periodic evaluation cycle")
 			} // end select
 		} // end loop
 	}(wg)

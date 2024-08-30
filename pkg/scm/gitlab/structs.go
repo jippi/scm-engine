@@ -35,7 +35,7 @@ type PeriodicEvaluationProjectNode struct {
 	FullPath string `graphql:"fullPath"`
 
 	// MergeRequests contains up to 100 merge requests, sorted by oldest update/last change first
-	MergeRequests graphqlNodesOf[PeriodicEvaluationMergeRequestNode] `graphql:"mergeRequests(first: 100, state: opened, not: {labels: $mr_ignore_labels}, sort: UPDATED_ASC)"`
+	MergeRequests graphqlNodesOf[PeriodicEvaluationMergeRequestNode] `graphql:"mergeRequests(first: 100, state: opened, not: {labels: $mr_ignore_labels}, labels: $mr_require_labels, sort: UPDATED_ASC)"`
 
 	// Repository contains information about the git repository
 	Repository PeriodicEvaluationRepository `graphql:"repository"`

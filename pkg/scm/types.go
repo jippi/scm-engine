@@ -204,27 +204,33 @@ type MergeRequestListFilters struct {
 	IgnoreMergeRequestWithLabels []string
 	OnlyProjectsWithMembership   bool
 	OnlyProjectsWithTopics       []string
+	OnlyMergeRequestsWithLabels  []string
 	SCMConfigurationFilePath     string
 }
 
 func (filter *MergeRequestListFilters) AsGraphqlVariables() map[string]any {
 	output := map[string]any{
 		"mr_ignore_labels":     filter.IgnoreMergeRequestWithLabels,
+		"mr_require_labels":    filter.OnlyMergeRequestsWithLabels,
 		"project_membership":   filter.OnlyProjectsWithMembership,
 		"project_topics":       filter.OnlyProjectsWithTopics,
 		"scm_config_file_path": filter.SCMConfigurationFilePath,
 	}
 
-	if len(filter.SCMConfigurationFilePath) == 0 {
-		output["scm_config_file_path"] = ".scm-engine.yml"
+	if len(filter.IgnoreMergeRequestWithLabels) == 0 {
+		output["mr_ignore_labels"] = []string{}
+	}
+
+	if len(filter.OnlyMergeRequestsWithLabels) == 0 {
+		output["mr_require_labels"] = []string{}
 	}
 
 	if len(filter.OnlyProjectsWithTopics) == 0 {
 		output["project_topics"] = []string{}
 	}
 
-	if len(filter.IgnoreMergeRequestWithLabels) == 0 {
-		output["mr_ignore_labels"] = []string{}
+	if len(filter.SCMConfigurationFilePath) == 0 {
+		output["scm_config_file_path"] = ".scm-engine.yml"
 	}
 
 	return output
