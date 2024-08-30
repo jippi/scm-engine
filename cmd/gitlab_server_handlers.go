@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
 )
@@ -112,14 +113,22 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		}
 
 		// Check if there exists scm-config file in the repo before moving forward
-		if _, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), ""); err != nil {
+		file, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), "")
+		if err != nil {
 			errHandler(ctx, w, http.StatusOK, err)
 
 			return
 		}
 
+		// Try to parse the config file
+		//
+		// In case of a parse error cfg remains "nil" and ProcessMR will try to read-and-parse it
+		// (but obviously also fail), but will surface the error within the GitLab External Pipeline (if enabled)
+		// which will surface the issue to the end-user directly
+		cfg, _ := config.ParseFile(file)
+
 		// Process the MR
-		if err := ProcessMR(ctx, client, nil, fullEventPayload); err != nil {
+		if err := ProcessMR(ctx, client, cfg, fullEventPayload); err != nil {
 			errHandler(ctx, w, http.StatusOK, err)
 
 			return
