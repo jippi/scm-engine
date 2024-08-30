@@ -900,17 +900,18 @@ GitHub (WIP)
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   scm-engine gitlab evaluate [command options]  [mr_id, mr_id, ...]
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>OPTIONS:
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>   --update-pipeline  Update the CI pipeline status with progress (default: false) [$SCM_ENGINE_UPDATE_PIPELINE]
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   --project value    GitLab project (example: &#39;gitlab-org/gitlab&#39;) [$GITLAB_PROJECT, $CI_PROJECT_PATH]
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   --id value         The Merge Request ID to process, if not provided as a CLI flag [$CI_MERGE_REQUEST_IID]
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>   --commit value     The git commit sha [$CI_COMMIT_SHA]
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   --help, -h         show help
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>GLOBAL OPTIONS:
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>   --config value  Path to the scm-engine config file (default: &quot;.scm-engine.yml&quot;) [$SCM_ENGINE_CONFIG_FILE]
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>   --dry-run       Dry run, don&#39;t actually _do_ actions, just print them (default: false) [$SCM_ENGINE_DRY_RUN]
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>   --help, -h      show help
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>   --version, -v   print the version
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>   --update-pipeline            Update the CI pipeline status with progress (default: true) [$SCM_ENGINE_UPDATE_PIPELINE]
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   --update-pipeline-url value  (Optional) URL to where logs can be found for the pipeline [$SCM_ENGINE_UPDATE_PIPELINE_URL]
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   --project value              GitLab project (example: &#39;gitlab-org/gitlab&#39;) [$GITLAB_PROJECT, $CI_PROJECT_PATH]
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>   --id value                   The Merge Request ID to process, if not provided as a CLI flag [$CI_MERGE_REQUEST_IID]
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   --commit value               The git commit sha [$CI_COMMIT_SHA]
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   --help, -h                   show help
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>GLOBAL OPTIONS:
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>   --config value  Path to the scm-engine config file (default: &quot;.scm-engine.yml&quot;) [$SCM_ENGINE_CONFIG_FILE]
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>   --dry-run       Dry run, don&#39;t actually _do_ actions, just print them (default: false) [$SCM_ENGINE_DRY_RUN]
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>   --help, -h      show help
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>   --version, -v   print the version
 </code></pre></div>
 <h2 id="scm-engine-gitlab-server"><code>scm-engine gitlab server</code><a class="headerlink" href="#scm-engine-gitlab-server" title="Permanent link">&para;</a></h2>
 <p>Point your GitLab webhook at the <code>/gitlab</code> endpoint.</p>
