@@ -20,7 +20,7 @@ merge_request.state_is("merged")
 merge_request.state_is("opened", "locked")
 ```
 
-### `merge_request.state_is_not(string...) -> boolean` {: #merge_request.state_is_not data-toc-label="state_is"}
+### `merge_request.state_is_not(string...) -> boolean` {: #merge_request.state_is_not data-toc-label="state_is_not"}
 
 Check if the `merge_request` state is NOT any of the provided states
 
