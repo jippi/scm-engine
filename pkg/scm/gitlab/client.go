@@ -149,7 +149,7 @@ func (client *Client) Start(ctx context.Context) error {
 }
 
 // Stop pipeline
-func (client *Client) Stop(ctx context.Context, err error) error {
+func (client *Client) Stop(ctx context.Context, evalError error) error {
 	ok, pattern := state.ShouldUpdatePipeline(ctx)
 	if !ok {
 		return nil
@@ -168,18 +168,20 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 		targetURL = &link
 	}
 
-	status := go_gitlab.Success
-	message := "OK"
+	var (
+		status  = go_gitlab.Success
+		message = "OK"
+	)
 
-	if err != nil {
+	if evalError != nil {
 		status = go_gitlab.Failed
 
 		// If the evaluation failed due to no config file, consider it a "skip" instead
-		if strings.Contains(err.Error(), "could not read remote config file") {
+		if strings.Contains(evalError.Error(), "404 Not Found") {
 			status = go_gitlab.Skipped
 		}
 
-		message = err.Error()
+		message = evalError.Error()
 	}
 
 	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
