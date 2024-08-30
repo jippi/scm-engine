@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hasura/go-graphql-client"
 	"github.com/jippi/scm-engine/pkg/scm"
@@ -160,7 +161,7 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
 		link = strings.ReplaceAll(link, "__MR_ID__", state.MergeRequestID(ctx))
 		link = strings.ReplaceAll(link, "__START_TS_MS__", strconv.FormatInt(state.StartTime(ctx).UnixMilli(), 10))
-		// link = strings.ReplaceAll(link, "__STOP_TS_MS__", strconv.FormatInt(time.Now().UnixMilli(), 10))
+		link = strings.ReplaceAll(link, "__STOP_TS_MS__", strconv.FormatInt(time.Now().UnixMilli(), 10))
 
 		targetURL = &link
 	}
