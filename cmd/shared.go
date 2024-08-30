@@ -94,7 +94,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	// Download and parse the configuration file if necessary
 	if configShouldBeDownloaded {
-		slogctx.Debug(ctx, "Downloading scm-engine configuration from ref")
+		slogctx.Debug(ctx, "Downloading scm-engine configuration from ref: "+configSourceRef)
 
 		file, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), configSourceRef)
 		if err != nil {
