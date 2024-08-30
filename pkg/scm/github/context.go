@@ -93,6 +93,6 @@ func (c *Context) GetDescription() string {
 	return c.PullRequest.Body
 }
 
-func (c *Context) CanUseConfigurationFileFromChange(ctx context.Context) bool {
+func (c *Context) CanUseConfigurationFileFromChangeRequest(ctx context.Context) bool {
 	return true
 }

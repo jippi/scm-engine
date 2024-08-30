@@ -107,7 +107,7 @@ func (c *Context) GetDescription() string {
 	return *c.MergeRequest.Description
 }
 
-func (c *Context) CanUseConfigurationFileFromChange(ctx context.Context) bool {
+func (c *Context) CanUseConfigurationFileFromChangeRequest(ctx context.Context) bool {
 	// If the Merge Request has diverged from HEAD we can't trust the configuration
 	if c.MergeRequest.DivergedFromTargetBranch {
 		slogctx.Warn(ctx, "The Merge Request branch has diverged from HEAD; will use the scm-engine config from HEAD instead")

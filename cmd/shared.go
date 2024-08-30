@@ -84,7 +84,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	// If the current branch is not in a state where the config file can be trusted,
 	// we instead use the HEAD version of the file
-	if !evalContext.CanUseConfigurationFileFromChange(ctx) {
+	if !evalContext.CanUseConfigurationFileFromChangeRequest(ctx) {
 		configShouldBeDownloaded = true
 		configSourceRef = "HEAD"
 
