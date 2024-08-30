@@ -173,6 +173,12 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 
 	if err != nil {
 		status = go_gitlab.Failed
+
+		// If the evaluation failed due to no config file, consider it a "skip" instead
+		if strings.Contains(err.Error(), "could not read remote config file") {
+			status = go_gitlab.Skipped
+		}
+
 		message = err.Error()
 	}
 

@@ -166,7 +166,7 @@ duration("1h").Seconds() == 3600
 Returns the [`time.Duration`](https://pkg.go.dev/time#Duration) value since the provided `time`.
 
 ```css
-since(now() + duration("1h))== 3600
+since(now() + duration("1h)) == 3600
 ```
 
 ### `uniq([]string) -> []string` {: #uniq data-toc-label="uniq"}
