@@ -111,6 +111,13 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 			return
 		}
 
+		// Check if there exists scm-config file in the repo before moving forward
+		if _, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), ""); err != nil {
+			errHandler(ctx, w, http.StatusOK, err)
+
+			return
+		}
+
 		// Process the MR
 		if err := ProcessMR(ctx, client, nil, fullEventPayload); err != nil {
 			errHandler(ctx, w, http.StatusOK, err)
