@@ -22,11 +22,12 @@ func Server(cCtx *cli.Context) error {
 	var wg sync.WaitGroup
 
 	// Setup context configuration
-	ctx := state.WithUpdatePipeline(cCtx.Context, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
+	ctx := cCtx.Context
+	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
+	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 
 	// Add logging context key/value pairs
 	ctx = slogctx.With(ctx, slog.String("gitlab_url", cCtx.String(FlagSCMBaseURL)))
-	ctx = slogctx.With(ctx, slog.String("config_file", cCtx.String(FlagConfigFile)))
 	ctx = slogctx.With(ctx, slog.Duration("server_timeout", cCtx.Duration(FlagServerTimeout)))
 
 	//
@@ -54,7 +55,7 @@ func Server(cCtx *cli.Context) error {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /_status", GitLabStatusHandler)
-	mux.HandleFunc("POST /gitlab", GitLabWebhookHandler(ctx, cCtx.String(FlagWebhookSecret), cCtx.String(FlagConfigFile)))
+	mux.HandleFunc("POST /gitlab", GitLabWebhookHandler(ctx, cCtx.String(FlagWebhookSecret)))
 
 	server := &http.Server{
 		Addr:         listenAddr,

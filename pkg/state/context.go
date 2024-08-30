@@ -11,15 +11,17 @@ import (
 type contextKey uint
 
 const (
-	projectID contextKey = iota
+	_ contextKey = iota
+	baseURL
+	commitSha
 	dryRun
 	mergeRequestID
-	commitSha
-	updatePipeline
-	updatePipelineURL
+	projectID
 	provider
 	token
-	baseURL
+	configFilePath
+	updatePipeline
+	updatePipelineURL
 )
 
 func ProjectID(ctx context.Context) string {
@@ -28,6 +30,10 @@ func ProjectID(ctx context.Context) string {
 
 func CommitSHA(ctx context.Context) string {
 	return ctx.Value(commitSha).(string) //nolint:forcetypeassert
+}
+
+func ConfigFilePath(ctx context.Context) string {
+	return ctx.Value(configFilePath).(string) //nolint:forcetypeassert
 }
 
 func BaseURL(ctx context.Context) string {
@@ -60,6 +66,13 @@ func WithProvider(ctx context.Context, value string) context.Context {
 func WithProjectID(ctx context.Context, value string) context.Context {
 	ctx = slogctx.With(ctx, slog.String("project_id", value))
 	ctx = context.WithValue(ctx, projectID, value)
+
+	return ctx
+}
+
+func WithConfigFilePath(ctx context.Context, value string) context.Context {
+	ctx = slogctx.With(ctx, slog.String("config_file_path", value))
+	ctx = context.WithValue(ctx, configFilePath, value)
 
 	return ctx
 }

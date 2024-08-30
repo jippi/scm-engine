@@ -33,6 +33,7 @@ func getClient(ctx context.Context) (scm.Client, error) {
 func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event any) (err error) {
 	// Attach unique eval id to the logs so they are easy to filter on later
 	ctx = slogctx.With(ctx, slog.String("eval_id", sid.MustGenerate()))
+	ctx = slogctx.With(ctx, slog.String("config_source_branch", "merge_request_branch"))
 
 	defer state.LockForProcessing(ctx)()
 
@@ -51,12 +52,9 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		return fmt.Errorf("failed to update pipeline monitor: %w", err)
 	}
 
-	slogctx.Info(ctx, "Processing MR")
-
-	remoteLabels, err := client.Labels().List(ctx)
-	if err != nil {
-		return err
-	}
+	//
+	// Create and validate the evaluation context
+	//
 
 	slogctx.Info(ctx, "Creating evaluation context")
 
@@ -72,9 +70,49 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	}
 
 	evalContext.SetWebhookEvent(event)
+
 	// Add our "ctx" to evalContext so Expr-Lang functions can reference them
 	// when they need to read our "cfg"
 	evalContext.SetContext(ctx)
+
+	//
+	// (Optional) Download the .scm-engine.yml configuration file from the GitLab HTTP API
+	//
+
+	var (
+		configShouldBeDownloaded = cfg == nil
+		configSourceRef          = state.CommitSHA(ctx)
+	)
+
+	// If the current branch is not in a state where the config file can be trusted,
+	// we instead use the HEAD version of the file
+	if !evalContext.CanUseConfigurationFileFromChange(ctx) {
+		configShouldBeDownloaded = true
+		configSourceRef = "HEAD"
+
+		// Update the logger with new value
+		ctx = slogctx.With(ctx, slog.String("config_source_branch", configSourceRef))
+	}
+
+	// Download and parse the configuration file if necessary
+	if configShouldBeDownloaded {
+		slogctx.Debug(ctx, "Downloading scm-engine configuration from ref")
+
+		file, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), configSourceRef)
+		if err != nil {
+			return fmt.Errorf("could not read remote config file: %w", err)
+		}
+
+		// Parse the file
+		cfg, err = config.ParseFile(file)
+		if err != nil {
+			return fmt.Errorf("could not parse config file: %w", err)
+		}
+	}
+
+	//
+	// Do the actual context evaluation
+	//
 
 	slogctx.Info(ctx, "Evaluating context")
 
@@ -85,7 +123,16 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	slogctx.Debug(ctx, "Evaluation complete", slog.Int("number_of_labels", len(labels)), slog.Int("number_of_actions", len(actions)))
 
+	//
+	// Post-evaluation sync of labels
+	//
+
 	slogctx.Info(ctx, "Sync labels")
+
+	remoteLabels, err := client.Labels().List(ctx)
+	if err != nil {
+		return err
+	}
 
 	if err := syncLabels(ctx, client, remoteLabels, labels); err != nil {
 		return err
@@ -104,6 +151,10 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		}
 	}
 
+	//
+	// Post-evaluation sync of actions
+	//
+
 	update := &scm.UpdateMergeRequestOptions{
 		AddLabels:    &add,
 		RemoveLabels: &remove,
@@ -114,6 +165,10 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	if err := runActions(ctx, evalContext, client, update, actions); err != nil {
 		return err
 	}
+
+	//
+	// Update the Merge Request with the outcome of labels and actions
+	//
 
 	slogctx.Info(ctx, "Updating Merge Request")
 

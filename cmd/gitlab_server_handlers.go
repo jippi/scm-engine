@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
 )
@@ -25,7 +24,7 @@ func GitLabStatusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("scm-engine status: OK\n\nNOTE: this is a static 'OK', no actual checks are being made"))
 }
 
-func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string) http.HandlerFunc {
+func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.HandlerFunc {
 	// Initialize GitLab client
 	client, err := getClient(ctx)
 	if err != nil {
@@ -36,9 +35,9 @@ func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string)
 		ctx := r.Context()
 
 		// Check if the webhook secret is set (and if its matching)
-		if len(ourSecret) > 0 {
+		if len(webhookSecret) > 0 {
 			theirSecret := r.Header.Get("X-Gitlab-Token")
-			if ourSecret != theirSecret {
+			if webhookSecret != theirSecret {
 				errHandler(ctx, w, http.StatusForbidden, errors.New("Missing or invalid X-Gitlab-Token header"))
 
 				return
@@ -104,22 +103,6 @@ func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string)
 
 		slogctx.Info(ctx, "GET /gitlab webhook")
 
-		// Get the remote config file
-		file, err := client.MergeRequests().GetRemoteConfig(ctx, configFilePath, gitSha)
-		if err != nil {
-			errHandler(ctx, w, http.StatusOK, fmt.Errorf("could not read remote config file: %w", err))
-
-			return
-		}
-
-		// Parse the file
-		cfg, err := config.ParseFile(file)
-		if err != nil {
-			errHandler(ctx, w, http.StatusOK, fmt.Errorf("could not parse config file: %w", err))
-
-			return
-		}
-
 		// Decode request payload into 'any' so we have all the details
 		var fullEventPayload any
 		if err := json.NewDecoder(bytes.NewReader(body)).Decode(&fullEventPayload); err != nil {
@@ -129,7 +112,7 @@ func GitLabWebhookHandler(ctx context.Context, ourSecret, configFilePath string)
 		}
 
 		// Process the MR
-		if err := ProcessMR(ctx, client, cfg, fullEventPayload); err != nil {
+		if err := ProcessMR(ctx, client, nil, fullEventPayload); err != nil {
 			errHandler(ctx, w, http.StatusOK, err)
 
 			return

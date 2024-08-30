@@ -28,8 +28,9 @@ type MergeRequestClient interface {
 }
 
 type EvalContext interface {
-	IsValid() bool
-	SetWebhookEvent(in any)
-	SetContext(ctx context.Context)
 	GetDescription() string
+	IsValid() bool
+	SetContext(ctx context.Context)
+	SetWebhookEvent(in any)
+	CanUseConfigurationFileFromChange(ctx context.Context) bool
 }

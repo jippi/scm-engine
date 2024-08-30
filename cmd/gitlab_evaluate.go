@@ -10,8 +10,10 @@ import (
 )
 
 func Evaluate(cCtx *cli.Context) error {
-	ctx := state.WithProjectID(cCtx.Context, cCtx.String(FlagSCMProject))
+	ctx := cCtx.Context
 	ctx = state.WithCommitSHA(ctx, cCtx.String(FlagCommitSHA))
+	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
+	ctx = state.WithProjectID(ctx, cCtx.String(FlagSCMProject))
 	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 

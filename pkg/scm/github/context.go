@@ -92,3 +92,7 @@ func (c *Context) SetContext(ctx context.Context) {
 func (c *Context) GetDescription() string {
 	return c.PullRequest.Body
 }
+
+func (c *Context) CanUseConfigurationFileFromChange(ctx context.Context) bool {
+	return true
+}

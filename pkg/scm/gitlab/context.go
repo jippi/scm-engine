@@ -7,6 +7,7 @@ import (
 	"github.com/hasura/go-graphql-client"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
+	slogctx "github.com/veqryn/slog-context"
 	"golang.org/x/oauth2"
 )
 
@@ -104,4 +105,24 @@ func (c *Context) GetDescription() string {
 	}
 
 	return *c.MergeRequest.Description
+}
+
+func (c *Context) CanUseConfigurationFileFromChange(ctx context.Context) bool {
+	// If the Merge Request has diverged from HEAD we can't trust the configuration
+	if c.MergeRequest.DivergedFromTargetBranch {
+		slogctx.Warn(ctx, "The Merge Request branch has diverged from HEAD; will use the scm-engine config from HEAD instead")
+
+		return false
+	}
+
+	// If the Merge Request is not up to date with HEAD we can't trust the configuration
+	if c.MergeRequest.ShouldBeRebased {
+		slogctx.Warn(ctx, "The Merge Request branch is not up to date with HEAD; will use the scm-engine config from HEAD instead")
+
+		return false
+	}
+
+	slogctx.Info(ctx, "The Merge Request branch is up to date with HEAD; will use the scm-engine config from the branch")
+
+	return true
 }
