@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
@@ -31,14 +33,16 @@ func getClient(ctx context.Context) (scm.Client, error) {
 }
 
 func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event any) (err error) {
+	// Track start time of the evaluation
+	ctx = state.WithStartTime(ctx, time.Now())
+
 	// Attach unique eval id to the logs so they are easy to filter on later
 	ctx = slogctx.With(ctx, slog.String("eval_id", sid.MustGenerate()))
+
+	// Track where we grab the configuration file from
 	ctx = slogctx.With(ctx, slog.String("config_source_branch", "merge_request_branch"))
 
 	defer state.LockForProcessing(ctx)()
-
-	// Write the config to context so we can pull it out later
-	ctx = config.WithConfig(ctx, cfg)
 
 	// Stop the pipeline when we leave this func
 	defer func() {
@@ -48,7 +52,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	}()
 
 	// Start the pipeline
-	if err = client.Start(ctx); err != nil {
+	if err := client.Start(ctx); err != nil {
 		return fmt.Errorf("failed to update pipeline monitor: %w", err)
 	}
 
@@ -68,12 +72,6 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 		return nil
 	}
-
-	evalContext.SetWebhookEvent(event)
-
-	// Add our "ctx" to evalContext so Expr-Lang functions can reference them
-	// when they need to read our "cfg"
-	evalContext.SetContext(ctx)
 
 	//
 	// (Optional) Download the .scm-engine.yml configuration file from the GitLab HTTP API
@@ -110,11 +108,21 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		}
 	}
 
+	if cfg == nil {
+		return errors.New("cfg==nil; this is unexpected an error, please report!")
+	}
+
+	// Write the config to context so we can pull it out later
+	ctx = config.WithConfig(ctx, cfg)
+
 	//
 	// Do the actual context evaluation
 	//
 
 	slogctx.Info(ctx, "Evaluating context")
+
+	evalContext.SetWebhookEvent(event)
+	evalContext.SetContext(ctx)
 
 	labels, actions, err := cfg.Evaluate(ctx, evalContext)
 	if err != nil {

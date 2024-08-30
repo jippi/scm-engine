@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"strconv"
+	"time"
 
 	slogctx "github.com/veqryn/slog-context"
 )
@@ -14,14 +15,15 @@ const (
 	_ contextKey = iota
 	baseURL
 	commitSha
+	configFilePath
 	dryRun
 	mergeRequestID
 	projectID
 	provider
 	token
-	configFilePath
 	updatePipeline
 	updatePipelineURL
+	startTime
 )
 
 func ProjectID(ctx context.Context) string {
@@ -54,6 +56,14 @@ func WithToken(ctx context.Context, value string) context.Context {
 
 func Provider(ctx context.Context) string {
 	return ctx.Value(provider).(string) //nolint:forcetypeassert
+}
+
+func StartTime(ctx context.Context) time.Time {
+	return ctx.Value(startTime).(time.Time) //nolint:forcetypeassert
+}
+
+func WithStartTime(ctx context.Context, now time.Time) context.Context {
+	return context.WithValue(ctx, startTime, now)
 }
 
 func WithProvider(ctx context.Context, value string) context.Context {
@@ -111,8 +121,8 @@ func IsDryRun(ctx context.Context) bool {
 }
 
 func ShouldUpdatePipeline(ctx context.Context) (bool, string) {
-	shouldUpdatePipeline := !IsDryRun(ctx) && ctx.Value(updatePipeline).(bool) //nolint:forcetypeassert
-	shouldUpdatePipelineURL := ctx.Value(updatePipelineURL).(string)           //nolint:forcetypeassert
+	shouldUpdatePipeline := ctx.Value(updatePipeline).(bool)         //nolint:forcetypeassert
+	shouldUpdatePipelineURL := ctx.Value(updatePipelineURL).(string) //nolint:forcetypeassert
 
 	return shouldUpdatePipeline, shouldUpdatePipelineURL
 }

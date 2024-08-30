@@ -17,7 +17,7 @@ func Evaluate(cCtx *cli.Context) error {
 	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 
-	cfg, err := config.LoadFile(cCtx.String(FlagConfigFile))
+	cfg, err := config.LoadFile(state.ConfigFilePath(ctx))
 	if err != nil {
 		return err
 	}

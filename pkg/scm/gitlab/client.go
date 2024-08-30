@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/hasura/go-graphql-client"
@@ -119,6 +120,8 @@ func (client *Client) Start(ctx context.Context) error {
 		link := pattern
 		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
 		link = strings.ReplaceAll(link, "__MR_ID__", state.MergeRequestID(ctx))
+		link = strings.ReplaceAll(link, "__START_TS_MS__", strconv.FormatInt(state.StartTime(ctx).UnixMilli(), 10))
+		link = strings.ReplaceAll(link, "__STOP_TS_MS__", "")
 
 		targetURL = &link
 	}
@@ -156,6 +159,8 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 		link := pattern
 		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
 		link = strings.ReplaceAll(link, "__MR_ID__", state.MergeRequestID(ctx))
+		link = strings.ReplaceAll(link, "__START_TS_MS__", strconv.FormatInt(state.StartTime(ctx).UnixMilli(), 10))
+		// link = strings.ReplaceAll(link, "__STOP_TS_MS__", strconv.FormatInt(time.Now().UnixMilli(), 10))
 
 		targetURL = &link
 	}

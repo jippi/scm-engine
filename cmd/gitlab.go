@@ -46,9 +46,16 @@ var GitLab = &cli.Command{
 				&cli.BoolFlag{
 					Name:  FlagUpdatePipeline,
 					Usage: "Update the CI pipeline status with progress",
-					Value: false,
+					Value: true,
 					EnvVars: []string{
 						"SCM_ENGINE_UPDATE_PIPELINE",
+					},
+				},
+				&cli.StringFlag{
+					Name:  FlagUpdatePipelineURL,
+					Usage: "(Optional) URL to where logs can be found for the pipeline",
+					EnvVars: []string{
+						"SCM_ENGINE_UPDATE_PIPELINE_URL",
 					},
 				},
 				&cli.StringFlag{
