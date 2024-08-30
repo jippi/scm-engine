@@ -9,6 +9,7 @@ import (
 )
 
 type Config struct {
+	DryRun             *bool              `yaml:"dry_run"`
 	Labels             Labels             `yaml:"label"`
 	Actions            Actions            `yaml:"actions"`
 	IgnoreActivityFrom IgnoreActivityFrom `yaml:"ignore_activity_from"`

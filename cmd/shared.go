@@ -108,8 +108,16 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		}
 	}
 
+	// Sanity check for having a configuration loaded
 	if cfg == nil {
 		return errors.New("cfg==nil; this is unexpected an error, please report!")
+	}
+
+	// Allow changing over to dry-run mode via configuration file
+	if cfg.DryRun != nil {
+		slogctx.Info(ctx, "Configuration file has 'dry_run' value, using that in favor of server default")
+
+		ctx = state.WithDryRun(ctx, *cfg.DryRun)
 	}
 
 	// Write the config to context so we can pull it out later
