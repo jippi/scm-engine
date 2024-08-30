@@ -38,7 +38,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return errors.New("step field 'replace' is required, but missing")
 		}
 
-		replacementSlice, ok := replacements.(map[string]any)
+		replacementSlice, ok := replacements.(scm.EvaluationActionStep)
 		if !ok {
 			return fmt.Errorf(`step field 'replace' must be a dictionary with string key and string values ("key": "value"), got: %T`, replacements)
 		}
