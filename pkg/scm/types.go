@@ -248,15 +248,21 @@ func (filter *MergeRequestListFilters) AsGraphqlVariables() map[string]any {
 	}
 
 	if len(filter.IgnoreMergeRequestWithLabels) == 0 {
-		output["mr_ignore_labels"] = []string{}
+		var emptyStringSlice []string
+
+		output["mr_ignore_labels"] = Ptr(emptyStringSlice)
 	}
 
 	if len(filter.OnlyMergeRequestsWithLabels) == 0 {
-		output["mr_require_labels"] = []string{}
+		var emptyStringSlice []string
+
+		output["mr_require_labels"] = Ptr(emptyStringSlice)
 	}
 
 	if len(filter.OnlyProjectsWithTopics) == 0 {
-		output["project_topics"] = []string{}
+		var emptyStringSlice []string
+
+		output["project_topics"] = Ptr(emptyStringSlice)
 	}
 
 	if len(filter.SCMConfigurationFilePath) == 0 {

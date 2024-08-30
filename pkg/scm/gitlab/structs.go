@@ -50,7 +50,7 @@ package gitlab
 //      "project_topics": ["scm-engine"],
 //      "project_membership": true,
 //      "mr_ignore_labels": ["security", "do-not-close"],
-//      "mr_ignore_labels": []
+//      "mr_require_labels": null
 //    }
 
 type PeriodicEvaluationResult struct {
