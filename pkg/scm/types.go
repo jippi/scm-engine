@@ -2,6 +2,7 @@ package scm
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -161,12 +162,41 @@ type EvaluationResult struct {
 	Matched bool
 }
 
-type EvaluationActionStep = map[string]any
+type EvaluationActionStep map[string]any
+
+func (step EvaluationActionStep) RequiredString(name string) (string, error) {
+	value, ok := step[name]
+	if !ok {
+		return "", fmt.Errorf("Required 'step' key '%s' is missing", name)
+	}
+
+	valueString, ok := value.(string)
+	if !ok {
+		return "", fmt.Errorf("Required 'step' key '%s' must be of type string, got %T", name, value)
+	}
+
+	return valueString, nil
+}
+
+func (step EvaluationActionStep) OptionalString(name, defaultValue string) (string, error) {
+	value, ok := step[name]
+	if !ok {
+		return defaultValue, nil
+	}
+
+	valueString, ok := value.(string)
+	if !ok {
+		return defaultValue, fmt.Errorf("Optional step field '%s' must be of type string, got %T", name, value)
+	}
+
+	return valueString, nil
+}
 
 type EvaluationActionResult struct {
-	Name string                 `yaml:"name"`
-	If   string                 `yaml:"if"`
-	Then []EvaluationActionStep `yaml:"then"`
+	Name  string                 `yaml:"name"`
+	Group string                 `yaml:"group"`
+	If    string                 `yaml:"if"`
+	Then  []EvaluationActionStep `yaml:"then"`
 }
 
 func (local EvaluationResult) IsEqual(ctx context.Context, remote *Label) bool {

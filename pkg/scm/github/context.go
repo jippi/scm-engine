@@ -39,6 +39,9 @@ func NewContext(ctx context.Context, _, token string) (*Context, error) {
 		return nil, err
 	}
 
+	// Initialize null-able types
+	evalContext.ActionGroups = make(map[string]any)
+
 	// move PullRequest to root context
 	evalContext.PullRequest = evalContext.Repository.PullRequest
 	evalContext.Repository.PullRequest = nil
@@ -95,4 +98,14 @@ func (c *Context) GetDescription() string {
 
 func (c *Context) CanUseConfigurationFileFromChangeRequest(ctx context.Context) bool {
 	return true
+}
+
+func (c *Context) TrackActionGroupExecution(name string) {
+	c.ActionGroups[name] = true
+}
+
+func (c *Context) HasExecutedActionGroup(name string) bool {
+	_, ok := c.ActionGroups[name]
+
+	return ok
 }

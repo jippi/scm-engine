@@ -18,17 +18,12 @@ import (
 )
 
 func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.EvaluationActionStep) error {
-	action, ok := step["action"]
-	if !ok {
-		return errors.New("step is missing an 'action' key")
+	action, err := step.RequiredString("action")
+	if err != nil {
+		return err
 	}
 
-	actionString, ok := action.(string)
-	if !ok {
-		return fmt.Errorf("step field 'action' must be of type string, got %T", action)
-	}
-
-	switch actionString {
+	switch action {
 	case "update_description":
 		// Use the raw MR description
 		body := evalContext.GetDescription()
@@ -94,14 +89,9 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		update.Description = &body
 
 	case "add_label":
-		name, ok := step["name"]
-		if !ok {
-			return errors.New("step field 'name' is required, but missing")
-		}
-
-		nameVal, ok := name.(string)
-		if !ok {
-			return errors.New("step field 'name' must be a string")
+		name, err := step.RequiredString("name")
+		if err != nil {
+			return err
 		}
 
 		labels := update.AddLabels
@@ -109,19 +99,14 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			labels = &scm.LabelOptions{}
 		}
 
-		tmp := append(*labels, nameVal)
+		tmp := append(*labels, name)
 
 		update.AddLabels = &tmp
 
 	case "remove_label":
-		name, ok := step["name"]
-		if !ok {
-			return errors.New("step field 'name' is required, but missing")
-		}
-
-		nameVal, ok := name.(string)
-		if !ok {
-			return errors.New("step field 'name' must be a string")
+		name, err := step.RequiredString("name")
+		if err != nil {
+			return err
 		}
 
 		labels := update.RemoveLabels
@@ -129,7 +114,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			labels = &scm.LabelOptions{}
 		}
 
-		tmp := append(*labels, nameVal)
+		tmp := append(*labels, name)
 
 		update.AddLabels = &tmp
 
@@ -147,7 +132,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 	case "approve":
 		if state.IsDryRun(ctx) {
-			slogctx.Info(ctx, "Approving MR")
+			slogctx.Info(ctx, "(Dry Run) Approving MR")
 
 			return nil
 		}
@@ -158,7 +143,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 	case "unapprove":
 		if state.IsDryRun(ctx) {
-			slogctx.Info(ctx, "Unapproving MR")
+			slogctx.Info(ctx, "(Dry Run) Unapproving MR")
 
 			return nil
 		}
@@ -168,28 +153,23 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		return err
 
 	case "comment":
-		msg, ok := step["message"]
-		if !ok {
-			return errors.New("step field 'message' is required, but missing")
+		message, err := step.RequiredString("message")
+		if err != nil {
+			return err
 		}
 
-		msgString, ok := msg.(string)
-		if !ok {
-			return fmt.Errorf("step field 'message' must be a string, got %T", msg)
-		}
-
-		if len(msgString) == 0 {
+		if len(message) == 0 {
 			return errors.New("step field 'message' must not be an empty string")
 		}
 
 		if state.IsDryRun(ctx) {
-			slogctx.Info(ctx, "Commenting on MR", slog.String("message", msgString))
+			slogctx.Info(ctx, "(Dry Run) Commenting on MR", slog.String("message", message))
 
 			return nil
 		}
 
-		_, _, err := c.wrapped.Notes.CreateMergeRequestNote(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
-			Body: scm.Ptr(msgString),
+		_, _, err = c.wrapped.Notes.CreateMergeRequestNote(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
+			Body: scm.Ptr(message),
 		})
 
 		return err

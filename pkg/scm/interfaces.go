@@ -33,4 +33,6 @@ type EvalContext interface {
 	IsValid() bool
 	SetContext(ctx context.Context)
 	SetWebhookEvent(in any)
+	TrackActionGroupExecution(name string)
+	HasExecutedActionGroup(name string) bool
 }

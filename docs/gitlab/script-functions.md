@@ -20,7 +20,7 @@ merge_request.state_is("merged")
 merge_request.state_is("opened", "locked")
 ```
 
-### `merge_request.state_is_not(string...) -> boolean` {: #merge_request.state_is data-toc-label="state_is"}
+### `merge_request.state_is_not(string...) -> boolean` {: #merge_request.state_is_not data-toc-label="state_is"}
 
 Check if the `merge_request` state is NOT any of the provided states
 
@@ -159,6 +159,14 @@ Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h", "d" and "w".
 
 ```css
 duration("1h").Seconds() == 3600
+```
+
+### `since(time.Time) -> duration` {: #duration data-toc-label="since"}
+
+Returns the [`time.Duration`](https://pkg.go.dev/time#Duration) value since the provided `time`.
+
+```css
+since(now() + duration("1h))== 3600
 ```
 
 ### `uniq([]string) -> []string` {: #uniq data-toc-label="uniq"}

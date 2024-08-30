@@ -145,12 +145,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	slogctx.Info(ctx, "Sync labels")
 
-	remoteLabels, err := client.Labels().List(ctx)
-	if err != nil {
-		return err
-	}
-
-	if err := syncLabels(ctx, client, remoteLabels, labels); err != nil {
+	if err := syncLabels(ctx, client, labels); err != nil {
 		return err
 	}
 
@@ -205,7 +200,7 @@ func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.Upda
 	return err
 }
 
-func runActions(ctx context.Context, evalContext scm.EvalContext, client scm.Client, update *scm.UpdateMergeRequestOptions, actions []config.Action) error {
+func runActions(ctx context.Context, evalContext scm.EvalContext, client scm.Client, update *scm.UpdateMergeRequestOptions, actions config.Actions) error {
 	if len(actions) == 0 {
 		slogctx.Debug(ctx, "No actions evaluated to true, skipping")
 
@@ -215,6 +210,14 @@ func runActions(ctx context.Context, evalContext scm.EvalContext, client scm.Cli
 	for _, action := range actions {
 		ctx := slogctx.With(ctx, slog.String("action_name", action.Name))
 		slogctx.Info(ctx, "Applying action")
+
+		if evalContext.HasExecutedActionGroup(action.Group) {
+			slogctx.Warn(ctx, fmt.Sprintf("Already executed another action within group '%s'; skipping current action until next evaluation", action.Group))
+
+			continue
+		}
+
+		evalContext.TrackActionGroupExecution(action.Group)
 
 		for _, task := range action.Then {
 			if err := client.ApplyStep(ctx, evalContext, update, task); err != nil {
@@ -228,8 +231,13 @@ func runActions(ctx context.Context, evalContext scm.EvalContext, client scm.Cli
 	return nil
 }
 
-func syncLabels(ctx context.Context, client scm.Client, remote []*scm.Label, required []scm.EvaluationResult) error {
+func syncLabels(ctx context.Context, client scm.Client, required []scm.EvaluationResult) error {
 	slogctx.Info(ctx, "Going to sync required labels", slog.Int("number_of_labels", len(required)))
+
+	remote, err := client.Labels().List(ctx)
+	if err != nil {
+		return err
+	}
 
 	remoteLabels := map[string]*scm.Label{}
 	for _, e := range remote {

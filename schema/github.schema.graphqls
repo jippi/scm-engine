@@ -24,6 +24,10 @@ scalar Duration
 # Add 'any' type for Event
 scalar Any
 
+# Add map[string]any type support
+# See: https://gqlgen.com/reference/scalars/#map
+scalar Map
+
 "The repository's visibility level"
 enum RepositoryVisibility {
   "The repository is visible only to those with explicit access"
@@ -126,6 +130,9 @@ type Context {
 
   "Information about the event that triggered the evaluation. Empty when not using webhook server."
   WebhookEvent: Any @generated @expr(key: "webhook_event")
+
+  "Internal state for tracing what actions has been executed during evaluation"
+  ActionGroups: Map @generated @internal
 }
 
 type ContextUser {

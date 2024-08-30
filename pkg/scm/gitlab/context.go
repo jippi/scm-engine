@@ -41,6 +41,9 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 		return nil, nil //nolint:nilnil
 	}
 
+	// Initialize null-able types
+	evalContext.ActionGroups = make(map[string]any)
+
 	// Move project labels into a un-nested expr exposed field
 	evalContext.Project.Labels = evalContext.Project.ResponseLabels.Nodes
 	evalContext.Project.ResponseLabels.Nodes = nil
@@ -125,4 +128,24 @@ func (c *Context) CanUseConfigurationFileFromChangeRequest(ctx context.Context) 
 	slogctx.Info(ctx, "The Merge Request branch is up to date with HEAD; will use the scm-engine config from the branch")
 
 	return true
+}
+
+func (c *Context) TrackActionGroupExecution(group string) {
+	// Ungrouped actions shouldn't be tracked
+	if len(group) == 0 {
+		return
+	}
+
+	c.ActionGroups[group] = true
+}
+
+func (c *Context) HasExecutedActionGroup(group string) bool {
+	// Ungrouped actions shouldn't be tracked
+	if len(group) == 0 {
+		return false
+	}
+
+	_, ok := c.ActionGroups[group]
+
+	return ok
 }
