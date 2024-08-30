@@ -113,7 +113,7 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		}
 
 		// Check if there exists scm-config file in the repo before moving forward
-		file, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), "")
+		file, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), state.CommitSHA(ctx))
 		if err != nil {
 			errHandler(ctx, w, http.StatusOK, err)
 
