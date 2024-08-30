@@ -63,6 +63,9 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 				return
 
 			case <-ticker.C:
+				// Track all log output back to a periodic evaluation cycle
+				ctx := slogctx.With(ctx, slog.String("periodic_eval_id", sid.MustGenerate()))
+
 				slogctx.Info(ctx, "Starting periodic evaluation cycle")
 
 				results, err := client.FindMergeRequestsForPeriodicEvaluation(ctx, filter)
@@ -72,7 +75,7 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 					continue
 				}
 
-				slogctx.Info(ctx, fmt.Sprintf("Found %d merge requests to evaluate", len(results)), slog.Int("number_of_projects", len(results)))
+				slogctx.Info(ctx, fmt.Sprintf("Found %d Merge Requests to evaluate", len(results)), slog.Int("number_of_projects", len(results)))
 
 				for _, mergeRequest := range results {
 					ctx := ctx // make sure we define a fresh GC-able context per merge request so we don't append to the existing forever

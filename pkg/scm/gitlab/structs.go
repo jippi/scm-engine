@@ -3,28 +3,56 @@ package gitlab
 // PeriodicEvaluationResult structs maps to the GraphQL query used to find Merge Requests
 // that should be periodically evaluated.
 //
-// It roughly matches this GraphQL query (via Go structs and field tags)
+// GraphQL query:
 //
-//	query($project_topics: [String!], $config_file: String! = ".scm-engine.yml", $project_membership: Boolean, $mr_ignore_labels: [String!]) {
-//	  projects(first: 100, membership: $project_membership, withMergeRequestsEnabled: true, topics: $project_topics) {
-//	    nodes {
-//	      fullPath
-//	      repository {
-//	        blobs(paths: $config_file) {
-//	          nodes {
-//	            rawBlob
-//	          }
-//	        }
-//	      }
-//	      mergeRequests(first: 100, state: opened, not: {labels: $mr_ignore_labels}, sort: UPDATED_ASC) {
-//	        nodes {
-//	          iid
-//	          diffHeadSha
-//	        }
-//	      }
-//	    }
-//	  }
-//	}
+//    query (
+//      $project_topics: [String!],
+//      $config_file: String!,
+//      $project_membership: Boolean,
+//      $mr_ignore_labels: [String!],
+//      $mr_require_labels: [String!]
+//    ) {
+//      projects(
+//        first: 100
+//        membership: $project_membership
+//        withMergeRequestsEnabled: true
+//        topics: $project_topics
+//      ) {
+//        nodes {
+//          fullPath
+//          repository {
+//            blobs(paths: [$config_file]) {
+//              nodes {
+//                rawBlob
+//              }
+//            }
+//          }
+//          mergeRequests(
+//            first: 100,
+//            state: opened,
+//            not: {labels: $mr_ignore_labels},
+//            labels: $mr_require_labels,
+//            sort: UPDATED_ASC
+//          ) {
+//            nodes {
+//              iid
+//              diffHeadSha
+//            }
+//          }
+//        }
+//      }
+//    }
+//
+// Query Variables
+//
+//    {
+//      "config_file": ".scm-engine.yml",
+//      "project_topics": ["scm-engine"],
+//      "project_membership": true,
+//      "mr_ignore_labels": ["security", "do-not-close"],
+//      "mr_ignore_labels": []
+//    }
+
 type PeriodicEvaluationResult struct {
 	// Projects contains first 100 projects that matches the filtering conditions
 	Projects graphqlNodesOf[PeriodicEvaluationProjectNode] `graphql:"projects(first: 100, membership: $project_membership, withMergeRequestsEnabled: true, topics: $project_topics)"`

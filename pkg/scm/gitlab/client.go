@@ -2,6 +2,7 @@ package gitlab
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -81,9 +82,13 @@ func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context
 		return nil, err
 	}
 
+	slogctx.Debug(ctx, fmt.Sprintf("Found %d projects", len(response.Projects.Nodes)))
+
 	var result []scm.PeriodicEvaluationMergeRequest
 
 	for _, project := range response.Projects.Nodes {
+		slogctx.Debug(ctx, fmt.Sprintf("Project %s has %d Merge Requests", project.FullPath, len(project.MergeRequests.Nodes)))
+
 		for _, mr := range project.MergeRequests.Nodes {
 			item := scm.PeriodicEvaluationMergeRequest{
 				Project:        project.FullPath,
