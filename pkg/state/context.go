@@ -20,14 +20,19 @@ const (
 	mergeRequestID
 	projectID
 	provider
+	startTime
 	token
 	updatePipeline
 	updatePipelineURL
-	startTime
+	evaluationID
 )
 
 func ProjectID(ctx context.Context) string {
 	return ctx.Value(projectID).(string) //nolint:forcetypeassert
+}
+
+func EvaluationID(ctx context.Context) string {
+	return ctx.Value(evaluationID).(string) //nolint:forcetypeassert
 }
 
 func CommitSHA(ctx context.Context) string {
@@ -60,6 +65,12 @@ func Provider(ctx context.Context) string {
 
 func StartTime(ctx context.Context) time.Time {
 	return ctx.Value(startTime).(time.Time) //nolint:forcetypeassert
+}
+
+func WithEvaluationID(ctx context.Context, id string) context.Context {
+	ctx = slogctx.With(ctx, slog.String("eval_id", id))
+
+	return context.WithValue(ctx, evaluationID, id)
 }
 
 func WithStartTime(ctx context.Context, now time.Time) context.Context {

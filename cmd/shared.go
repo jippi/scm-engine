@@ -37,7 +37,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	ctx = state.WithStartTime(ctx, time.Now())
 
 	// Attach unique eval id to the logs so they are easy to filter on later
-	ctx = slogctx.With(ctx, slog.String("eval_id", sid.MustGenerate()))
+	ctx = state.WithEvaluationID(ctx, sid.MustGenerate())
 
 	// Track where we grab the configuration file from
 	ctx = slogctx.With(ctx, slog.String("config_source_branch", "merge_request_branch"))

@@ -119,8 +119,9 @@ func (client *Client) Start(ctx context.Context) error {
 
 	if len(pattern) != 0 {
 		link := pattern
-		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
+		link = strings.ReplaceAll(link, "__ID__", state.EvaluationID(ctx))
 		link = strings.ReplaceAll(link, "__MR_ID__", state.MergeRequestID(ctx))
+		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
 		link = strings.ReplaceAll(link, "__START_TS_MS__", strconv.FormatInt(state.StartTime(ctx).UnixMilli(), 10))
 		link = strings.ReplaceAll(link, "__STOP_TS_MS__", "")
 
@@ -158,8 +159,9 @@ func (client *Client) Stop(ctx context.Context, err error) error {
 
 	if len(pattern) != 0 {
 		link := pattern
-		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
+		link = strings.ReplaceAll(link, "__ID__", state.EvaluationID(ctx))
 		link = strings.ReplaceAll(link, "__MR_ID__", state.MergeRequestID(ctx))
+		link = strings.ReplaceAll(link, "__PROJECT_ID__", state.ProjectID(ctx))
 		link = strings.ReplaceAll(link, "__START_TS_MS__", strconv.FormatInt(state.StartTime(ctx).UnixMilli(), 10))
 		link = strings.ReplaceAll(link, "__STOP_TS_MS__", strconv.FormatInt(time.Now().UnixMilli(), 10))
 
