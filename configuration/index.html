@@ -419,6 +419,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#include" class="md-nav__link">
+    <span class="md-ellipsis">
+      include
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="include">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#include.project" class="md-nav__link">
+    <span class="md-ellipsis">
+      project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include.files" class="md-nav__link">
+    <span class="md-ellipsis">
+      files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include.ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      ref
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#actions" class="md-nav__link">
     <span class="md-ellipsis">
       actions
@@ -983,6 +1025,48 @@ GitHub (WIP)
 </li>
       
         <li class="md-nav__item">
+  <a href="#include" class="md-nav__link">
+    <span class="md-ellipsis">
+      include
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="include">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#include.project" class="md-nav__link">
+    <span class="md-ellipsis">
+      project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include.files" class="md-nav__link">
+    <span class="md-ellipsis">
+      files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include.ref" class="md-nav__link">
+    <span class="md-ellipsis">
+      ref
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#actions" class="md-nav__link">
     <span class="md-ellipsis">
       actions
@@ -1178,9 +1262,9 @@ GitHub (WIP)
 <h2 id="actions"><code>ignore_activity_from</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h2>
 <div class="admonition question">
 <p class="admonition-title">What is 'activity'?</p>
-</div>
 <p>SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.</p>
 <p><em>Generally</em>, <code>activity</code> is what you see in the Merge/Pull Request <code>timeline</code> in the browser UI.</p>
+</div>
 <p>Configure what users that should be ignored when considering activity on a Merge Request</p>
 <h3 id="actions"><code>ignore_activity_from.bots</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h3>
 <p>Should <code>bot</code> users be ignored when considering activity? Default: <code>false</code></p>
@@ -1189,6 +1273,50 @@ GitHub (WIP)
 <h3 id="actions"><code>ignore_activity_from.emails[]</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h3>
 <p>A list of emails that should be ignored when considering user activity. Default: <code>[]</code></p>
 <p><strong>NOTE:</strong> If a user do not have a public email configured on their profile, that users activity will never match this rule.</p>
+<h2 id="include"><code>include[]</code><a class="headerlink" href="#include" title="Permanent link">&para;</a></h2>
+<div class="admonition question">
+<p class="admonition-title">What are includes?</p>
+<p><code>scm-engine</code> has support for importing some (or all) of its configuration from other repositories.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">The <code>scm-engine</code> API token MUST be able to read the content of the referenced projects via the API</p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Limitations and restrictions of remote included configuration files</p>
+<p>This is immensely useful if you want to share configuration between many projects, like a centralized <code>scm-engine-library</code> project with common patterns and configuration files.</p>
+<ul>
+<li>Only <code>actions</code> and <code>label</code> configurations keys are supported in included configuration files.</li>
+<li>Nested/Recursive includes are NOT support.</li>
+<li>Merging/overriding configurations are NOT supported; included configuration will always append to the existing configuration.</li>
+<li>All included files MUST exist and be valid; any missing file or invalid configuration will result in failure.</li>
+<li><code>scm-engine</code> will read all files from a project in a single request where possible; up to 100 files are supported.</li>
+<li><code>scm-engine</code> do NOT cache any remote configuration files; they are always read during evaluation cycle.</li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example 'include' configuration loading 4 files from the 'platform/scm-engine-library' project</p>
+<div class="language-yaml highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">include</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform/scm-engine-library</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">label/change-type.yml</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">label/last-commit-age.yml</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">label/need-rebase.yml</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">life-cycle/close-merge-request-3-weeks.yml</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">label</span><span class="p">:</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">....</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nt">actions</span><span class="p">:</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+</div>
+<h3 id="include.project"><code>include[].project</code><a class="headerlink" href="#include.project" title="Permanent link">&para;</a></h3>
+<p>The GitLab repository slug to read configuration files, like <code>example/project</code>.</p>
+<h3 id="include.files"><code>include[].files</code><a class="headerlink" href="#include.files" title="Permanent link">&para;</a></h3>
+<p>The list of files to include from the project. The paths must be <em>relative</em> to the repository root, e.x. <code>label/some-config-file.yml</code>; NOT <code>/label/some-config-file.yml</code></p>
+<h3 id="include.ref"><code>include[].ref</code><a class="headerlink" href="#include.ref" title="Permanent link">&para;</a></h3>
+<p>Optional Git reference to read the configuration from; it can be a tag, branch, or commit SHA.</p>
+<p>If omitted, <code>HEAD</code> is used; meaning your default branch.</p>
 <h2 id="actions"><code>actions[]</code><a class="headerlink" href="#actions" title="Permanent link">&para;</a></h2>
 <div class="admonition question">
 <p class="admonition-title">What are actions?</p>
@@ -1228,9 +1356,9 @@ GitHub (WIP)
 <ul>
 <li>(required) <code class="language-css highlight"><span class="nt">message</span></code> The message that will be commented on the Merge Request.</li>
 </ul>
-<div class="language-yaml highlight"><span class="filename">'comment' example</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comment</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="no">Hello world</span>
+<div class="language-yaml highlight"><span class="filename">'comment' example</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comment</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="no">Hello world</span>
 </code></pre></div>
 </li>
 <li>
@@ -1243,8 +1371,8 @@ GitHub (WIP)
 <ul>
 <li>(required) <code class="language-css highlight"><span class="nt">label</span></code> The label name to add.</li>
 </ul>
-<div class="language-yaml highlight"><span class="filename">add_label example</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add_label</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span>
+<div class="language-yaml highlight"><span class="filename">add_label example</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add_label</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span>
 </code></pre></div>
 </li>
 <li>
@@ -1253,8 +1381,8 @@ GitHub (WIP)
 <ul>
 <li>(required) <code class="language-css highlight"><span class="nt">label</span></code> The label name to add.</li>
 </ul>
-<div class="language-yaml highlight"><span class="filename">remove_label example</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove_label</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span>
+<div class="language-yaml highlight"><span class="filename">remove_label example</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove_label</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example</span>
 </code></pre></div>
 </li>
 <li>
@@ -1263,9 +1391,9 @@ GitHub (WIP)
 <ul>
 <li>(required) <code class="language-css highlight"><span class="nt">replace</span></code> A list of key/value pairs to replace in the description. The <code>key</code> is the raw string to replace in the Merge Request description. The <code>value</code> is an Expr Lang expression returning a <code>string</code> that <code>key</code> will be replaced with - all Script Attributes and Script Functions are available within the script.</li>
 </ul>
-<div class="language-yaml highlight"><span class="filename">update_description example</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update_description</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">replace</span><span class="p">:</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">&quot;${{CI_MERGE_REQUEST_IID}}&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;merge_request.iid&quot;</span>
+<div class="language-yaml highlight"><span class="filename">update_description example</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update_description</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">replace</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="s">&quot;${{CI_MERGE_REQUEST_IID}}&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;merge_request.iid&quot;</span>
 </code></pre></div>
 </li>
 </ul>
