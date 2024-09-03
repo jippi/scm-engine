@@ -88,6 +88,74 @@ enum UserState {
   blocked_pending_approval
 }
 
+"Representation of whether a GitLab merge request can be merged"
+enum MergeStatus {
+  "Merge status has not been checked"
+  UNCHECKED
+  "Currently checking for mergeability"
+  CHECKING
+  "There are no conflicts between the source and target branches"
+  CAN_BE_MERGED
+  "There are conflicts between the source and target branches"
+  CANNOT_BE_MERGED
+  "Currently unchecked. The previous state was CANNOT_BE_MERGED"
+  CANNOT_BE_MERGED_RECHECK
+}
+
+"Detailed representation of whether a GitLab merge request can be merged"
+enum DetailedMergeStatus {
+  "Merge status has not been checked"
+  UNCHECKED
+
+  "Currently checking for mergeability"
+  CHECKING
+
+  "Branch can be merged"
+  MERGEABLE
+
+  "Source branch exists and contains commits"
+  COMMITS_STATUS
+
+  "Pipeline must succeed before merging"
+  CI_MUST_PASS
+
+  "Pipeline is still running"
+  CI_STILL_RUNNING
+
+  "Discussions must be resolved before merging"
+  DISCUSSIONS_NOT_RESOLVED
+
+  "Merge request must not be draft before merging"
+  DRAFT_STATUS
+
+  "Merge request must be open before merging"
+  NOT_OPEN
+
+  "Merge request must be approved before merging"
+  NOT_APPROVED
+
+  "Merge request dependencies must be merged"
+  BLOCKED_STATUS
+
+  "Status checks must pass"
+  EXTERNAL_STATUS_CHECKS
+
+  "Merge request diff is being created"
+  PREPARING
+
+  "Either the title or description must reference a Jira issue"
+  JIRA_ASSOCIATION
+
+  "There are conflicts between the source and target branches"
+  CONFLICT
+
+  "Merge request needs to be rebased"
+  NEED_REBASE
+
+  "Indicates a reviewer has requested change"
+  REQUESTED_CHANGES
+}
+
 input ListMergeRequestsQueryInput {
   project_id: ID!
   state: MergeRequestState! = "opened"
@@ -202,6 +270,8 @@ type ContextMergeRequest {
   CreatedAt: Time!
   "Description of the merge request (Markdown rendered as HTML for caching)"
   Description: String
+  "Detailed merge status of the merge request"
+  DetailedMergeStatus: DetailedMergeStatus
   "Indicates if comments on the merge request are locked to members only"
   DiscussionLocked: Boolean!
   "Indicates if the source branch is behind the target branch"
@@ -225,7 +295,7 @@ type ContextMergeRequest {
   "Timestamp of when the merge request was merged, null if not merged"
   MergedAt: Time
   "Merge status of the merge request"
-  MergeStatusEnum: String!
+  MergeStatusEnum: MergeStatus
   "Timestamp of when the merge request was prepared"
   PreparedAt: Time
   "Indicates if the merge request will be rebased"
