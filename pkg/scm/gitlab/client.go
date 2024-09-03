@@ -2,6 +2,7 @@ package gitlab
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -100,6 +101,14 @@ func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) 
 }
 
 func (client *Client) GetProjectFiles(ctx context.Context, project string, ref *string, files []string) (map[string]string, error) {
+	if len(project) == 0 {
+		return nil, errors.New("Missing required 'project' value for include")
+	}
+
+	if len(files) == 0 {
+		return nil, fmt.Errorf("Missing list of files to include from project [%s]", project)
+	}
+
 	var (
 		response  IncludeConfigurationResult
 		variables = map[string]any{
@@ -110,16 +119,29 @@ func (client *Client) GetProjectFiles(ctx context.Context, project string, ref *
 	)
 
 	if err := client.newGraphQLClient(ctx).Query(ctx, &response, variables); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("GraphQL query failed while trying to read remote configuration files [%v] for project [%s]: %w", files, project, err)
 	}
 
-	blobs := map[string]string{}
+	fileContents := map[string]string{}
 
+	// Convert the GraphQL response into a simple map
 	for _, blob := range response.Project.Repository.Blobs.Nodes {
-		blobs[blob.Path] = blobs[blob.Blob]
+		fileContents[blob.Path] = blob.Blob
 	}
 
-	return blobs, nil
+	// Check if the files provided as input all exist in the file content and is not empty
+	for _, file := range files {
+		val, ok := fileContents[file]
+		if !ok {
+			return nil, fmt.Errorf("configuration file [%s] in project [%s] does not exist (or could not be read)", file, project)
+		}
+
+		if len(val) == 0 {
+			return nil, fmt.Errorf("configuration file [%s] in project [%s] is empty", file, project)
+		}
+	}
+
+	return fileContents, nil
 }
 
 // Start pipeline
