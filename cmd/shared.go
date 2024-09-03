@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/scm/github"
@@ -112,6 +113,9 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	if cfg == nil {
 		return errors.New("cfg==nil; this is unexpected an error, please report!")
 	}
+
+	spew.Dump(cfg.LoadIncludes(ctx, client))
+	panic("end")
 
 	// Allow changing the 'dry-run' mode via configuration file
 	if cfg.DryRun != nil && *cfg.DryRun != state.IsDryRun(ctx) {

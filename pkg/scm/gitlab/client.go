@@ -62,23 +62,9 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 // FindMergeRequestsForPeriodicEvaluation will find all Merge Requests legible for
 // periodic re-evaluation.
 func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters scm.MergeRequestListFilters) ([]scm.PeriodicEvaluationMergeRequest, error) {
-	httpClient := oauth2.NewClient(
-		ctx,
-		oauth2.StaticTokenSource(
-			&oauth2.Token{
-				AccessToken: state.Token(ctx),
-			},
-		),
-	)
-
-	gClient := graphql.NewClient(
-		graphqlBaseURL(client.wrapped.BaseURL())+"/api/graphql",
-		httpClient,
-	)
-
 	var response PeriodicEvaluationResult
 
-	if err := gClient.Query(ctx, &response, filters.AsGraphqlVariables()); err != nil {
+	if err := client.newGraphQLClient(ctx).Query(ctx, &response, filters.AsGraphqlVariables()); err != nil {
 		return nil, err
 	}
 
@@ -111,6 +97,29 @@ func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context
 // EvalContext creates a new evaluation context for GitLab specific usage
 func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) {
 	return NewContext(ctx, graphqlBaseURL(client.wrapped.BaseURL()), state.Token(ctx))
+}
+
+func (client *Client) GetProjectFiles(ctx context.Context, project string, ref *string, files []string) (map[string]string, error) {
+	var (
+		response  IncludeConfigurationResult
+		variables = map[string]any{
+			"project": graphql.ID(project),
+			"files":   files,
+			"ref":     ref,
+		}
+	)
+
+	if err := client.newGraphQLClient(ctx).Query(ctx, &response, variables); err != nil {
+		return nil, err
+	}
+
+	blobs := map[string]string{}
+
+	for _, blob := range response.Project.Repository.Blobs.Nodes {
+		blobs[blob.Path] = blobs[blob.Blob]
+	}
+
+	return blobs, nil
 }
 
 // Start pipeline
@@ -236,4 +245,20 @@ func graphqlBaseURL(inputURL *url.URL) string {
 	}
 
 	return buf.String()
+}
+
+func (client Client) newGraphQLClient(ctx context.Context) *graphql.Client {
+	httpClient := oauth2.NewClient(
+		ctx,
+		oauth2.StaticTokenSource(
+			&oauth2.Token{
+				AccessToken: state.Token(ctx),
+			},
+		),
+	)
+
+	return graphql.NewClient(
+		graphqlBaseURL(client.wrapped.BaseURL())+"/api/graphql",
+		httpClient,
+	)
 }
