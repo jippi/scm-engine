@@ -47,19 +47,37 @@ A list of emails that should be ignored when considering user activity. Default:
     * `scm-engine` will read all files from a project in a single request where possible; up to 100 files are supported.
     * `scm-engine` do NOT cache any remote configuration files; they are always read during evaluation cycle.
 
+!!! example "Example 'include' configuration loading 4 files from the 'platform/scm-engine-library' project"
+
+    ```yaml
+    include:
+      - project: platform/scm-engine-library
+        files:
+          - label/change-type.yml
+          - label/last-commit-age.yml
+          - label/need-rebase.yml
+          - life-cycle/close-merge-request-3-weeks.yml
+
+      label:
+        - ....
+
+      actions:
+        - ...
+    ```
+
 ### `include[].project` {#include.project data-toc-label="project"}
 
 The GitLab repository slug to read configuration files, like `example/project`.
+
+### `include[].files` {#include.files data-toc-label="files"}
+
+The list of files to include from the project. The paths must be *relative* to the repository root, e.x. `label/some-config-file.yml`; NOT `/label/some-config-file.yml`
 
 ### `include[].ref` {#include.ref data-toc-label="ref"}
 
 Optional Git reference to read the configuration from; it can be a tag, branch, or commit SHA.
 
 If omitted, `HEAD` is used; meaning your default branch.
-
-### `include[].files` {#include.files data-toc-label="files"}
-
-The list of files to include from the project. The paths must be *relative* to the repository root, e.x. `label/some-config-file.yml`; NOT `/label/some-config-file.yml`
 
 ## `actions[]` {#actions data-toc-label="actions"}
 
