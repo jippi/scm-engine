@@ -8,9 +8,9 @@ The file path can be changed via `--config` CLI flag and `#!css $SCM_ENGINE_CONF
 
 !!! question "What is 'activity'?"
 
-  SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.
+    SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.
 
-  *Generally*, `activity` is what you see in the Merge/Pull Request `timeline` in the browser UI.
+    *Generally*, `activity` is what you see in the Merge/Pull Request `timeline` in the browser UI.
 
 Configure what users that should be ignored when considering activity on a Merge Request
 
@@ -27,6 +27,57 @@ A list of usernames that should be ignored when considering user activity. Defau
 A list of emails that should be ignored when considering user activity. Default: `[]`
 
 **NOTE:** If a user do not have a public email configured on their profile, that users activity will never match this rule.
+
+## `include[]` {#include data-toc-label="include"}
+
+!!! question "What are includes?"
+
+    `scm-engine` has support for importing some (or all) of its configuration from other repositories.
+
+!!! note "The `scm-engine` API token MUST be able to read the content of the referenced projects via the API"
+
+!!! abstract "Limitations and restrictions of remote included configuration files"
+
+    This is immensely useful if you want to share configuration between many projects, like a centralized `scm-engine-library` project with common patterns and configuration files.
+
+    * Only `actions` and `label` configurations keys are supported in included configuration files.
+    * Nested/Recursive includes are NOT support.
+    * Merging/overriding configurations are NOT supported; included configuration will always append to the existing configuration.
+    * All included files MUST exist and be valid; any missing file or invalid configuration will result in failure.
+    * `scm-engine` will read all files from a project in a single request where possible; up to 100 files are supported.
+    * `scm-engine` do NOT cache any remote configuration files; they are always read during evaluation cycle.
+
+!!! example "Example 'include' configuration loading 4 files from the 'platform/scm-engine-library' project"
+
+    ```yaml
+    include:
+      - project: platform/scm-engine-library
+        files:
+          - label/change-type.yml
+          - label/last-commit-age.yml
+          - label/need-rebase.yml
+          - life-cycle/close-merge-request-3-weeks.yml
+
+      label:
+        - ....
+
+      actions:
+        - ...
+    ```
+
+### `include[].project` {#include.project data-toc-label="project"}
+
+The GitLab repository slug to read configuration files, like `example/project`.
+
+### `include[].files` {#include.files data-toc-label="files"}
+
+The list of files to include from the project. The paths must be *relative* to the repository root, e.x. `label/some-config-file.yml`; NOT `/label/some-config-file.yml`
+
+### `include[].ref` {#include.ref data-toc-label="ref"}
+
+Optional Git reference to read the configuration from; it can be a tag, branch, or commit SHA.
+
+If omitted, `HEAD` is used; meaning your default branch.
 
 ## `actions[]` {#actions data-toc-label="actions"}
 
@@ -62,11 +113,11 @@ The list of operations to take if the [`#!css action.if`](#actions.if) returned 
 
 This key controls what kind of action that should be taken.
 
-- `#!yaml approve` to approve the Merge Request.
-- `#!yaml unapprove` to approve the Merge Request.
-- `#!yaml close` to close the Merge Request.
-- `#!yaml reopen` to reopen the Merge Request.
-- `#!yaml comment` to add a comment to the Merge Request
+* `#!yaml approve` to approve the Merge Request.
+* `#!yaml unapprove` to approve the Merge Request.
+* `#!yaml close` to close the Merge Request.
+* `#!yaml reopen` to reopen the Merge Request.
+* `#!yaml comment` to add a comment to the Merge Request
 
       *Additional fields:*
 
@@ -78,9 +129,9 @@ This key controls what kind of action that should be taken.
           Hello world
       ```
 
-- `#!yaml lock_discussion` to prevent further discussions on the Merge Request.
-- `#!yaml unlock_discussion` to allow discussions on the Merge Request.
-- `#!yaml add_label` to add *an existing* label to the Merge Request
+* `#!yaml lock_discussion` to prevent further discussions on the Merge Request.
+* `#!yaml unlock_discussion` to allow discussions on the Merge Request.
+* `#!yaml add_label` to add *an existing* label to the Merge Request
 
       *Additional fields:*
 
@@ -91,7 +142,7 @@ This key controls what kind of action that should be taken.
         label: example
       ```
 
-- `#!yaml remove_label` to remove a label from the Merge Request
+* `#!yaml remove_label` to remove a label from the Merge Request
 
       *Additional fields:*
 
@@ -102,7 +153,7 @@ This key controls what kind of action that should be taken.
         label: example
       ```
 
-- `#!yaml update_description` updates the Merge Request Description
+* `#!yaml update_description` updates the Merge Request Description
 
       *Additional fields:*
 
@@ -129,11 +180,11 @@ These keys are shared between the [`#!yaml conditional`](#label.strategy-conditi
 
 SCM Engine supports two strategies for managing labels, each changes the behavior of the [`#!css script`](#label.script).
 
-- `#!yaml conditional` (default, if `#!css strategy` key is omitted), where you provide the `#!css name` of the label, and a [`#!css script`](#label.script) that returns a boolean for wether the label should be added to the Merge Request.
+* `#!yaml conditional` (default, if `#!css strategy` key is omitted), where you provide the `#!css name` of the label, and a [`#!css script`](#label.script) that returns a boolean for wether the label should be added to the Merge Request.
 
     The [`#!css script`](#label.script) must return a `#!yaml boolean` value, where `#!yaml true` mean `add the label` and `#!yaml false` mean `remove the label`.
 
-- `#!yaml generate`, where your `#!css script` generates the list of labels that should be added to the Merge Request.
+* `#!yaml generate`, where your `#!css script` generates the list of labels that should be added to the Merge Request.
 
     The [`#!css script`](#label.script) must return a `list of strings`, where each label returned will be added to the Merge Request.
 
@@ -153,11 +204,11 @@ Thanks to the dynamic nature of the `#!yaml generate` strategy, it has fantastic
 
 ### `label[].name` {#label.name data-toc-label="name"}
 
-- When using `#!yaml label.strategy: conditional`
+* When using `#!yaml label.strategy: conditional`
 
     **REQUIRED** The `#!css name` of the label to create.
 
-- When using `#!yaml label.strategy: generate`
+* When using `#!yaml label.strategy: generate`
 
     **OMITTED** The `#!css name` field must not be set when using the `#!yaml generate` strategy.
 

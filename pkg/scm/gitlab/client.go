@@ -2,6 +2,7 @@ package gitlab
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -62,23 +63,9 @@ func (client *Client) MergeRequests() scm.MergeRequestClient {
 // FindMergeRequestsForPeriodicEvaluation will find all Merge Requests legible for
 // periodic re-evaluation.
 func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters scm.MergeRequestListFilters) ([]scm.PeriodicEvaluationMergeRequest, error) {
-	httpClient := oauth2.NewClient(
-		ctx,
-		oauth2.StaticTokenSource(
-			&oauth2.Token{
-				AccessToken: state.Token(ctx),
-			},
-		),
-	)
-
-	gClient := graphql.NewClient(
-		graphqlBaseURL(client.wrapped.BaseURL())+"/api/graphql",
-		httpClient,
-	)
-
 	var response PeriodicEvaluationResult
 
-	if err := gClient.Query(ctx, &response, filters.AsGraphqlVariables()); err != nil {
+	if err := client.newGraphQLClient(ctx).Query(ctx, &response, filters.AsGraphqlVariables()); err != nil {
 		return nil, err
 	}
 
@@ -111,6 +98,50 @@ func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context
 // EvalContext creates a new evaluation context for GitLab specific usage
 func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) {
 	return NewContext(ctx, graphqlBaseURL(client.wrapped.BaseURL()), state.Token(ctx))
+}
+
+func (client *Client) GetProjectFiles(ctx context.Context, project string, ref *string, files []string) (map[string]string, error) {
+	if len(project) == 0 {
+		return nil, errors.New("Missing required 'project' value for include")
+	}
+
+	if len(files) == 0 {
+		return nil, fmt.Errorf("Missing list of files to include from project [%s]", project)
+	}
+
+	var (
+		response  IncludeConfigurationResult
+		variables = map[string]any{
+			"project": graphql.ID(project),
+			"files":   files,
+			"ref":     ref,
+		}
+	)
+
+	if err := client.newGraphQLClient(ctx).Query(ctx, &response, variables); err != nil {
+		return nil, fmt.Errorf("GraphQL query failed while trying to read remote configuration files [%v] for project [%s]: %w", files, project, err)
+	}
+
+	fileContents := map[string]string{}
+
+	// Convert the GraphQL response into a simple map
+	for _, blob := range response.Project.Repository.Blobs.Nodes {
+		fileContents[blob.Path] = blob.Blob
+	}
+
+	// Check if the files provided as input all exist in the file content and is not empty
+	for _, file := range files {
+		val, ok := fileContents[file]
+		if !ok {
+			return nil, fmt.Errorf("configuration file [%s] in project [%s] does not exist (or could not be read)", file, project)
+		}
+
+		if len(val) == 0 {
+			return nil, fmt.Errorf("configuration file [%s] in project [%s] is empty", file, project)
+		}
+	}
+
+	return fileContents, nil
 }
 
 // Start pipeline
@@ -236,4 +267,20 @@ func graphqlBaseURL(inputURL *url.URL) string {
 	}
 
 	return buf.String()
+}
+
+func (client Client) newGraphQLClient(ctx context.Context) *graphql.Client {
+	httpClient := oauth2.NewClient(
+		ctx,
+		oauth2.StaticTokenSource(
+			&oauth2.Token{
+				AccessToken: state.Token(ctx),
+			},
+		),
+	)
+
+	return graphql.NewClient(
+		graphqlBaseURL(client.wrapped.BaseURL())+"/api/graphql",
+		httpClient,
+	)
 }

@@ -68,3 +68,8 @@ func (client *Client) Start(ctx context.Context) error {
 func (client *Client) Stop(ctx context.Context, err error) error {
 	return nil
 }
+
+// Get Project Files
+func (client *Client) GetProjectFiles(ctx context.Context, project string, ref *string, files []string) (map[string]string, error) {
+	return nil, errors.New("not implemented yet")
+}

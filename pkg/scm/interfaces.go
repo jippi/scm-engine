@@ -9,6 +9,7 @@ type Client interface {
 	ApplyStep(ctx context.Context, evalContext EvalContext, update *UpdateMergeRequestOptions, step EvaluationActionStep) error
 	EvalContext(ctx context.Context) (EvalContext, error)
 	FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters MergeRequestListFilters) ([]PeriodicEvaluationMergeRequest, error)
+	GetProjectFiles(ctx context.Context, project string, ref *string, files []string) (map[string]string, error)
 	Labels() LabelClient
 	MergeRequests() MergeRequestClient
 	Start(ctx context.Context) error
@@ -30,9 +31,9 @@ type MergeRequestClient interface {
 type EvalContext interface {
 	CanUseConfigurationFileFromChangeRequest(ctx context.Context) bool
 	GetDescription() string
+	HasExecutedActionGroup(name string) bool
 	IsValid() bool
 	SetContext(ctx context.Context)
 	SetWebhookEvent(in any)
 	TrackActionGroupExecution(name string)
-	HasExecutedActionGroup(name string) bool
 }
