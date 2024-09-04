@@ -201,7 +201,7 @@ type EvaluationActionResult struct {
 	// See: https://jippi.github.io/scm-engine/configuration/#actions.name
 	Name string `json:"name" yaml:"name"`
 
-	// Only one action per group (in order) will be executed per evaluation cycle.
+	// (Optional) Only one action per group (in order) will be executed per evaluation cycle.
 	// Use this to 'stop' other actions from running with the same group name
 	Group string `json:"group,omitempty" yaml:"group"`
 

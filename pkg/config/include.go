@@ -11,7 +11,7 @@ type Include struct {
 	// See: https://jippi.github.io/scm-engine/configuration/#include.files
 	Files []string `json:"files" yaml:"files"`
 
-	// Optional Git reference to read the configuration from; it can be a tag, branch, or commit SHA.
+	// (Optional) Git reference to read the configuration from; it can be a tag, branch, or commit SHA.
 	//
 	// If omitted, HEAD is used; meaning your default branch.
 	//

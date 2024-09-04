@@ -73,10 +73,12 @@ func (labels Labels) Evaluate(ctx context.Context, evalContext scm.EvalContext) 
 }
 
 type Label struct {
-	// Strategy used for the label
+	// (Optional) Strategy used for the label
 	//
 	// - "conditional" will, based on the boolean output of [script], control if the label [name] should be added/removed on the MR
 	// - "computed" will, based on the list of strings output of [script], add/remove labels on the MR
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#label.strategy
 	Strategy labelType `json:"strategy,omitempty" yaml:"strategy" jsonschema:"default=conditional,enum=conditional,enum=generate"`
 
 	// Name of the label being generated.
@@ -86,31 +88,35 @@ type Label struct {
 	// See: https://jippi.github.io/scm-engine/configuration/#label.name
 	Name string `json:"name,omitempty" yaml:"name" jsonschema:"dependentRequired"`
 
-	// Description for the label being generated.
-	//
-	// Optional; will be an empty string if omitted
+	// (Optional) Description for the label being generated.
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.description
-	Description string `json:"description" yaml:"description"`
+	Description string `json:"description,omitempty" yaml:"description"`
 
-	// The HEX color code to use for the label.
+	// (Optional) The HEX color code to use for the label.
 	//
 	// May use the color variables (e.g., $purple-300) defined in Twitter Bootstrap
 	// https://getbootstrap.com/docs/5.3/customize/color/#all-colors
-	Color string `json:"color" yaml:"color"`
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#label.color
+	Color string `json:"color,omitempty" yaml:"color"`
 
-	// Priority controls wether the label should be a priority label or regular one.
+	// (Optional) Priority controls wether the label should be a priority label or regular one.
 	//
 	// This controls if the label is prioritized (sorted first) in the list.
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#label.priority
 	Priority types.Value[int] `json:"priority,omitempty" yaml:"priority"`
 
-	// Script contains the [expr-lang](https://expr-lang.org/) script used to emit labels for the MR.
+	// Script contains the (https://expr-lang.org/) script used to emit labels for the MR.
 	//
-	// Please see [Type] documentation for more information.
+	// See: https://jippi.github.io/scm-engine/configuration/#label.script
 	Script string `json:"script" yaml:"script"`
 
-	// SkipIf is an optional [expr-lang](https://expr-lang.org/) script, returning a boolean, wether to
+	// SkipIf is an optional (https://expr-lang.org/) script, returning a boolean, wether to
 	// skip (true) or process (false) this label step.
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#label.skip_if
 	SkipIf string `json:"skip_if,omitempty" yaml:"skip_if"`
 
 	//

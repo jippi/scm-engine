@@ -10,27 +10,27 @@ import (
 )
 
 type Config struct {
-	// When on, no actions will be taken, but instead logged for review
+	// (Optional) When on, no actions will be taken, but instead logged for review
 	DryRun *bool `json:"dry_run,omitempty" yaml:"dry_run" jsonschema:"default=false"`
 
-	// scm-engine has support for importing some (or all) of its configuration from other repositories.
+	// (Optional) Import configuration from other git repositories
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#include
 	Includes []Include `json:"include,omitempty" yaml:"include"`
 
-	// Configure what users that should be ignored when considering activity on a Merge Request
+	// (Optional) Configure what users that should be ignored when considering activity on a Merge Request
 	//
 	// SCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from
 	IgnoreActivityFrom IgnoreActivityFrom `json:"ignore_activity_from,omitempty" yaml:"ignore_activity_from"`
 
-	// Actions can modify a Merge Request in various ways, for example, adding a comment or closing the Merge Request.
+	// (Optional) Actions can modify a Merge Request in various ways, for example, adding a comment or closing the Merge Request.
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#actions
 	Actions Actions `json:"actions,omitempty" yaml:"actions"`
 
-	// Labels are a way to categorize and filter issues, merge requests, and epics in GitLab. -- GitLab documentation
+	// (Optional) Labels are a way to categorize and filter issues, merge requests, and epics in GitLab. -- GitLab documentation
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label
 	Labels Labels `json:"label,omitempty" yaml:"label"`
