@@ -26,7 +26,7 @@ require (
 	github.com/veqryn/slog-dedup v0.5.0
 	github.com/xanzy/go-gitlab v0.108.0
 	github.com/xhit/go-str2duration/v2 v2.1.0
-	golang.org/x/oauth2 v0.22.0
+	golang.org/x/oauth2 v0.23.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
