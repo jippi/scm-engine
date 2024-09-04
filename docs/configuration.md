@@ -4,7 +4,7 @@ The default configuration filename is `.scm-engine.yml`, either in current worki
 
 The file path can be changed via `--config` CLI flag and `#!css $SCM_ENGINE_CONFIG_FILE` environment variable.
 
-## `ignore_activity_from` {#actions data-toc-label="ignore_activity_from"}
+## `ignore_activity_from` {#ignore_activity_from data-toc-label="ignore_activity_from"}
 
 !!! question "What is 'activity'?"
 
@@ -14,15 +14,15 @@ The file path can be changed via `--config` CLI flag and `#!css $SCM_ENGINE_CONF
 
 Configure what users that should be ignored when considering activity on a Merge Request
 
-### `ignore_activity_from.bots` {#actions data-toc-label="bots"}
+### `ignore_activity_from.bots` {#ignore_activity_from.bots data-toc-label="bots"}
 
 Should `bot` users be ignored when considering activity? Default: `false`
 
-### `ignore_activity_from.usernames[]` {#actions data-toc-label="usernames"}
+### `ignore_activity_from.usernames[]` {#ignore_activity_from.usernames data-toc-label="usernames"}
 
 A list of usernames that should be ignored when considering user activity. Default: `[]`
 
-### `ignore_activity_from.emails[]` {#actions data-toc-label="emails"}
+### `ignore_activity_from.emails[]` {#ignore_activity_from.emails data-toc-label="emails"}
 
 A list of emails that should be ignored when considering user activity. Default: `[]`
 
