@@ -210,7 +210,7 @@ func (client *Client) Stop(ctx context.Context, evalError error) error {
 	)
 
 	if evalError != nil {
-		status = go_gitlab.Skipped
+		status = go_gitlab.Canceled
 		message = evalError.Error()
 	}
 
