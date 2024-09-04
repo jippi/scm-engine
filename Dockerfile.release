@@ -3,9 +3,4 @@
 
 FROM ubuntu
 
-RUN set -ex \
-  && apt-get update \
-  && apt-get install ca-certificates --yes \
-  && apt-get clean
-
 COPY ["scm-engine", "/usr/local/bin/scm-engine"]
