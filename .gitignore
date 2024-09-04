@@ -12,11 +12,13 @@
 /completions/
 /coverage.txt
 /dist/
+/docs/github/_partials/cmd-*
+/docs/github/script-attributes.md
+/docs/gitlab/_partials/cmd-*
+/docs/gitlab/script-attributes.md
+/docs/scm-engine.schema.json
 /manpages/
 /schema/ignore
 /scm-engine
 /scm-engine.exe
-/docs/gitlab/script-attributes.md
-/docs/github/script-attributes.md
-/docs/github/_partials/cmd-*
-/docs/gitlab/_partials/cmd-*
+/scm-engine.schema.json

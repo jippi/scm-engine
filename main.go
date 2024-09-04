@@ -1,13 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
+	"github.com/invopop/jsonschema"
 	"github.com/jippi/scm-engine/cmd"
+	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/tui"
 	"github.com/urfave/cli/v2"
@@ -69,6 +72,26 @@ func main() {
 		Commands: []*cli.Command{
 			cmd.GitLab,
 			cmd.GitHub,
+			{
+				Name: "jsonschema",
+				Action: func(ctx *cli.Context) error {
+					r := new(jsonschema.Reflector)
+					if err := r.AddGoComments("github.com/jippi/scm-engine", "./"); err != nil {
+						return err
+					}
+
+					schema := r.Reflect(&config.Config{})
+
+					data, err := json.MarshalIndent(schema, "", "  ")
+					if err != nil {
+						panic(err.Error())
+					}
+
+					fmt.Println(string(data))
+
+					return os.WriteFile("scm-engine.schema.json", data, 0o600)
+				},
+			},
 			// DEPRECATED COMMANDS
 			{
 				Name:      "evaluate",

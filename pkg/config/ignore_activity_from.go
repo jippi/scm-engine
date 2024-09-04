@@ -3,9 +3,20 @@ package config
 import "github.com/jippi/scm-engine/pkg/scm"
 
 type IgnoreActivityFrom struct {
-	IsBot     bool     `yaml:"bots"`
-	Usernames []string `yaml:"usernames"`
-	Emails    []string `yaml:"emails"`
+	// Should bot users be ignored when considering activity? Default: false
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from.bots
+	IsBot bool `json:"bots" yaml:"bots"`
+
+	// A list of usernames that should be ignored when considering user activity. Default: []
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from.usernames
+	Usernames []string `json:"usernames" yaml:"usernames"`
+	// A list of emails that should be ignored when considering user activity. Default: []
+	// NOTE: If a user do not have a public email configured on their profile, that users activity will never match this rule.
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from.emails
+	Emails []string `json:"emails" yaml:"emails"`
 }
 
 func (i IgnoreActivityFrom) Matches(actor scm.Actor) bool {

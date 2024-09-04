@@ -162,6 +162,9 @@ type EvaluationResult struct {
 	Matched bool
 }
 
+// This key controls what kind of action that should be taken.
+//
+// See: https://jippi.github.io/scm-engine/configuration/#actions.if.then
 type EvaluationActionStep map[string]any
 
 func (step EvaluationActionStep) RequiredString(name string) (string, error) {
@@ -193,10 +196,26 @@ func (step EvaluationActionStep) OptionalString(name, defaultValue string) (stri
 }
 
 type EvaluationActionResult struct {
-	Name  string                 `yaml:"name"`
-	Group string                 `yaml:"group"`
-	If    string                 `yaml:"if"`
-	Then  []EvaluationActionStep `yaml:"then"`
+	// The name of the action, this is purely for debugging and your convenience.
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#actions.name
+	Name string `json:"name" yaml:"name"`
+
+	// Only one action per group (in order) will be executed per evaluation cycle.
+	// Use this to 'stop' other actions from running with the same group name
+	Group string `json:"group,omitempty" yaml:"group"`
+
+	// A key controlling if the action should executed or not.
+	//
+	// This script is in Expr-lang: https://expr-lang.org/docs/language-definition
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#actions.if
+	If string `json:"if" yaml:"if"`
+
+	// The list of operations to take if the action.if returned true.
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#actions.if.then
+	Then []EvaluationActionStep `json:"then" yaml:"then"`
 }
 
 func (local EvaluationResult) IsEqual(ctx context.Context, remote *Label) bool {

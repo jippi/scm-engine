@@ -3,13 +3,31 @@ package types
 import (
 	"database/sql"
 	"fmt"
+	"reflect"
 
 	"github.com/guregu/null/v5"
+	"github.com/invopop/jsonschema"
 	"gopkg.in/yaml.v3"
 )
 
 type Value[T comparable] struct {
 	null.Value[T]
+}
+
+func (v Value[T]) JSONSchema() *jsonschema.Schema {
+	var schemaType string
+
+	switch reflect.TypeFor[T]().Kind() {
+	case reflect.Int:
+		schemaType = "number"
+
+	default:
+		panic(fmt.Errorf("don't know how to convert type [%s] to JSON Schema type", reflect.TypeFor[T]().Kind().String()))
+	}
+
+	return &jsonschema.Schema{
+		Type: schemaType,
+	}
 }
 
 // NewValue creates a new Value.

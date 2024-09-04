@@ -77,49 +77,53 @@ type Label struct {
 	//
 	// - "conditional" will, based on the boolean output of [script], control if the label [name] should be added/removed on the MR
 	// - "computed" will, based on the list of strings output of [script], add/remove labels on the MR
-	Strategy labelType `yaml:"strategy"`
+	Strategy labelType `json:"strategy,omitempty" yaml:"strategy" jsonschema:"default=conditional,enum=conditional,enum=generate"`
 
 	// Name of the label being generated.
 	//
 	// May only be used with [conditional] labelling type
-	Name string `yaml:"name"`
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#label.name
+	Name string `json:"name,omitempty" yaml:"name" jsonschema:"dependentRequired"`
 
 	// Description for the label being generated.
 	//
 	// Optional; will be an empty string if omitted
-	Description string `yaml:"description"`
+	//
+	// See: https://jippi.github.io/scm-engine/configuration/#label.description
+	Description string `json:"description" yaml:"description"`
 
 	// The HEX color code to use for the label.
 	//
 	// May use the color variables (e.g., $purple-300) defined in Twitter Bootstrap
 	// https://getbootstrap.com/docs/5.3/customize/color/#all-colors
-	Color string `yaml:"color"`
+	Color string `json:"color" yaml:"color"`
 
 	// Priority controls wether the label should be a priority label or regular one.
 	//
 	// This controls if the label is prioritized (sorted first) in the list.
-	Priority types.Value[int] `yaml:"priority"`
+	Priority types.Value[int] `json:"priority,omitempty" yaml:"priority"`
 
 	// Script contains the [expr-lang](https://expr-lang.org/) script used to emit labels for the MR.
 	//
 	// Please see [Type] documentation for more information.
-	Script string `yaml:"script"`
+	Script string `json:"script" yaml:"script"`
 
 	// SkipIf is an optional [expr-lang](https://expr-lang.org/) script, returning a boolean, wether to
 	// skip (true) or process (false) this label step.
-	SkipIf string `yaml:"skip_if"`
+	SkipIf string `json:"skip_if,omitempty" yaml:"skip_if"`
 
 	//
 	// -- Internal state
 	//
 
 	// scriptCompiled is the [expr-lang](https://expr-lang.org/) [Script] script pre-compiled
-	scriptCompiled *vm.Program
+	scriptCompiled *vm.Program `json:"-" yaml:"-"`
 
 	// skipIfCompiled is the [expr-lang](https://expr-lang.org/) [SkipIf] script pre-compiled
-	skipIfCompiled *vm.Program
+	skipIfCompiled *vm.Program `json:"-" yaml:"-"`
 
-	expectedReturnType any
+	expectedReturnType any `json:"-" yaml:"-"`
 }
 
 func (p *Label) initialize(evalContext scm.EvalContext) error {
