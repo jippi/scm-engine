@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jippi/scm-engine/pkg/config/config",
+  "$ref": "#/$defs/Config",
+  "$defs": {
+    "Action": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "if": {
+          "type": "string"
+        },
+        "then": {
+          "items": {
+            "$ref": "#/$defs/EvaluationActionStep"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "name",
+        "if",
+        "then"
+      ]
+    },
+    "Actions": {
+      "items": {
+        "$ref": "#/$defs/Action"
+      },
+      "type": "array"
+    },
+    "Config": {
+      "properties": {
+        "dry_run": {
+          "type": "boolean",
+          "description": "When on, no actions will be taken, but instead logged for review",
+          "default": false
+        },
+        "include": {
+          "items": {
+            "$ref": "#/$defs/Include"
+          },
+          "type": "array",
+          "description": "scm-engine has support for importing some (or all) of its configuration from other repositories.\n\nSee: https://jippi.github.io/scm-engine/configuration/#include"
+        },
+        "ignore_activity_from": {
+          "$ref": "#/$defs/IgnoreActivityFrom",
+          "description": "Configure what users that should be ignored when considering activity on a Merge Request\n\nSCM-Engine defines activity as comments, reviews, commits, adding/removing labels and similar actions made on a change request.\n\nSee: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from"
+        },
+        "actions": {
+          "$ref": "#/$defs/Actions",
+          "description": "Actions can modify a Merge Request in various ways, for example, adding a comment or closing the Merge Request.\n\nSee: https://jippi.github.io/scm-engine/configuration/#actions"
+        },
+        "label": {
+          "$ref": "#/$defs/Labels",
+          "description": "Labels are a way to categorize and filter issues, merge requests, and epics in GitLab. -- GitLab documentation\n\nSee: https://jippi.github.io/scm-engine/configuration/#label"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "EvaluationActionStep": {
+      "type": "object",
+      "description": "This key controls what kind of action that should be taken."
+    },
+    "IgnoreActivityFrom": {
+      "properties": {
+        "bots": {
+          "type": "boolean",
+          "description": "Should bot users be ignored when considering activity? Default: false\n\nSee: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from.bots"
+        },
+        "usernames": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "A list of usernames that should be ignored when considering user activity. Default: []\n\nSee: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from.usernames"
+        },
+        "emails": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "A list of emails that should be ignored when considering user activity. Default: []\nNOTE: If a user do not have a public email configured on their profile, that users activity will never match this rule.\n\nSee: https://jippi.github.io/scm-engine/configuration/#ignore_activity_from.emails"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "bots",
+        "usernames",
+        "emails"
+      ]
+    },
+    "Include": {
+      "properties": {
+        "project": {
+          "type": "string",
+          "description": "The project to include files from\n\nSee: https://jippi.github.io/scm-engine/configuration/#include.project"
+        },
+        "files": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "The list of files to include from the project. The paths must be relative to the repository root, e.x. label/some-config-file.yml; NOT /label/some-config-file.yml\n\nSee: https://jippi.github.io/scm-engine/configuration/#include.files"
+        },
+        "ref": {
+          "type": "string",
+          "description": "Optional Git reference to read the configuration from; it can be a tag, branch, or commit SHA.\n\nIf omitted, HEAD is used; meaning your default branch.\n\nSee: https://jippi.github.io/scm-engine/configuration/#include.ref"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "project",
+        "files"
+      ]
+    },
+    "Label": {
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "conditional",
+            "generate"
+          ],
+          "description": "Strategy used for the label\n\n- \"conditional\" will, based on the boolean output of [script], control if the label [name] should be added/removed on the MR\n- \"computed\" will, based on the list of strings output of [script], add/remove labels on the MR",
+          "default": "conditional"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the label being generated.\n\nMay only be used with [conditional] labelling type\n\nSee: https://jippi.github.io/scm-engine/configuration/#label.name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description for the label being generated.\n\nOptional; will be an empty string if omitted\n\nSee: https://jippi.github.io/scm-engine/configuration/#label.description"
+        },
+        "color": {
+          "type": "string",
+          "description": "The HEX color code to use for the label.\n\nMay use the color variables (e.g., $purple-300) defined in Twitter Bootstrap\nhttps://getbootstrap.com/docs/5.3/customize/color/#all-colors"
+        },
+        "priority": {
+          "$ref": "#/$defs/Value[int]",
+          "description": "Priority controls wether the label should be a priority label or regular one.\n\nThis controls if the label is prioritized (sorted first) in the list."
+        },
+        "script": {
+          "type": "string",
+          "description": "Script contains the [expr-lang](https://expr-lang.org/) script used to emit labels for the MR.\n\nPlease see [Type] documentation for more information."
+        },
+        "skip_if": {
+          "type": "string",
+          "description": "SkipIf is an optional [expr-lang](https://expr-lang.org/) script, returning a boolean, wether to\nskip (true) or process (false) this label step."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "description",
+        "color",
+        "script"
+      ]
+    },
+    "Labels": {
+      "items": {
+        "$ref": "#/$defs/Label"
+      },
+      "type": "array"
+    },
+    "Value[int]": {
+      "type": "number"
+    }
+  }
+}
