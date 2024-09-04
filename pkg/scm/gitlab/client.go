@@ -210,13 +210,7 @@ func (client *Client) Stop(ctx context.Context, evalError error) error {
 	)
 
 	if evalError != nil {
-		status = go_gitlab.Failed
-
-		// If the evaluation failed due to no config file, consider it a "skip" instead
-		if strings.Contains(evalError.Error(), "404 Not Found") {
-			status = go_gitlab.Skipped
-		}
-
+		status = go_gitlab.Skipped
 		message = evalError.Error()
 	}
 
