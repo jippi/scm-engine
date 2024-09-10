@@ -13,6 +13,8 @@ This example will close a Merge Request if no activity has happened for 28 days.
 The script will warn at 21 days mark that the Merge Request will be closed, with instructions on how to prevent it.
 
 ```{.yaml linenums=1}
+# yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
 label:
   - name: "stale" # (1)!
     color: $red # (11)!
@@ -96,6 +98,8 @@ actions:
 === "Config"
 
     ```yaml
+    # yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
     label:
       - name: lang/go
         color: $indigo
@@ -135,6 +139,8 @@ actions:
 === "Config"
 
     ```yaml
+    # yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
     label:
       # Generate list of labels via script
       - strategy: generate
