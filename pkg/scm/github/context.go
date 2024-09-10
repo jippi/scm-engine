@@ -109,3 +109,7 @@ func (c *Context) HasExecutedActionGroup(name string) bool {
 
 	return ok
 }
+
+func (c *Context) AllowPipelineFailure(ctx context.Context) bool {
+	return len(c.PullRequest.findModifiedFiles(state.ConfigFilePath(ctx))) == 1
+}

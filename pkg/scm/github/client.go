@@ -65,7 +65,7 @@ func (client *Client) Start(ctx context.Context) error {
 }
 
 // Stop pipeline
-func (client *Client) Stop(ctx context.Context, err error) error {
+func (client *Client) Stop(ctx context.Context, err error, allowPipelineFailure bool) error {
 	return nil
 }
 

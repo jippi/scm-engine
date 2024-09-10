@@ -185,7 +185,7 @@ func (client *Client) Start(ctx context.Context) error {
 }
 
 // Stop pipeline
-func (client *Client) Stop(ctx context.Context, evalError error) error {
+func (client *Client) Stop(ctx context.Context, evalError error, allowPipelineFailure bool) error {
 	ok, pattern := state.ShouldUpdatePipeline(ctx)
 	if !ok {
 		return nil
@@ -210,7 +210,10 @@ func (client *Client) Stop(ctx context.Context, evalError error) error {
 	)
 
 	if evalError != nil {
-		status = go_gitlab.Success
+		if allowPipelineFailure {
+			status = go_gitlab.Failed
+		}
+
 		message = evalError.Error()
 	}
 

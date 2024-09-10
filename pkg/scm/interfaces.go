@@ -13,7 +13,7 @@ type Client interface {
 	Labels() LabelClient
 	MergeRequests() MergeRequestClient
 	Start(ctx context.Context) error
-	Stop(ctx context.Context, err error) error
+	Stop(ctx context.Context, err error, allowPipelineFailure bool) error
 }
 
 type LabelClient interface {
@@ -29,6 +29,7 @@ type MergeRequestClient interface {
 }
 
 type EvalContext interface {
+	AllowPipelineFailure(ctx context.Context) bool
 	CanUseConfigurationFileFromChangeRequest(ctx context.Context) bool
 	GetDescription() string
 	HasExecutedActionGroup(name string) bool

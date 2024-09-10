@@ -130,6 +130,15 @@ func (c *Context) CanUseConfigurationFileFromChangeRequest(ctx context.Context) 
 	return true
 }
 
+// AllowPipelineFailure controls if the CI pipeline are allowed to fail
+//
+// We allow the pipeline to fail with an error if the SCM-Engine configuration file
+// is changed within the merge request, effectively allowing us to lint the configuration
+// file when changing it but failing "open" in all other cases.
+func (c *Context) AllowPipelineFailure(ctx context.Context) bool {
+	return len(c.MergeRequest.findModifiedFiles(state.ConfigFilePath(ctx))) == 1
+}
+
 func (c *Context) TrackActionGroupExecution(group string) {
 	// Ungrouped actions shouldn't be tracked
 	if len(group) == 0 {
