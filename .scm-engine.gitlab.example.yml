@@ -1,7 +1,17 @@
-# See: https://getbootstrap.com/docs/5.3/customize/color/#all-colors
+# yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
+# Expr-Lang
+#
+#   Language Definition: https://expr-lang.org/docs/language-definition
+#
+# SCM-engine
+#
+#   Config file: https://jippi.github.io/scm-engine/configuration/
+#   Variables  : https://jippi.github.io/scm-engine/gitlab/script-attributes/
+#   Functions  : https://jippi.github.io/scm-engine/gitlab/script-functions
+#   GitHub     : https://github.com/jippi/scm-engine/
 
 actions:
-  # NOTE: depends on the "stale" label further down in the document
   - name: Warn about closing the MR if there have been no commit activity for 3 weeks
     group: close_mr_lifecycle
     if: |1
@@ -32,6 +42,17 @@ actions:
       && merge_request.time_since_last_commit > duration("4w")
       && none(merge_request.notes, .body contains "scm-engine-mr-lifecycle:close")
       && any(merge_request.notes, .body contains "scm-engine-mr-lifecycle:warn" && since(.created_at) > duration("1w"))
+    then:
+      - action: close
+      - action: comment
+        message: |
+          <!-- scm-engine-mr-lifecycle:close -->
+          :wave: Hello!
+
+          This Merge Request has not seen any commit activity for 4 weeks.
+          To keep our project clean, we will close the Merge request now.
+
+          To disable this behavior, add the `do-not-close` label to the Merge Request in the right menu or add a comment with `/label ~"do-not-close"`.
 
   - name: Approve MR if the 'break-glass-approve' label is configured
     if: |1
@@ -45,13 +66,6 @@ actions:
         message: "Approving the MR since it has the 'break-glass-approve' label. Talk to ITGC about this!"
 
 label:
-  - name: stale
-    color: $red
-    script: |1
-           merge_request.state_is("opened")
-        && merge_request.has_no_label("do-not-close")
-        && merge_request.has_no_user_activity_within("21d")
-
   - name: lang/go
     color: $indigo
     script: merge_request.modified_files("*.go")
