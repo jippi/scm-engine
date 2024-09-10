@@ -156,10 +156,10 @@ func MergeRequestIDInt(ctx context.Context) int {
 func MergeRequestIDUint(ctx context.Context) uint64 {
 	val := MergeRequestID(ctx)
 
-	number, err := strconv.Atoi(val)
+	number, err := strconv.ParseUint(val, 10, 64)
 	if err != nil {
 		panic(err)
 	}
 
-	return uint64(number)
+	return number
 }
