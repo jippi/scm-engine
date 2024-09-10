@@ -42,11 +42,14 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	// Track where we grab the configuration file from
 	ctx = slogctx.With(ctx, slog.String("config_source_branch", "merge_request_branch"))
 
+	// Should we allow failing the CI pipeline?
+	allowPipelineFailure := false
+
 	defer state.LockForProcessing(ctx)()
 
 	// Stop the pipeline when we leave this func
 	defer func() {
-		if stopErr := client.Stop(ctx, err); stopErr != nil {
+		if stopErr := client.Stop(ctx, err, allowPipelineFailure); stopErr != nil {
 			slogctx.Error(ctx, "Failed to update pipeline", slog.Any("error", stopErr))
 		}
 	}()
@@ -72,6 +75,9 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 		return nil
 	}
+
+	// Check if we are allowed to fail the CI pipeline
+	allowPipelineFailure = evalContext.AllowPipelineFailure(ctx)
 
 	//
 	// (Optional) Download the .scm-engine.yml configuration file from the GitLab HTTP API

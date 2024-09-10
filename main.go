@@ -17,7 +17,7 @@ import (
 	slogctx "github.com/veqryn/slog-context"
 )
 
-// nolint: gochecknoglobals
+//nolint:gochecknoglobals
 var (
 	commit  = "unknown"
 	date    = "unknown"
