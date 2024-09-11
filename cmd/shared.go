@@ -131,6 +131,11 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		ctx = state.WithDryRun(ctx, *cfg.DryRun)
 	}
 
+	// Lint the configuration file to catch any misconfigurations
+	if err := cfg.Lint(ctx, evalContext); err != nil {
+		return fmt.Errorf("Configuration failed validation: %w", err)
+	}
+
 	// Write the config to context so we can pull it out later
 	ctx = config.WithConfig(ctx, cfg)
 
