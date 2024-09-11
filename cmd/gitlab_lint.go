@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
@@ -33,8 +33,18 @@ func Lint(cCtx *cli.Context) error {
 		return err
 	}
 
-	var out map[string]any
-	if err := yaml.Unmarshal(raw, &out); err != nil {
+	var yamlOutput map[string]any
+	if err := yaml.Unmarshal(raw, &yamlOutput); err != nil {
+		return err
+	}
+
+	jsonString, err := json.Marshal(yamlOutput)
+	if err != nil {
+		return err
+	}
+
+	var jsonOutput map[string]any
+	if err := json.Unmarshal(jsonString, &jsonOutput); err != nil {
 		return err
 	}
 
@@ -43,13 +53,23 @@ func Lint(cCtx *cli.Context) error {
 		return err
 	}
 
-	result := schema.Validate(out)
+	result := schema.Validate(yamlOutput)
 
-	details, _ := json.MarshalIndent(result.ToList(true), "", "  ")
-	log.Println(string(details))
+	list := result.ToList(false)
+	for _, check := range list.Details {
+		if check.Valid {
+			continue
+		}
 
-	dummyContext := gitlab.Context{}
-	spew.Dump(cfg.Lint(ctx, &dummyContext))
+		spew.Dump(check)
+	}
 
-	return nil
+	details, err := json.MarshalIndent(list, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(details))
+
+	return cfg.Lint(ctx, &gitlab.Context{})
 }
