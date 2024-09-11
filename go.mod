@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	github.com/99designs/gqlgen v0.17.49
+	github.com/aquilax/truncate v1.0.0
 	github.com/charmbracelet/lipgloss v0.13.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/expr-lang/expr v1.16.9
@@ -35,7 +36,6 @@ require (
 
 require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aquilax/truncate v1.0.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
