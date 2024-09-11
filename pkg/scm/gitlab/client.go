@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquilax/truncate"
 	"github.com/hasura/go-graphql-client"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
@@ -214,7 +215,7 @@ func (client *Client) Stop(ctx context.Context, evalError error, allowPipelineFa
 			status = go_gitlab.Failed
 		}
 
-		description = scm.TruncateText(evalError.Error(), 250)
+		description = truncate.Truncate(evalError.Error(), 250, "...", truncate.PositionEnd)
 	}
 
 	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
