@@ -67,7 +67,13 @@ func Lint(cCtx *cli.Context) error {
 	}
 
 	// To scm-engine specific linting last
-	return cfg.Lint(ctx, &gitlab.Context{})
+	if err := cfg.Lint(ctx, &gitlab.Context{}); err != nil {
+		return err
+	}
+
+	slogctx.Info(ctx, "No errors found")
+
+	return nil
 }
 
 type EmbedLoader struct{}

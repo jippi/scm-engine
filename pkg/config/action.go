@@ -23,7 +23,7 @@ type (
 
 		// (Optional) Only one action per group (in order) will be executed per evaluation cycle.
 		// Use this to 'stop' other actions from running with the same group name
-		Group string `json:"group,omitempty" yaml:"group"`
+		Group string `json:"group,omitempty" yaml:"group,omitempty"`
 
 		// A key controlling if the action should executed or not.
 		//
