@@ -37,7 +37,7 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 		return nil, err
 	}
 
-	if evalContext.Project.MergeRequest == nil {
+	if evalContext.Project == nil || evalContext.Project.MergeRequest == nil {
 		return nil, nil //nolint:nilnil
 	}
 

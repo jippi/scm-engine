@@ -43,7 +43,7 @@ tasks:
       - go run . gitlab -h > docs/gitlab/_partials/cmd-gitlab.md
       - go run . gitlab evaluate -h > docs/gitlab/_partials/cmd-gitlab-evaluate.md
       - go run . gitlab server -h > docs/gitlab/_partials/cmd-gitlab-server.md
-      - go run . jsonschema > docs/scm-engine.schema.json
+      - cp pkg/generated/resources/scm-engine.schema.json docs/scm-engine.schema.json
 
   docs:server:
     desc: Run Docs dev server with live preview

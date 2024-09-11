@@ -37,6 +37,19 @@ var GitLab = &cli.Command{
 	},
 	Subcommands: []*cli.Command{
 		{
+			Name:   "lint",
+			Usage:  "lint a configuration file",
+			Args:   false,
+			Action: Lint,
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "schema",
+					Usage: "Where to find the JSON Schema file. Can load the file from either the embedded version (default), http://, https://, or a file:// URI",
+					Value: "embed://",
+				},
+			},
+		},
+		{
 			Name:      "evaluate",
 			Usage:     "Evaluate a Merge Request",
 			Args:      true,
