@@ -44,8 +44,8 @@ var GitLab = &cli.Command{
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "schema",
-					Usage: "The HTTP/HTTPS URL or file path to the scm-engine schema file",
-					Value: "https://jippi.github.io/scm-engine/scm-engine.schema.json",
+					Usage: "Where to find the JSON Schema file. Can load the file from either the embedded version (default), http://, https://, or a file:// URI",
+					Value: "embed://",
 				},
 			},
 		},

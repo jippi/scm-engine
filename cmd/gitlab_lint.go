@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
+	"github.com/jippi/scm-engine/pkg/generated/resources"
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/santhosh-tekuri/jsonschema/v6"
@@ -18,15 +20,6 @@ import (
 func Lint(cCtx *cli.Context) error {
 	ctx := cCtx.Context
 	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
-
-	cfg, err := config.LoadFile(state.ConfigFilePath(ctx))
-	if err != nil {
-		return err
-	}
-
-	if len(cfg.Includes) != 0 {
-		slogctx.Warn(ctx, "Configuration file contains 'include' settings, those are currently unsupported by 'lint' command and will be ignored")
-	}
 
 	// Read raw YAML file
 	raw, err := os.ReadFile(state.ConfigFilePath(ctx))
@@ -45,6 +38,7 @@ func Lint(cCtx *cli.Context) error {
 		"file":  jsonschema.FileLoader{},
 		"http":  newHTTPURLLoader(),
 		"https": newHTTPURLLoader(),
+		"embed": &EmbedLoader{},
 	}
 
 	// Create json schema compiler
@@ -62,8 +56,24 @@ func Lint(cCtx *cli.Context) error {
 		return err
 	}
 
+	// Load the configuration file via our Go struct
+	cfg, err := config.LoadFile(state.ConfigFilePath(ctx))
+	if err != nil {
+		return err
+	}
+
+	if len(cfg.Includes) != 0 {
+		slogctx.Warn(ctx, "Configuration file contains 'include' settings, those are currently unsupported by 'lint' command and will be ignored")
+	}
+
 	// To scm-engine specific linting last
 	return cfg.Lint(ctx, &gitlab.Context{})
+}
+
+type EmbedLoader struct{}
+
+func (l *EmbedLoader) Load(url string) (any, error) {
+	return jsonschema.UnmarshalJSON(strings.NewReader(resources.JSONSchema))
 }
 
 type HTTPURLLoader http.Client
