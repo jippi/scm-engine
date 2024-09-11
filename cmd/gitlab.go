@@ -37,6 +37,12 @@ var GitLab = &cli.Command{
 	},
 	Subcommands: []*cli.Command{
 		{
+			Name:   "lint",
+			Usage:  "lint a configuration file",
+			Args:   false,
+			Action: Lint,
+		},
+		{
 			Name:      "evaluate",
 			Usage:     "Evaluate a Merge Request",
 			Args:      true,

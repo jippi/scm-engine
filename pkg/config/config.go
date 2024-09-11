@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/jippi/scm-engine/pkg/scm"
 	slogctx "github.com/veqryn/slog-context"
 )
@@ -34,6 +35,24 @@ type Config struct {
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label
 	Labels Labels `json:"label,omitempty" yaml:"label"`
+}
+
+func (c Config) Lint(_ context.Context, evalContext scm.EvalContext) error {
+	var errors error
+
+	for _, action := range c.Actions {
+		if _, err := action.Setup(evalContext); err != nil {
+			errors = multierror.Append(errors, fmt.Errorf("Action %q failed validation: %w", action.Name, err))
+		}
+	}
+
+	for _, label := range c.Labels {
+		if err := label.Setup(evalContext); err != nil {
+			errors = multierror.Append(errors, fmt.Errorf("Label %q failed validation: %w", label.Name, err))
+		}
+	}
+
+	return errors
 }
 
 func (c Config) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, []Action, error) {

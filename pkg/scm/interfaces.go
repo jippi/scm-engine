@@ -6,7 +6,7 @@ import (
 )
 
 type Client interface {
-	ApplyStep(ctx context.Context, evalContext EvalContext, update *UpdateMergeRequestOptions, step EvaluationActionStep) error
+	ApplyStep(ctx context.Context, evalContext EvalContext, update *UpdateMergeRequestOptions, step ActionStep) error
 	EvalContext(ctx context.Context) (EvalContext, error)
 	FindMergeRequestsForPeriodicEvaluation(ctx context.Context, filters MergeRequestListFilters) ([]PeriodicEvaluationMergeRequest, error)
 	GetProjectFiles(ctx context.Context, project string, ref *string, files []string) (map[string]string, error)
@@ -37,4 +37,10 @@ type EvalContext interface {
 	SetContext(ctx context.Context)
 	SetWebhookEvent(in any)
 	TrackActionGroupExecution(name string)
+}
+
+type ActionStep interface {
+	RequiredString(name string) (string, error)
+	OptionalString(name, fallback string) (string, error)
+	Get(name string) (any, error)
 }

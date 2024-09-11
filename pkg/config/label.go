@@ -132,7 +132,7 @@ type Label struct {
 	expectedReturnType any `json:"-" yaml:"-"`
 }
 
-func (p *Label) initialize(evalContext scm.EvalContext) error {
+func (p *Label) Setup(evalContext scm.EvalContext) error {
 	var scriptReturnType expr.Option
 
 	if len(p.Script) == 0 {
@@ -205,7 +205,7 @@ func (p *Label) initialize(evalContext scm.EvalContext) error {
 }
 
 func (p *Label) ShouldSkip(ctx context.Context, evalContext scm.EvalContext) (bool, error) {
-	if err := p.initialize(evalContext); err != nil {
+	if err := p.Setup(evalContext); err != nil {
 		return true, err
 	}
 
@@ -213,7 +213,7 @@ func (p *Label) ShouldSkip(ctx context.Context, evalContext scm.EvalContext) (bo
 }
 
 func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]scm.EvaluationResult, error) {
-	if err := p.initialize(evalContext); err != nil {
+	if err := p.Setup(evalContext); err != nil {
 		return nil, fmt.Errorf("failed to initialize expr script engine: %w", err)
 	}
 

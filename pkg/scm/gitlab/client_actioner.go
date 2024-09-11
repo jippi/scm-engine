@@ -10,6 +10,7 @@ import (
 
 	"github.com/expr-lang/expr"
 	"github.com/expr-lang/expr/patcher"
+	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/stdlib"
@@ -17,7 +18,7 @@ import (
 	"github.com/xanzy/go-gitlab"
 )
 
-func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.EvaluationActionStep) error {
+func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
 	action, err := step.RequiredString("action")
 	if err != nil {
 		return err
@@ -33,12 +34,12 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			body = *update.Description
 		}
 
-		replacements, ok := step["replace"]
-		if !ok {
-			return errors.New("step field 'replace' is required, but missing")
+		replacements, err := step.Get("replace")
+		if err != nil {
+			return err
 		}
 
-		replacementSlice, ok := replacements.(scm.EvaluationActionStep)
+		replacementSlice, ok := replacements.(config.ActionStep)
 		if !ok {
 			return fmt.Errorf(`step field 'replace' must be a dictionary with string key and string values ("key": "value"), got: %T`, replacements)
 		}
@@ -175,7 +176,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		return err
 
 	default:
-		return fmt.Errorf("GitLab client does not know how to apply action %q", step["action"])
+		return fmt.Errorf("GitLab client does not know how to apply action %q", action)
 	}
 
 	return nil
