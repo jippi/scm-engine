@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 // Ptr is a helper that returns a pointer to v.
@@ -72,6 +73,26 @@ func FindModifiedFiles(files []string, patterns ...string) []string {
 	}
 
 	return output
+}
+
+func TruncateText(text string, maxLen int) string {
+	lastSpaceIx := maxLen
+	curLen := 0
+
+	for i, r := range text {
+		if unicode.IsSpace(r) {
+			lastSpaceIx = i
+		}
+
+		curLen++
+
+		if curLen > maxLen {
+			return text[:lastSpaceIx] + "..."
+		}
+	}
+
+	// If here, string is shorter or equal to maxLen
+	return text
 }
 
 // buildPatternRegex compiles a new regexp object from a gitignore-style pattern string

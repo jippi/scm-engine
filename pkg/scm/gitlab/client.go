@@ -205,8 +205,8 @@ func (client *Client) Stop(ctx context.Context, evalError error, allowPipelineFa
 	}
 
 	var (
-		status  = go_gitlab.Success
-		message = "OK"
+		status      = go_gitlab.Success
+		description = "OK"
 	)
 
 	if evalError != nil {
@@ -214,13 +214,13 @@ func (client *Client) Stop(ctx context.Context, evalError error, allowPipelineFa
 			status = go_gitlab.Failed
 		}
 
-		message = evalError.Error()
+		description = scm.TruncateText(evalError.Error(), 250)
 	}
 
 	_, response, err := client.wrapped.Commits.SetCommitStatus(state.ProjectID(ctx), state.CommitSHA(ctx), &go_gitlab.SetCommitStatusOptions{
 		State:       status,
 		Context:     pipelineName,
-		Description: scm.Ptr(message),
+		Description: scm.Ptr(description),
 		TargetURL:   targetURL,
 	})
 
