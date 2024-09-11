@@ -79,19 +79,19 @@ type Label struct {
 	// - "computed" will, based on the list of strings output of [script], add/remove labels on the MR
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.strategy
-	Strategy labelType `json:"strategy,omitempty" yaml:"strategy" jsonschema:"default=conditional,enum=conditional,enum=generate"`
+	Strategy labelType `json:"strategy,omitempty" yaml:"strategy,omitempty" jsonschema:"default=conditional,enum=conditional,enum=generate"`
 
 	// Name of the label being generated.
 	//
 	// May only be used with [conditional] labelling type
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.name
-	Name string `json:"name,omitempty" yaml:"name" jsonschema:"dependentRequired"`
+	Name string `json:"name,omitempty" yaml:"name,omitempty" jsonschema:"dependentRequired"`
 
 	// (Optional) Description for the label being generated.
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.description
-	Description string `json:"description,omitempty" yaml:"description"`
+	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 
 	// (Optional) The HEX color code to use for the label.
 	//
@@ -99,25 +99,25 @@ type Label struct {
 	// https://getbootstrap.com/docs/5.3/customize/color/#all-colors
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.color
-	Color string `json:"color,omitempty" yaml:"color"`
+	Color string `json:"color,omitempty" yaml:"color,omitempty"`
 
 	// (Optional) Priority controls wether the label should be a priority label or regular one.
 	//
 	// This controls if the label is prioritized (sorted first) in the list.
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.priority
-	Priority types.Value[int] `json:"priority,omitempty" yaml:"priority"`
+	Priority types.Value[int] `json:"priority,omitempty" yaml:"priority,omitempty"`
 
 	// Script contains the (https://expr-lang.org/) script used to emit labels for the MR.
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.script
-	Script string `json:"script" yaml:"script"`
+	Script string `json:"script" yaml:"script,omitempty"`
 
 	// SkipIf is an optional (https://expr-lang.org/) script, returning a boolean, wether to
 	// skip (true) or process (false) this label step.
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#label.skip_if
-	SkipIf string `json:"skip_if,omitempty" yaml:"skip_if"`
+	SkipIf string `json:"skip_if,omitempty" yaml:"skip_if,omitempty"`
 
 	//
 	// -- Internal state
@@ -181,7 +181,7 @@ func (p *Label) Setup(evalContext scm.EvalContext) error {
 
 		p.scriptCompiled, err = expr.Compile(p.Script, opts...)
 		if err != nil {
-			return fmt.Errorf("'script' error: %w", err)
+			return fmt.Errorf("could not compile 'script' into valid expr-lang syntax: %w", err)
 		}
 	}
 
@@ -197,7 +197,7 @@ func (p *Label) Setup(evalContext scm.EvalContext) error {
 
 		p.skipIfCompiled, err = expr.Compile(p.SkipIf, opts...)
 		if err != nil {
-			return fmt.Errorf("'if' script error: %w", err)
+			return fmt.Errorf("could not compile 'if' into valid expr-lang syntax: %w", err)
 		}
 	}
 

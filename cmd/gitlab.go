@@ -41,6 +41,13 @@ var GitLab = &cli.Command{
 			Usage:  "lint a configuration file",
 			Args:   false,
 			Action: Lint,
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "schema",
+					Usage: "The HTTP/HTTPS URL or file path to the scm-engine schema file",
+					Value: "https://jippi.github.io/scm-engine/scm-engine.schema.json",
+				},
+			},
 		},
 		{
 			Name:      "evaluate",

@@ -1,15 +1,15 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
+	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
-	"github.com/kaptinlin/jsonschema"
+	"github.com/santhosh-tekuri/jsonschema/v6"
 	"github.com/urfave/cli/v2"
 	slogctx "github.com/veqryn/slog-context"
 	"gopkg.in/yaml.v3"
@@ -28,48 +28,69 @@ func Lint(cCtx *cli.Context) error {
 		slogctx.Warn(ctx, "Configuration file contains 'include' settings, those are currently unsupported by 'lint' command and will be ignored")
 	}
 
+	// Read raw YAML file
 	raw, err := os.ReadFile(state.ConfigFilePath(ctx))
 	if err != nil {
 		return err
 	}
 
-	var yamlOutput map[string]any
+	// Parse the YAML file into lose Go shape
+	var yamlOutput any
 	if err := yaml.Unmarshal(raw, &yamlOutput); err != nil {
 		return err
 	}
 
-	jsonString, err := json.Marshal(yamlOutput)
+	// Setup file loaders for reading the JSON schema file
+	loader := jsonschema.SchemeURLLoader{
+		"file":  jsonschema.FileLoader{},
+		"http":  newHTTPURLLoader(),
+		"https": newHTTPURLLoader(),
+	}
+
+	// Create json schema compiler
+	compiler := jsonschema.NewCompiler()
+	compiler.UseLoader(loader)
+
+	// Compile the schema into validator format
+	sch, err := compiler.Compile(cCtx.String("schema"))
 	if err != nil {
 		return err
 	}
 
-	var jsonOutput map[string]any
-	if err := json.Unmarshal(jsonString, &jsonOutput); err != nil {
+	// Validate the json output
+	if err := sch.Validate(yamlOutput); err != nil {
 		return err
 	}
 
-	schema, err := jsonschema.NewCompiler().GetSchema("https://jippi.github.io/scm-engine/scm-engine.schema.json")
-	if err != nil {
-		return err
-	}
-
-	result := schema.Validate(yamlOutput)
-
-	list := result.ToList(false)
-	for _, check := range list.Details {
-		if check.Valid {
-			continue
-		}
-
-		spew.Dump(check)
-	}
-
-	details, err := json.MarshalIndent(list, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(string(details))
-
+	// To scm-engine specific linting last
 	return cfg.Lint(ctx, &gitlab.Context{})
+}
+
+type HTTPURLLoader http.Client
+
+func (l *HTTPURLLoader) Load(url string) (any, error) {
+	client := (*http.Client)(l)
+
+	resp, err := client.Get(url) //nolint
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		resp.Body.Close()
+
+		return nil, fmt.Errorf("%s returned status code %d", url, resp.StatusCode)
+	}
+
+	defer resp.Body.Close()
+
+	return jsonschema.UnmarshalJSON(resp.Body)
+}
+
+func newHTTPURLLoader() *HTTPURLLoader {
+	httpLoader := HTTPURLLoader(http.Client{
+		Timeout: 15 * time.Second,
+	})
+
+	return &httpLoader
 }
