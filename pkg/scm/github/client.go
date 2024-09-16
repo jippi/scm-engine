@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	go_github "github.com/google/go-github/v64/github"
+	go_github "github.com/google/go-github/v65/github"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 )
