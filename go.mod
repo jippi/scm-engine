@@ -3,7 +3,7 @@ module github.com/jippi/scm-engine
 go 1.23
 
 require (
-	github.com/99designs/gqlgen v0.17.52
+	github.com/99designs/gqlgen v0.17.53
 	github.com/aquilax/truncate v1.0.0
 	github.com/charmbracelet/lipgloss v0.13.0
 	github.com/davecgh/go-spew v1.1.1
