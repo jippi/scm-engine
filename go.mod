@@ -9,7 +9,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/expr-lang/expr v1.16.9
 	github.com/fatih/structtag v1.2.0
-	github.com/golang-cz/devslog v0.0.9
+	github.com/golang-cz/devslog v0.0.11
 	github.com/google/go-github/v65 v65.0.0
 	github.com/guregu/null/v5 v5.0.0
 	github.com/hashicorp/go-multierror v1.1.1
