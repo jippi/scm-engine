@@ -13,7 +13,7 @@ require (
 	github.com/google/go-github/v65 v65.0.0
 	github.com/guregu/null/v5 v5.0.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/hasura/go-graphql-client v0.13.0
+	github.com/hasura/go-graphql-client v0.13.1
 	github.com/iancoleman/strcase v0.3.0
 	github.com/invopop/jsonschema v0.12.0
 	github.com/lmittmann/tint v1.0.5
@@ -40,6 +40,7 @@ require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/charmbracelet/x/ansi v0.1.4 // indirect
+	github.com/coder/websocket v1.8.12 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
 	github.com/fatih/color v1.17.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
@@ -68,5 +69,4 @@ require (
 	golang.org/x/tools v0.24.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	modernc.org/b/v2 v2.1.0 // indirect
-	nhooyr.io/websocket v1.8.11 // indirect
 )
