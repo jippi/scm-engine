@@ -18,7 +18,7 @@ require (
 	github.com/invopop/jsonschema v0.12.0
 	github.com/lmittmann/tint v1.0.5
 	github.com/muesli/termenv v0.15.2
-	github.com/samber/slog-multi v1.2.2
+	github.com/samber/slog-multi v1.2.3
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.1
 	github.com/stretchr/testify v1.9.0
 	github.com/teacat/noire v1.1.0
@@ -57,10 +57,9 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/samber/lo v1.38.1 // indirect
+	github.com/samber/lo v1.47.0 // indirect
 	github.com/sosodev/duration v1.3.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/mod v0.20.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
