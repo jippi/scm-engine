@@ -3,6 +3,8 @@ package scm
 import (
 	"context"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/jippi/scm-engine/pkg/state"
@@ -14,6 +16,22 @@ type Actor struct {
 	Username string
 	Email    *string
 	IsBot    bool
+}
+
+func (a Actor) IntID() int {
+	re := regexp.MustCompile(`(\d+)`)
+	match := re.FindStringSubmatch(a.ID)
+
+	if len(match) < 2 {
+		return -1
+	}
+
+	intID, err := strconv.Atoi(match[1])
+	if err != nil {
+		return -1
+	}
+
+	return intID
 }
 
 // Label represents a GitLab label.
