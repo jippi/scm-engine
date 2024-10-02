@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/expr-lang/expr"
 	"github.com/expr-lang/expr/patcher"
@@ -199,7 +200,8 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			break
 		case "random":
 			reviewers = make([]string, limit)
-			perm := rand.Perm(len(eligibleReviewers))
+			r := rand.New(rand.NewSource(time.Now().UnixNano()))
+			perm := r.Perm(len(eligibleReviewers))
 
 			for i := 0; i < limit; i++ {
 				reviewers[i] = eligibleReviewers[perm[i]]
