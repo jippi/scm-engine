@@ -164,3 +164,32 @@ func (c *Context) HasExecutedActionGroup(group string) bool {
 
 	return ok
 }
+
+// GetCodeOwners returns the eligible code owners for the merge request
+//
+// This is based on the elibible approvers in the rules of the merge request approval
+// state api.
+func (c *Context) GetCodeOwners() []string {
+	ownerSet := make(map[string]bool)
+
+	for _, rule := range c.MergeRequest.ApprovalState.Rules {
+		// Multiple code owner paths could be matched when sections are used, so
+		// flatten the list of eligible approvers
+		if rule.Type.String() != "CODE_OWNER" {
+			continue
+		}
+
+		if rule.EligibleApprovers != nil {
+			for _, user := range rule.EligibleApprovers {
+				ownerSet[user.Username] = true
+			}
+		}
+	}
+
+	owners := make([]string, 0, len(ownerSet))
+	for owner := range ownerSet {
+		owners = append(owners, owner)
+	}
+
+	return owners
+}

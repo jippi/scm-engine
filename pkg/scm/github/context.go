@@ -113,3 +113,7 @@ func (c *Context) HasExecutedActionGroup(name string) bool {
 func (c *Context) AllowPipelineFailure(ctx context.Context) bool {
 	return len(c.PullRequest.findModifiedFiles(state.ConfigFilePath(ctx))) == 1
 }
+
+func (c *Context) GetCodeOwners() []string {
+	return []string{}
+}
