@@ -182,6 +182,7 @@ type PeriodicEvaluationMergeRequest struct {
 	MergeRequestID string
 	SHA            string
 	ConfigBlob     string
+	UpdatePipeline bool
 }
 
 type EvalContextualizer struct{}

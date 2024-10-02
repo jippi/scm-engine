@@ -37,6 +37,10 @@ package gitlab
 //	        nodes {
 //	          iid
 //	          diffHeadSha
+//
+//	          headPipeline {
+//	            status
+//	          }
 //	        }
 //	      }
 //	    }
@@ -75,8 +79,13 @@ type PeriodicEvaluationRepository struct {
 }
 
 type PeriodicEvaluationMergeRequestNode struct {
-	IID string `graphql:"iid"`
-	SHA string `graphql:"diffHeadSha"`
+	IID          string        `graphql:"iid"`
+	SHA          string        `graphql:"diffHeadSha"`
+	HeadPipeline *PipelineNode `graphql:"headPipeline"`
+}
+
+type PipelineNode struct {
+	Status string `graphql:"status"`
 }
 
 type BlobNode struct {

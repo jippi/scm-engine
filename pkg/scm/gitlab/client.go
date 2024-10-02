@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -21,6 +22,36 @@ import (
 )
 
 var pipelineName = scm.Ptr("scm-engine")
+
+// Skip the "update external pipeline" step if the HEAD pipeline is any
+// of the configured options
+//
+// Disable updating CI pipelines when running periodic evaluations in the background
+// to avoid sending "CI pipeline failed" notification emails to users
+//
+// If the HEAD CI pipeline for a MR is in "failed" mode and we update the external
+// pipeline, GitLab will send the user (if configured in their profile) a 'your pipeline failed'
+// email every time the background evaluation process runs.
+//
+// Possible values:
+//
+// - CANCELED
+// - CANCELING
+// - CREATED
+// - FAILED
+// - MANUAL
+// - PENDING
+// - PREPARING
+// - RUNNING
+// - SCHEDULED
+// - SKIPPED
+// - SUCCESS
+// - WAITING_FOR_CALLBACK
+// - WAITING_FOR_RESOURCE
+var SkipPipelineUpdateIfPeriodicAndPipelineStatusIs = []string{
+	"FAILED",
+	"SKIPPED",
+}
 
 // Ensure the GitLab client implements the [scm.Client]
 var _ scm.Client = (*Client)(nil)
@@ -74,6 +105,9 @@ func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context
 
 	var result []scm.PeriodicEvaluationMergeRequest
 
+	// Check if the evaluation should update CI pipelines by default
+	updatePipeline, _ := state.ShouldUpdatePipeline(ctx)
+
 	for _, project := range response.Projects.Nodes {
 		slogctx.Debug(ctx, fmt.Sprintf("Project %s has %d Merge Requests", project.FullPath, len(project.MergeRequests.Nodes)))
 
@@ -82,6 +116,14 @@ func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context
 				Project:        project.FullPath,
 				MergeRequestID: mr.IID,
 				SHA:            mr.SHA,
+				UpdatePipeline: updatePipeline,
+			}
+
+			// If periodic evaluation are updating CI pipelines, check if the status of the HEAD pipeline
+			// is in a state where re-triggering the external CI pipeline would potentially send the MR creator
+			// a "Your CI pipeline failed" e-mail every time we evaluate the MR in the background (spammy!)
+			if item.UpdatePipeline && mr.HeadPipeline != nil && slices.Contains(SkipPipelineUpdateIfPeriodicAndPipelineStatusIs, mr.HeadPipeline.Status) {
+				item.UpdatePipeline = false
 			}
 
 			// Only set the ConfigBlob struct if the config file exists in the repository

@@ -174,14 +174,15 @@ linters-settings:
     check-return: true
     check-type-param: true
     ignore-names:
-      - tt
       - err
       - i
       - id
+      - mr
       - ok
-      - wg
       - r
+      - tt
       - w
+      - wg
 
   tagalign:
     # Align and sort can be used together or separately.
