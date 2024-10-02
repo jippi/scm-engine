@@ -428,6 +428,8 @@ type ContextUsersNode {
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#user
 type ContextUser {
+  "ID of the user"
+  ID: String!
   "Indicates if the user is a bot"
   Bot: Boolean!
   "Username of the user. Unique within this instance of GitLab"
