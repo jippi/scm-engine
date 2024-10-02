@@ -37,6 +37,7 @@ type EvalContext interface {
 	SetContext(ctx context.Context)
 	SetWebhookEvent(in any)
 	TrackActionGroupExecution(name string)
+	GetCodeOwners() []string
 }
 
 type ActionStep interface {
