@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"math/rand"
 	"reflect"
 	"strings"
 
@@ -159,7 +160,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return err
 		}
 
-		limit, err := step.RequiredInt("limit")
+		desiredLimit, err := step.RequiredInt("limit")
 		if err != nil {
 			return err
 		}
@@ -169,9 +170,51 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return err
 		}
 
-		if state.IsDryRun(ctx) {
-			slogctx.Info(ctx, "(Dry Run) Assigning MR", slog.String("source", source), slog.Int("limit", limit), slog.String("mode", mode))
+		var eligibleReviewers []string
+
+		switch source {
+		case "codeowners":
+			eligibleReviewers = evalContext.GetCodeOwners()
+
+			break
 		}
+
+		if len(eligibleReviewers) == 0 {
+			return nil
+		}
+
+		var reviewers []string
+
+		var limit int
+		if desiredLimit > len(eligibleReviewers) {
+			limit = len(eligibleReviewers)
+		} else {
+			limit = desiredLimit
+		}
+
+		switch mode {
+		case "linear":
+			reviewers = eligibleReviewers[:limit]
+
+			break
+		case "random":
+			reviewers = make([]string, limit)
+			perm := rand.Perm(len(eligibleReviewers))
+
+			for i := 0; i < limit; i++ {
+				reviewers[i] = eligibleReviewers[perm[i]]
+			}
+
+			break
+		}
+
+		if state.IsDryRun(ctx) {
+			slogctx.Info(ctx, "(Dry Run) Assigning MR", slog.String("source", source), slog.Int("limit", limit), slog.String("mode", mode), slog.Any("reviewers", reviewers))
+
+			return nil
+		}
+
+		// TODO: Call the GitLab API to assign the reviewers
 
 		return nil
 
