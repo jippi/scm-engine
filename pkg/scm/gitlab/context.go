@@ -52,6 +52,12 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 	evalContext.MergeRequest = evalContext.Project.MergeRequest
 	evalContext.Project.MergeRequest = nil
 
+	evalContext.MergeRequest.Assignees = evalContext.MergeRequest.CurrentAssignees.Nodes
+	evalContext.MergeRequest.CurrentAssignees = nil
+
+	evalContext.MergeRequest.Reviewers = evalContext.MergeRequest.CurrentReviewers.Nodes
+	evalContext.MergeRequest.CurrentReviewers = nil
+
 	// Copy "current user" into MR
 	evalContext.MergeRequest.CurrentUser = evalContext.CurrentUser
 
