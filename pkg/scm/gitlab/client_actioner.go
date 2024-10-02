@@ -153,6 +153,28 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 		return err
 
+	case "assign_reviewers":
+		source, err := step.RequiredStringEnum("source", "codeowners")
+		if err != nil {
+			return err
+		}
+
+		limit, err := step.RequiredInt("limit")
+		if err != nil {
+			return err
+		}
+
+		mode, err := step.OptionalStringEnum("mode", "linear", "linear", "random")
+		if err != nil {
+			return err
+		}
+
+		if state.IsDryRun(ctx) {
+			slogctx.Info(ctx, "(Dry Run) Assigning MR", slog.String("source", source), slog.Int("limit", limit), slog.String("mode", mode))
+		}
+
+		return nil
+
 	case "comment":
 		message, err := step.RequiredString("message")
 		if err != nil {
