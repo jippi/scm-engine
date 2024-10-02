@@ -10,6 +10,7 @@ import (
 )
 
 type Actor struct {
+	ID       string
 	Username string
 	Email    *string
 	IsBot    bool
