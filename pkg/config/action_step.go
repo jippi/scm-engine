@@ -149,6 +149,20 @@ func (step ActionStep) JSONSchema() *jsonschema.Schema {
 	}
 }
 
+func (step ActionStep) RequiredInt(name string) (int, error) {
+	value, ok := step[name]
+	if !ok {
+		return 0, fmt.Errorf("Required 'step' key '%s' is missing", name)
+	}
+
+	valueInt, ok := value.(int)
+	if !ok {
+		return 0, fmt.Errorf("Required 'step' key '%s' must be of type int, got %T", name, value)
+	}
+
+	return valueInt, nil
+}
+
 func (step ActionStep) RequiredString(name string) (string, error) {
 	value, ok := step[name]
 	if !ok {
@@ -161,6 +175,40 @@ func (step ActionStep) RequiredString(name string) (string, error) {
 	}
 
 	return valueString, nil
+}
+
+func (step ActionStep) RequiredStringEnum(name string, values ...string) (string, error) {
+	value, ok := step[name]
+	if !ok {
+		return "", fmt.Errorf("Required 'step' key '%s' is missing", name)
+	}
+
+	valueString, ok := value.(string)
+	if !ok {
+		return "", fmt.Errorf("Required 'step' key '%s' must be of type string, got %T", name, value)
+	}
+
+	for _, validValue := range values {
+		if valueString == validValue {
+			return valueString, nil
+		}
+	}
+
+	return "", fmt.Errorf("Required 'step' key '%s' must be one of %v, got %s", name, values, valueString)
+}
+
+func (step ActionStep) OptionalInt(name string, fallback int) (int, error) {
+	value, ok := step[name]
+	if !ok {
+		return fallback, nil
+	}
+
+	valueInt, ok := value.(int)
+	if !ok {
+		return fallback, fmt.Errorf("Optional step field '%s' must be of type int, got %T", name, value)
+	}
+
+	return valueInt, nil
 }
 
 func (step ActionStep) OptionalString(name, defaultValue string) (string, error) {
@@ -177,18 +225,24 @@ func (step ActionStep) OptionalString(name, defaultValue string) (string, error)
 	return valueString, nil
 }
 
-func (step ActionStep) RequiredInt(name string) (int, error) {
+func (step ActionStep) OptionalStringEnum(name string, fallback string, values ...string) (string, error) {
 	value, ok := step[name]
 	if !ok {
-		return 0, fmt.Errorf("Required 'step' key '%s' is missing", name)
+		return fallback, nil
 	}
 
-	valueInt, ok := value.(int)
+	valueString, ok := value.(string)
 	if !ok {
-		return 0, fmt.Errorf("Required 'step' key '%s' must be of type int, got %T", name, value)
+		return fallback, fmt.Errorf("Optional step field '%s' must be of type string, got %T", name, value)
 	}
 
-	return valueInt, nil
+	for _, validValue := range values {
+		if valueString == validValue {
+			return valueString, nil
+		}
+	}
+
+	return fallback, fmt.Errorf("Optional step field '%s' must be one of %v, got %s", name, values, valueString)
 }
 
 func (step ActionStep) Get(name string) (any, error) {
