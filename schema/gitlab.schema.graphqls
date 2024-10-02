@@ -172,6 +172,13 @@ enum PipelineStatusEnum {
   WAITING_FOR_RESOURCE
 }
 
+enum ApprovalRuleType {
+  REGULAR
+  CODE_OWNER
+  REPORT_APPROVER
+  ANY_APPROVER
+}
+
 input ListMergeRequestsQueryInput {
   project_id: ID!
   state: MergeRequestState! = "opened"
@@ -270,8 +277,12 @@ type ContextMergeRequest {
   ApprovalsLeft: Int
   "Number of approvals required"
   ApprovalsRequired: Int
+  "Information relating to rules that must be satisfied to merge this merge request"
+  ApprovalState: ContextApprovalState!
   "Indicates if the merge request has all the required approvals"
   Approved: Boolean!
+  "Users assigned to a merge request"
+  Assignees: [ContextUser]
   "User who created this merge request"
   Author: ContextUser!
   "Indicates if auto merge is enabled for the merge request"
@@ -314,6 +325,8 @@ type ContextMergeRequest {
   MergeStatusEnum: MergeStatus
   "Timestamp of when the merge request was prepared"
   PreparedAt: Time
+  "Users assigned to a merge request as a reviewer."
+  Reviewers: [ContextUser]
   "Indicates if the merge request will be rebased"
   ShouldBeRebased: Boolean!
   "Indicates if the source branch of the merge request will be deleted after merge"
@@ -416,6 +429,23 @@ type ContextUser {
   PublicEmail: String
   "State of the user"
   State: UserState!
+}
+
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#mergerequestapprovalstate
+type ContextApprovalState {
+  "List of approval rules associated with the merge request"
+  Rules: [ContextApprovalRule!]
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#approvalrule
+type ContextApprovalRule {
+  "Name of the rule"
+  Name: String
+  "Type of the rule"
+  Type: ApprovalRuleType
+  "List of all users eligible to approve the merge request (defined explicitly and from associated groups)"
+  EligibleApprovers: [ContextUser!]
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#commit
