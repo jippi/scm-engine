@@ -579,6 +579,33 @@ GitLab
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#merge_request.diff_stats[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      diff_stats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.labels[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      labels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.head_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      head_pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#merge_request.notes[]" class="md-nav__link">
     <span class="md-ellipsis">
       notes
@@ -647,24 +674,6 @@ GitLab
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#merge_request.labels[]" class="md-nav__link">
-    <span class="md-ellipsis">
-      labels
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#merge_request.diff_stats[]" class="md-nav__link">
-    <span class="md-ellipsis">
-      diff_stats
-    </span>
-  </a>
   
 </li>
         
@@ -948,6 +957,33 @@ GitHub (WIP)
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#merge_request.diff_stats[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      diff_stats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.labels[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      labels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.head_pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      head_pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#merge_request.notes[]" class="md-nav__link">
     <span class="md-ellipsis">
       notes
@@ -1016,24 +1052,6 @@ GitHub (WIP)
         
       </ul>
     </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#merge_request.labels[]" class="md-nav__link">
-    <span class="md-ellipsis">
-      labels
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#merge_request.diff_stats[]" class="md-nav__link">
-    <span class="md-ellipsis">
-      diff_stats
-    </span>
-  </a>
   
 </li>
         
@@ -1229,6 +1247,63 @@ GitHub (WIP)
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">user_discussions_count</span></code> ; <code>optional int</code>. Number of user discussions in the merge request</li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">user_notes_count</span></code> ; <code>optional int</code>. User notes count of the merge request</li>
 </ul>
+<h3 id="merge_request.diff_stats[]"><code>merge_request.diff_stats[]</code><a class="headerlink" href="#merge_request.diff_stats[]" title="Permanent link">&para;</a></h3>
+<p>Changes to a single file</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">diff_stats</span><span class="o">[]</span><span class="p">.</span><span class="nc">additions</span></code> ; <code>int</code>. Number of lines added to this file</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">diff_stats</span><span class="o">[]</span><span class="p">.</span><span class="nc">deletions</span></code> ; <code>int</code>. Number of lines deleted from this file</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">diff_stats</span><span class="o">[]</span><span class="p">.</span><span class="nc">path</span></code> ; <code>string</code>. File path, relative to repository root</li>
+</ul>
+<h3 id="merge_request.labels[]"><code>merge_request.labels[]</code><a class="headerlink" href="#merge_request.labels[]" title="Permanent link">&para;</a></h3>
+<p>Labels available on this merge request</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">color</span></code> ; <code>string</code>. Background color of the label</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">description</span></code> ; <code>string</code>. Description of the label (Markdown rendered as HTML for caching)</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. Label ID</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">title</span></code> ; <code>string</code>. Content of the label</li>
+</ul>
+<h3 id="merge_request.head_pipeline"><code>merge_request.head_pipeline</code><a class="headerlink" href="#merge_request.head_pipeline" title="Permanent link">&para;</a></h3>
+<p>Pipeline running on the branch HEAD of the merge request</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">active</span></code> ; <code>boolean</code>. Indicates if the pipeline is active</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">cancelable</span></code> ; <code>boolean</code>. Specifies if a pipeline can be canceled</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">complete</span></code> ; <code>boolean</code>. Indicates if a pipeline is complete</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">duration</span></code> ; <code>optional int</code>. Duration of the pipeline in seconds</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">failure_reason</span></code> ; <code>optional string</code>. The reason why the pipeline failed</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">finished_at</span></code> ; <code>optional time</code>. Timestamp of the pipeline's completion</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the pipeline</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">iid</span></code> ; <code>string</code>. Internal ID of the pipeline</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">latest</span></code> ; <code>boolean</code>. If the pipeline is the latest one or not</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">name</span></code> ; <code>optional string</code>. Name of the pipeline</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">path</span></code> ; <code>optional string</code>. Relative path to the pipeline's page</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">retryable</span></code> ; <code>boolean</code>. Specifies if a pipeline can be retried</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">started_at</span></code> ; <code>optional time</code>. Timestamp when the pipeline was started</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">status</span></code> (enum) Status of the pipeline</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>CANCELED</code> </li>
+<li><code>CANCELING</code> </li>
+<li><code>CREATED</code> </li>
+<li><code>FAILED</code> </li>
+<li><code>MANUAL</code> </li>
+<li><code>PENDING</code> </li>
+<li><code>PREPARING</code> </li>
+<li><code>RUNNING</code> </li>
+<li><code>SCHEDULED</code> </li>
+<li><code>SKIPPED</code> </li>
+<li><code>SUCCESS</code> </li>
+<li><code>WAITING_FOR_CALLBACK</code> </li>
+<li><code>WAITING_FOR_RESOURCE</code> </li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">stuck</span></code> ; <code>boolean</code>. If the pipeline is stuck</p>
+</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">total_jobs</span></code> ; <code>int</code>. The total number of jobs in the pipeline</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">updated_at</span></code> ; <code>time</code>. Timestamp of the pipeline's last activity</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">head_pipeline</span><span class="p">.</span><span class="nc">warnings</span></code> ; <code>boolean</code>. Indicates if a pipeline has warnings</li>
+</ul>
 <h3 id="merge_request.notes[]"><code>merge_request.notes[]</code><a class="headerlink" href="#merge_request.notes[]" title="Permanent link">&para;</a></h3>
 <p>All notes on this MR</p>
 <ul>
@@ -1334,21 +1409,6 @@ GitHub (WIP)
 <li>
 <p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">username</span></code> ; <code>string</code>. Username of the user. Unique within this instance of GitLab</p>
 </li>
-</ul>
-<h3 id="merge_request.labels[]"><code>merge_request.labels[]</code><a class="headerlink" href="#merge_request.labels[]" title="Permanent link">&para;</a></h3>
-<p>Labels available on this merge request</p>
-<ul>
-<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">color</span></code> ; <code>string</code>. Background color of the label</li>
-<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">description</span></code> ; <code>string</code>. Description of the label (Markdown rendered as HTML for caching)</li>
-<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. Label ID</li>
-<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="o">[]</span><span class="p">.</span><span class="nc">title</span></code> ; <code>string</code>. Content of the label</li>
-</ul>
-<h3 id="merge_request.diff_stats[]"><code>merge_request.diff_stats[]</code><a class="headerlink" href="#merge_request.diff_stats[]" title="Permanent link">&para;</a></h3>
-<p>Changes to a single file</p>
-<ul>
-<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">diff_stats</span><span class="o">[]</span><span class="p">.</span><span class="nc">additions</span></code> ; <code>int</code>. Number of lines added to this file</li>
-<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">diff_stats</span><span class="o">[]</span><span class="p">.</span><span class="nc">deletions</span></code> ; <code>int</code>. Number of lines deleted from this file</li>
-<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">diff_stats</span><span class="o">[]</span><span class="p">.</span><span class="nc">path</span></code> ; <code>string</code>. File path, relative to repository root</li>
 </ul>
 <h3 id="merge_request.author"><code>merge_request.author</code><a class="headerlink" href="#merge_request.author" title="Permanent link">&para;</a></h3>
 <p>User who created this merge request</p>
