@@ -203,3 +203,13 @@ func buildPatternRegex(pattern string) (*regexp.Regexp, error) {
 
 	return regexp.Compile(regexString.String())
 }
+
+func Contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+
+	return false
+}
