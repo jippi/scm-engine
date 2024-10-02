@@ -111,18 +111,18 @@ func (client *Client) FindMergeRequestsForPeriodicEvaluation(ctx context.Context
 	for _, project := range response.Projects.Nodes {
 		slogctx.Debug(ctx, fmt.Sprintf("Project %s has %d Merge Requests", project.FullPath, len(project.MergeRequests.Nodes)))
 
-		for _, mergeRequest := range project.MergeRequests.Nodes {
+		for _, mr := range project.MergeRequests.Nodes {
 			item := scm.PeriodicEvaluationMergeRequest{
 				Project:        project.FullPath,
-				MergeRequestID: mergeRequest.IID,
-				SHA:            mergeRequest.SHA,
+				MergeRequestID: mr.IID,
+				SHA:            mr.SHA,
 				UpdatePipeline: updatePipeline,
 			}
 
 			// If periodic evaluation are updating CI pipelines, check if the status of the HEAD pipeline
 			// is in a state where re-triggering the external CI pipeline would potentially send the MR creator
 			// a "Your CI pipeline failed" e-mail every time we evaluate the MR in the background (spammy!)
-			if item.UpdatePipeline && mergeRequest.HeadPipeline != nil && slices.Contains(SkipPipelineUpdateIfPeriodicAndPipelineStatusIs, mergeRequest.HeadPipeline.Status) {
+			if item.UpdatePipeline && mr.HeadPipeline != nil && slices.Contains(SkipPipelineUpdateIfPeriodicAndPipelineStatusIs, mr.HeadPipeline.Status) {
 				item.UpdatePipeline = false
 			}
 
