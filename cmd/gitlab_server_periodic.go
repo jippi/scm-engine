@@ -83,6 +83,12 @@ func startPeriodicEvaluation(ctx context.Context, interval time.Duration, filter
 					ctx = state.WithMergeRequestID(ctx, mergeRequest.MergeRequestID)
 					ctx = state.WithProjectID(ctx, mergeRequest.Project)
 
+					if !mergeRequest.UpdatePipeline {
+						slogctx.Info(ctx, "Disabling CI pipeline commit status updating since the MR HEAD CI pipeline is in a failed state")
+
+						ctx = state.WithUpdatePipeline(ctx, false, "")
+					}
+
 					if len(mergeRequest.ConfigBlob) == 0 {
 						slogctx.Warn(ctx, "Could not find the scm-engine configuration file in the repository, skipping...")
 
