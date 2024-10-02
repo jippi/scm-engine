@@ -179,8 +179,14 @@ func (c *Context) GetCodeOwners() []string {
 			continue
 		}
 
+		// Note that the anyone who has authored a commit in the MR won't be considered
+		// an eligible approver as part of the GitLab API response.
 		if rule.EligibleApprovers != nil {
 			for _, user := range rule.EligibleApprovers {
+				if user.Bot == true {
+					continue
+				}
+
 				ownerSet[user.Username] = true
 			}
 		}
