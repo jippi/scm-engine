@@ -170,7 +170,7 @@ func (c *Context) HasExecutedActionGroup(group string) bool {
 // This is based on the elibible approvers in the rules of the merge request approval
 // state api.
 func (c *Context) GetCodeOwners() []string {
-	ownerSet := make(map[string]bool)
+	owners := []string{}
 
 	for _, rule := range c.MergeRequest.ApprovalState.Rules {
 		// Multiple code owner paths could be matched when sections are used, so
@@ -187,14 +187,13 @@ func (c *Context) GetCodeOwners() []string {
 					continue
 				}
 
-				ownerSet[user.Username] = true
+				if scm.Contains(owners, user.Username) {
+					continue
+				}
+
+				owners = append(owners, user.Username)
 			}
 		}
-	}
-
-	owners := make([]string, 0, len(ownerSet))
-	for owner := range ownerSet {
-		owners = append(owners, owner)
 	}
 
 	return owners
