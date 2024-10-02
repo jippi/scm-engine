@@ -177,6 +177,20 @@ func (step ActionStep) OptionalString(name, defaultValue string) (string, error)
 	return valueString, nil
 }
 
+func (step ActionStep) RequiredInt(name string) (int, error) {
+	value, ok := step[name]
+	if !ok {
+		return 0, fmt.Errorf("Required 'step' key '%s' is missing", name)
+	}
+
+	valueInt, ok := value.(int)
+	if !ok {
+		return 0, fmt.Errorf("Required 'step' key '%s' must be of type int, got %T", name, value)
+	}
+
+	return valueInt, nil
+}
+
 func (step ActionStep) Get(name string) (any, error) {
 	value, ok := step[name]
 	if !ok {
