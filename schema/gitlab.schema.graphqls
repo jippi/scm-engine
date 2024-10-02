@@ -156,6 +156,22 @@ enum DetailedMergeStatus {
   REQUESTED_CHANGES
 }
 
+enum PipelineStatusEnum {
+  CANCELED
+  CANCELING
+  CREATED
+  FAILED
+  MANUAL
+  PENDING
+  PREPARING
+  RUNNING
+  SCHEDULED
+  SKIPPED
+  SUCCESS
+  WAITING_FOR_CALLBACK
+  WAITING_FOR_RESOURCE
+}
+
 input ListMergeRequestsQueryInput {
   project_id: ID!
   state: MergeRequestState! = "opened"
@@ -337,6 +353,8 @@ type ContextMergeRequest {
   DiffStats: [ContextDiffStat!]
   "Labels available on this merge request"
   Labels: [ContextLabel!] @generated
+  "Pipeline running on the branch HEAD of the merge request"
+  HeadPipeline: ContextPipeline
 
   #
   # scm-engine customs
@@ -465,4 +483,44 @@ type ContextDiffStat {
   Deletions: Int!
   "File path, relative to repository root"
   Path: String!
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#pipeline
+type ContextPipeline {
+  "Indicates if the pipeline is active"
+  Active: Boolean!
+  "Specifies if a pipeline can be canceled"
+  Cancelable: Boolean!
+  "Indicates if a pipeline is complete"
+  Complete: Boolean!
+  "Duration of the pipeline in seconds"
+  Duration: Int
+  "The reason why the pipeline failed"
+  FailureReason: String
+  "Timestamp of the pipeline's completion"
+  FinishedAt: Time
+  "ID of the pipeline"
+  ID: String!
+  "Internal ID of the pipeline"
+  IID: String!
+  "If the pipeline is the latest one or not"
+  Latest: Boolean!
+  "Name of the pipeline"
+  Name: String
+  "Relative path to the pipeline's page"
+  Path: String
+  "Specifies if a pipeline can be retried"
+  Retryable: Boolean!
+  "Timestamp when the pipeline was started"
+  StartedAt: Time
+  "Status of the pipeline"
+  Status: PipelineStatusEnum!
+  "If the pipeline is stuck"
+  Stuck: Boolean!
+  "The total number of jobs in the pipeline"
+  TotalJobs: Int!
+  "Timestamp of the pipeline's last activity"
+  UpdatedAt: Time!
+  "Indicates if a pipeline has warnings"
+  Warnings: Boolean!
 }

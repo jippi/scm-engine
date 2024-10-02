@@ -25,3 +25,8 @@ func (d MergeStatus) AsString() string {
 func (d DetailedMergeStatus) AsString() string {
 	return d.String()
 }
+
+// PipelineStatusEnum is a ENUM type
+func (d PipelineStatusEnum) AsString() string {
+	return d.String()
+}
