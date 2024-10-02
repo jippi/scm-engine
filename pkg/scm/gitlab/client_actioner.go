@@ -171,7 +171,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return err
 		}
 
-		var eligibleReviewers []string
+		var eligibleReviewers []scm.Actor
 
 		switch source {
 		case "codeowners":
@@ -184,7 +184,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return nil
 		}
 
-		var reviewers []string
+		var reviewers []scm.Actor
 
 		var limit int
 		if desiredLimit > len(eligibleReviewers) {
@@ -199,7 +199,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 			break
 		case "random":
-			reviewers = make([]string, limit)
+			reviewers = make([]scm.Actor, limit)
 			r := rand.New(rand.NewSource(time.Now().UnixNano()))
 			perm := r.Perm(len(eligibleReviewers))
 
@@ -210,15 +210,25 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			break
 		}
 
+		var reviewerIDs []int
+
+		for _, reviewer := range reviewers {
+			reviewerIDs = append(reviewerIDs, reviewer.IntID())
+		}
+
 		if state.IsDryRun(ctx) {
 			slogctx.Info(ctx, "(Dry Run) Assigning MR", slog.String("source", source), slog.Int("limit", limit), slog.String("mode", mode), slog.Any("reviewers", reviewers))
 
 			return nil
 		}
 
-		// TODO: Call the GitLab API to assign the reviewers
+		update := &scm.UpdateMergeRequestOptions{
+			ReviewerIDs: &reviewerIDs,
+		}
 
-		return nil
+		_, err = c.MergeRequests().Update(ctx, update)
+
+		return err
 
 	case "comment":
 		message, err := step.RequiredString("message")
