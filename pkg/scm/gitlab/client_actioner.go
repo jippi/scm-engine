@@ -188,12 +188,12 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return nil
 		}
 
-		var reviewers []scm.Actor
+		var reviewers scm.Actors
 
-		limit = desiredLimit
+		limit := desiredLimit
 		if limit > len(eligibleReviewers) {
 			limit = len(eligibleReviewers)
-		} 
+		}
 
 		switch mode {
 		case "linear":
@@ -201,7 +201,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 			break
 		case "random":
-			reviewers = make([]scm.Actor, limit)
+			reviewers = make(scm.Actors, limit)
 			perm := randSource.Perm(len(eligibleReviewers))
 
 			for i := 0; i < limit; i++ {

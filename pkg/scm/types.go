@@ -11,6 +11,18 @@ import (
 	"github.com/jippi/scm-engine/pkg/types"
 )
 
+type Actors []Actor
+
+func (a Actors) Has(actor Actor) bool {
+	for _, item := range a {
+		if item.ID == actor.ID {
+			return true
+		}
+	}
+
+	return false
+}
+
 type Actor struct {
 	ID       string
 	Username string
