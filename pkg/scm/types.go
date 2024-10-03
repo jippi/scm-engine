@@ -113,6 +113,14 @@ type UpdateMergeRequestOptions struct {
 	AllowCollaboration *bool         `json:"allow_collaboration,omitempty"  url:"allow_collaboration,omitempty"`
 }
 
+func (o *UpdateMergeRequestOptions) AppendReviewerIDs(reviewerIDs []int) {
+	if o.ReviewerIDs == nil {
+		o.ReviewerIDs = &reviewerIDs
+	} else {
+		*o.ReviewerIDs = append(*o.ReviewerIDs, reviewerIDs...)
+	}
+}
+
 // ListLabelsOptions represents the available ListLabels() options.
 //
 // GitLab API docs: https://docs.gitlab.com/ee/api/labels.html#list-labels
