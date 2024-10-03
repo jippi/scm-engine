@@ -175,7 +175,7 @@ func (c *Context) GetCodeOwners() []scm.Actor {
 	for _, rule := range c.MergeRequest.ApprovalState.Rules {
 		// Multiple code owner paths could be matched when sections are used, so
 		// flatten the list of eligible approvers
-		if rule.Type.String() != "CODE_OWNER" {
+		if *rule.Type != ApprovalRuleTypeCodeOwner {
 			continue
 		}
 
