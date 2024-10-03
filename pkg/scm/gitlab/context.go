@@ -192,7 +192,7 @@ func (c *Context) GetCodeOwners() scm.Actors {
 					continue
 				}
 
-				actors = append(actors, actor)
+				actors.Add(actor)
 			}
 		}
 	}

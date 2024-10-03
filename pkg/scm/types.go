@@ -23,6 +23,10 @@ func (a Actors) Has(actor Actor) bool {
 	return false
 }
 
+func (a Actors) Add(actor Actor) {
+	a = append(a, actor)
+}
+
 type Actor struct {
 	ID       string
 	Username string
