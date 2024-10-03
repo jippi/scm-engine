@@ -186,12 +186,10 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 		var reviewers []scm.Actor
 
-		var limit int
-		if desiredLimit > len(eligibleReviewers) {
+		limit = desiredLimit
+		if limit > len(eligibleReviewers) {
 			limit = len(eligibleReviewers)
-		} else {
-			limit = desiredLimit
-		}
+		} 
 
 		switch mode {
 		case "linear":
