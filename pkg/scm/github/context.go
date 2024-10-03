@@ -118,3 +118,8 @@ func (c *Context) GetCodeOwners() scm.Actors {
 	// unimplemented
 	return make(scm.Actors, 0)
 }
+
+func (c *Context) GetReviewers() scm.Actors {
+	// unimplemented
+	return make(scm.Actors, 0)
+}
