@@ -1,9 +1,10 @@
-package gitlab
+package gitlab_test
 
 import (
 	"testing"
 
 	"github.com/jippi/scm-engine/pkg/scm"
+	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,26 +13,26 @@ func TestGetCodeOwners(t *testing.T) {
 
 	tests := []struct {
 		name           string
-		mergeRequest   *ContextMergeRequest
+		mergeRequest   *gitlab.ContextMergeRequest
 		expectedOwners scm.Actors
 	}{
 		{
 			name: "No approval rules",
-			mergeRequest: &ContextMergeRequest{
-				ApprovalState: &ContextApprovalState{
-					Rules: []ContextApprovalRule{},
+			mergeRequest: &gitlab.ContextMergeRequest{
+				ApprovalState: &gitlab.ContextApprovalState{
+					Rules: []gitlab.ContextApprovalRule{},
 				},
 			},
 			expectedOwners: scm.Actors{},
 		},
 		{
 			name: "Approval rules without code owners",
-			mergeRequest: &ContextMergeRequest{
-				ApprovalState: &ContextApprovalState{
-					Rules: []ContextApprovalRule{
+			mergeRequest: &gitlab.ContextMergeRequest{
+				ApprovalState: &gitlab.ContextApprovalState{
+					Rules: []gitlab.ContextApprovalRule{
 						{
-							Type: scm.Ptr(ApprovalRuleTypeAnyApprover),
-							EligibleApprovers: []ContextUser{
+							Type: scm.Ptr(gitlab.ApprovalRuleTypeAnyApprover),
+							EligibleApprovers: []gitlab.ContextUser{
 								{Username: "user1"},
 							},
 						},
@@ -42,12 +43,12 @@ func TestGetCodeOwners(t *testing.T) {
 		},
 		{
 			name: "Approval rules with code owners",
-			mergeRequest: &ContextMergeRequest{
-				ApprovalState: &ContextApprovalState{
-					Rules: []ContextApprovalRule{
+			mergeRequest: &gitlab.ContextMergeRequest{
+				ApprovalState: &gitlab.ContextApprovalState{
+					Rules: []gitlab.ContextApprovalRule{
 						{
-							Type: scm.Ptr(ApprovalRuleTypeCodeOwner),
-							EligibleApprovers: []ContextUser{
+							Type: scm.Ptr(gitlab.ApprovalRuleTypeCodeOwner),
+							EligibleApprovers: []gitlab.ContextUser{
 								{Username: "user1"},
 								{Username: "user2", Bot: true}, // Should be ignored
 								{Username: "user3"},
@@ -63,12 +64,12 @@ func TestGetCodeOwners(t *testing.T) {
 		},
 		{
 			name: "Duplicate code owners",
-			mergeRequest: &ContextMergeRequest{
-				ApprovalState: &ContextApprovalState{
-					Rules: []ContextApprovalRule{
+			mergeRequest: &gitlab.ContextMergeRequest{
+				ApprovalState: &gitlab.ContextApprovalState{
+					Rules: []gitlab.ContextApprovalRule{
 						{
-							Type: scm.Ptr(ApprovalRuleTypeCodeOwner),
-							EligibleApprovers: []ContextUser{
+							Type: scm.Ptr(gitlab.ApprovalRuleTypeCodeOwner),
+							EligibleApprovers: []gitlab.ContextUser{
 								{Username: "user1"},
 								{Username: "user1"}, // Duplicate, should be ignored
 							},
@@ -87,7 +88,7 @@ func TestGetCodeOwners(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			ctx := &Context{
+			ctx := &gitlab.Context{
 				MergeRequest: tt.mergeRequest,
 			}
 			owners := ctx.GetCodeOwners()
