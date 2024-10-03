@@ -20,6 +20,8 @@ import (
 	"github.com/xanzy/go-gitlab"
 )
 
+var randSource = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
 	action, err := step.RequiredString("action")
 	if err != nil {
@@ -166,7 +168,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return err
 		}
 
-		mode, err := step.OptionalStringEnum("mode", "linear", "linear", "random")
+		mode, err := step.OptionalStringEnum("mode", "random", "random")
 		if err != nil {
 			return err
 		}
@@ -181,6 +183,8 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		}
 
 		if len(eligibleReviewers) == 0 {
+			slogctx.Debug(ctx, "No eligible reviewers found")
+
 			return nil
 		}
 
@@ -198,8 +202,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			break
 		case "random":
 			reviewers = make([]scm.Actor, limit)
-			r := rand.New(rand.NewSource(time.Now().UnixNano()))
-			perm := r.Perm(len(eligibleReviewers))
+			perm := randSource.Perm(len(eligibleReviewers))
 
 			for i := 0; i < limit; i++ {
 				reviewers[i] = eligibleReviewers[perm[i]]
@@ -211,6 +214,14 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		var reviewerIDs []int
 
 		for _, reviewer := range reviewers {
+			id := reviewer.IntID()
+			// skip invalid int ids, this should not happen but still safeguard against it
+			if id != -1 {
+				slogctx.Warn(ctx, "Invalid reviewer ID", slog.String("id", reviewer.ID))
+
+				continue
+			}
+
 			reviewerIDs = append(reviewerIDs, reviewer.IntID())
 		}
 

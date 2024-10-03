@@ -18,6 +18,8 @@ type Actor struct {
 	IsBot    bool
 }
 
+// IntID is a safe parser for the ID field of an Actor, returning -1 if
+// the ID cannot be parsed as an integer.
 func (a Actor) IntID() int {
 	re := regexp.MustCompile(`(\d+)`)
 	match := re.FindStringSubmatch(a.ID)
