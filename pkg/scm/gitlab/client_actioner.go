@@ -227,11 +227,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return nil
 		}
 
-		update := &scm.UpdateMergeRequestOptions{
-			ReviewerIDs: &reviewerIDs,
-		}
-
-		_, err = c.MergeRequests().Update(ctx, update)
+		update.AppendReviewerIDs(reviewerIDs)
 
 		return err
 
