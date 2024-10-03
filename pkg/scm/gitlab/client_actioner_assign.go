@@ -3,13 +3,21 @@ package gitlab
 import (
 	"context"
 	"log/slog"
+	"math/rand"
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
 )
 
-func (c *Client) AssignReviewers(ctx context.Context, evalContext *Context, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
+var randSource *rand.Rand
+
+func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
+	// ensure random seed is set
+	if randSource == nil {
+		randSource = rand.New(rand.NewSource(state.RandomSeed(ctx))) //nolint:gosec
+	}
+
 	source, err := step.RequiredStringEnum("source", "codeowners")
 	if err != nil {
 		return err
@@ -50,6 +58,7 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext *Context, upda
 	switch mode {
 	case "random":
 		reviewers = make(scm.Actors, limit)
+
 		perm := randSource.Perm(len(eligibleReviewers))
 
 		for i := 0; i < limit; i++ {
@@ -64,7 +73,7 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext *Context, upda
 	for _, reviewer := range reviewers {
 		id := reviewer.IntID()
 		// skip invalid int ids, this should not happen but still safeguard against it
-		if id != -1 {
+		if id == -1 {
 			slogctx.Warn(ctx, "Invalid reviewer ID", slog.String("id", reviewer.ID))
 
 			continue

@@ -25,6 +25,7 @@ const (
 	updatePipeline
 	updatePipelineURL
 	evaluationID
+	randomSeed
 )
 
 func ProjectID(ctx context.Context) string {
@@ -162,4 +163,12 @@ func MergeRequestIDUint(ctx context.Context) uint64 {
 	}
 
 	return number
+}
+
+func RandomSeed(ctx context.Context) int64 {
+	return ctx.Value(randomSeed).(int64) //nolint:forcetypeassert
+}
+
+func WithRandomSeed(ctx context.Context, seed int64) context.Context {
+	return context.WithValue(ctx, randomSeed, seed)
 }
