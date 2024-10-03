@@ -15,7 +15,7 @@ type Actors []Actor
 
 func (a Actors) Has(actor Actor) bool {
 	for _, item := range a {
-		if item.ID == actor.ID {
+		if item.ID == actor.ID && item.Username == actor.Username {
 			return true
 		}
 	}
@@ -23,8 +23,8 @@ func (a Actors) Has(actor Actor) bool {
 	return false
 }
 
-func (a Actors) Add(actor Actor) {
-	a = append(a, actor)
+func (a *Actors) Add(actor Actor) {
+	*a = append(*a, actor)
 }
 
 type Actor struct {
