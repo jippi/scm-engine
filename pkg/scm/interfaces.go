@@ -38,6 +38,7 @@ type EvalContext interface {
 	SetWebhookEvent(in any)
 	TrackActionGroupExecution(name string)
 	GetCodeOwners() Actors
+	GetReviewers() Actors
 }
 
 type ActionStep interface {

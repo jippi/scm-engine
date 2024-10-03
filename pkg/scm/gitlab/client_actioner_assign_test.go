@@ -67,12 +67,23 @@ func (c *evalContextMock) GetCodeOwners() scm.Actors {
 	return nil
 }
 
+func (c *evalContextMock) GetReviewers() scm.Actors {
+	args := c.Called()
+
+	if actors, ok := args.Get(0).(scm.Actors); ok {
+		return actors
+	}
+
+	return nil
+}
+
 func TestAssignReviewers(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
 		name                      string
 		step                      config.ActionStep
+		mockGetReviewersResponse  scm.Actors
 		mockGetCodeOwnersResponse scm.Actors
 		wantUpdate                *scm.UpdateMergeRequestOptions
 		wantErr                   error
@@ -82,6 +93,7 @@ func TestAssignReviewers(t *testing.T) {
 			step: config.ActionStep{
 				"limit": 2,
 			},
+			mockGetReviewersResponse:  nil,
 			mockGetCodeOwnersResponse: nil,
 			wantUpdate:                &scm.UpdateMergeRequestOptions{},
 			wantErr:                   errors.New("Required 'step' key 'source' is missing"),
@@ -91,6 +103,7 @@ func TestAssignReviewers(t *testing.T) {
 			step: config.ActionStep{
 				"source": "codeowners",
 			},
+			mockGetReviewersResponse:  nil,
 			mockGetCodeOwnersResponse: nil,
 			wantUpdate:                &scm.UpdateMergeRequestOptions{},
 			wantErr:                   errors.New("Required 'step' key 'limit' is missing"),
@@ -112,6 +125,25 @@ func TestAssignReviewers(t *testing.T) {
 			},
 			wantErr: nil,
 		},
+		{
+			name: "should not update reviewers if reviewers already assigned",
+			step: config.ActionStep{
+				"source": "codeowners",
+				"limit":  2,
+				"mode":   "random",
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "1", Username: "user1"},
+				{ID: "2", Username: "user2"},
+			},
+			mockGetCodeOwnersResponse: scm.Actors{
+				{ID: "1", Username: "user1"},
+				{ID: "2", Username: "user2"},
+				{ID: "3", Username: "user3"},
+			},
+			wantUpdate: &scm.UpdateMergeRequestOptions{},
+			wantErr:    nil,
+		},
 	}
 
 	for _, tt := range tests {
@@ -119,6 +151,7 @@ func TestAssignReviewers(t *testing.T) {
 			t.Parallel()
 
 			evalContext := new(evalContextMock)
+			evalContext.On("GetReviewers").Return(tt.mockGetReviewersResponse)
 			evalContext.On("GetCodeOwners").Return(tt.mockGetCodeOwnersResponse)
 
 			client := &gitlab.Client{}

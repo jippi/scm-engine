@@ -33,6 +33,14 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 		return err
 	}
 
+	// prevents misuse and situations where evaluate will assign reviewers endlessly
+	existingReviewers := evalContext.GetReviewers()
+	if len(existingReviewers) > 0 {
+		slogctx.Debug(ctx, "Reviewers already assigned", slog.Any("reviewers", existingReviewers))
+
+		return nil
+	}
+
 	var eligibleReviewers []scm.Actor
 
 	switch source {

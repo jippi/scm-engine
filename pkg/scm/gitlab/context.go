@@ -199,3 +199,14 @@ func (c *Context) GetCodeOwners() scm.Actors {
 
 	return actors
 }
+
+func (c *Context) GetReviewers() scm.Actors {
+	actors := make(scm.Actors, 0)
+
+	for _, reviewer := range c.MergeRequest.Reviewers {
+		actor := reviewer.ToActor()
+		actors.Add(actor)
+	}
+
+	return actors
+}
