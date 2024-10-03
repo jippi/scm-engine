@@ -28,6 +28,11 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		return err
 	}
 
+	gitlabContext, ok := evalContext.(*Context)
+	if !ok {
+		return errors.New("failed to assert evalContext as *Context")
+	}
+
 	switch action {
 	case "update_description":
 		// Use the raw MR description
@@ -158,78 +163,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		return err
 
 	case "assign_reviewers":
-		source, err := step.RequiredStringEnum("source", "codeowners")
-		if err != nil {
-			return err
-		}
-
-		desiredLimit, err := step.RequiredInt("limit")
-		if err != nil {
-			return err
-		}
-
-		mode, err := step.OptionalStringEnum("mode", "random", "random")
-		if err != nil {
-			return err
-		}
-
-		var eligibleReviewers []scm.Actor
-
-		switch source {
-		case "codeowners":
-			eligibleReviewers = evalContext.GetCodeOwners()
-
-			break
-		}
-
-		if len(eligibleReviewers) == 0 {
-			slogctx.Debug(ctx, "No eligible reviewers found")
-
-			return nil
-		}
-
-		var reviewers scm.Actors
-
-		limit := desiredLimit
-		if limit > len(eligibleReviewers) {
-			limit = len(eligibleReviewers)
-		}
-
-		switch mode {
-		case "random":
-			reviewers = make(scm.Actors, limit)
-			perm := randSource.Perm(len(eligibleReviewers))
-
-			for i := 0; i < limit; i++ {
-				reviewers[i] = eligibleReviewers[perm[i]]
-			}
-
-			break
-		}
-
-		var reviewerIDs []int
-
-		for _, reviewer := range reviewers {
-			id := reviewer.IntID()
-			// skip invalid int ids, this should not happen but still safeguard against it
-			if id != -1 {
-				slogctx.Warn(ctx, "Invalid reviewer ID", slog.String("id", reviewer.ID))
-
-				continue
-			}
-
-			reviewerIDs = append(reviewerIDs, reviewer.IntID())
-		}
-
-		if state.IsDryRun(ctx) {
-			slogctx.Info(ctx, "(Dry Run) Assigning MR", slog.String("source", source), slog.Int("limit", limit), slog.String("mode", mode), slog.Any("reviewers", reviewers))
-
-			return nil
-		}
-
-		update.AppendReviewerIDs(reviewerIDs)
-
-		return err
+		return c.AssignReviewers(ctx, gitlabContext, update, step)
 
 	case "comment":
 		message, err := step.RequiredString("message")
