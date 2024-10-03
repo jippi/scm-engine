@@ -3,7 +3,6 @@ package scm
 import (
 	"context"
 	"net/http"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -37,14 +36,9 @@ type Actor struct {
 // IntID is a safe parser for the ID field of an Actor, returning -1 if
 // the ID cannot be parsed as an integer.
 func (a Actor) IntID() int {
-	re := regexp.MustCompile(`(\d+)`)
-	match := re.FindStringSubmatch(a.ID)
+	id := strings.Replace(a.ID, "gid://gitlab/User/", "", 1)
 
-	if len(match) < 2 {
-		return -1
-	}
-
-	intID, err := strconv.Atoi(match[1])
+	intID, err := strconv.Atoi(id)
 	if err != nil {
 		return -1
 	}

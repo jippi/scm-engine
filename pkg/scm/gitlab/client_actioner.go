@@ -5,10 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	"math/rand"
 	"reflect"
 	"strings"
-	"time"
 
 	"github.com/expr-lang/expr"
 	"github.com/expr-lang/expr/patcher"
@@ -20,17 +18,10 @@ import (
 	"github.com/xanzy/go-gitlab"
 )
 
-var randSource = rand.New(rand.NewSource(time.Now().UnixNano()))
-
 func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
 	action, err := step.RequiredString("action")
 	if err != nil {
 		return err
-	}
-
-	gitlabContext, ok := evalContext.(*Context)
-	if !ok {
-		return errors.New("failed to assert evalContext as *Context")
 	}
 
 	switch action {
@@ -163,7 +154,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		return err
 
 	case "assign_reviewers":
-		return c.AssignReviewers(ctx, gitlabContext, update, step)
+		return c.AssignReviewers(ctx, evalContext, update, step)
 
 	case "comment":
 		message, err := step.RequiredString("message")

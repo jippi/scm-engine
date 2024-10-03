@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
@@ -16,6 +17,7 @@ func Evaluate(cCtx *cli.Context) error {
 	ctx = state.WithProjectID(ctx, cCtx.String(FlagSCMProject))
 	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
+	ctx = state.WithRandomSeed(ctx, time.Now().UnixNano()) // weak seed since only used for codeowner selection
 
 	cfg, err := config.LoadFile(state.ConfigFilePath(ctx))
 	if err != nil {
