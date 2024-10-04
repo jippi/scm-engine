@@ -3,6 +3,7 @@ package state
 import (
 	"context"
 	"log/slog"
+	"math/rand"
 	"strconv"
 	"time"
 
@@ -165,10 +166,12 @@ func MergeRequestIDUint(ctx context.Context) uint64 {
 	return number
 }
 
-func RandomSeed(ctx context.Context) int64 {
-	return ctx.Value(randomSeed).(int64) //nolint:forcetypeassert
+func RandomSeed(ctx context.Context) *rand.Rand {
+	return ctx.Value(randomSeed).(*rand.Rand) //nolint:forcetypeassert
 }
 
 func WithRandomSeed(ctx context.Context, seed int64) context.Context {
-	return context.WithValue(ctx, randomSeed, seed)
+	randSource := rand.New(rand.NewSource(seed)) //nolint:gosec
+
+	return context.WithValue(ctx, randomSeed, randSource)
 }

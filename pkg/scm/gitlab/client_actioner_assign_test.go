@@ -120,7 +120,7 @@ func TestAssignReviewers(t *testing.T) {
 				{ID: "3", Username: "user3"},
 			},
 			wantUpdate: &scm.UpdateMergeRequestOptions{
-				ReviewerIDs: scm.Ptr([]int{3, 2}),
+				ReviewerIDs: scm.Ptr([]int{1, 2}),
 			},
 			wantErr: nil,
 		},
