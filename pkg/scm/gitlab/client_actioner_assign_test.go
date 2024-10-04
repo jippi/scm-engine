@@ -89,14 +89,14 @@ func TestAssignReviewers(t *testing.T) {
 		wantErr                   error
 	}{
 		{
-			name: "should error on no source provided",
+			name: "should not error on no source provided",
 			step: config.ActionStep{
 				"limit": 2,
 			},
 			mockGetReviewersResponse:  nil,
 			mockGetCodeOwnersResponse: nil,
 			wantUpdate:                &scm.UpdateMergeRequestOptions{},
-			wantErr:                   errors.New("Required 'step' key 'source' is missing"),
+			wantErr:                   nil,
 		},
 		{
 			name: "should error on no limit provided",
