@@ -172,10 +172,15 @@ enum PipelineStatusEnum {
   WAITING_FOR_RESOURCE
 }
 
+# https://docs.gitlab.com/ee/api/graphql/reference/#approvalruletype
 enum ApprovalRuleType {
+  "A regular approval rule"
   REGULAR
+  "A code_owner approval rule"
   CODE_OWNER
+  "A report_approver approval rule"
   REPORT_APPROVER
+  "A any_approver approval rule"
   ANY_APPROVER
 }
 
