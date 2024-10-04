@@ -121,7 +121,24 @@ func TestAssignReviewers(t *testing.T) {
 				{ID: "3", Username: "user3"},
 			},
 			wantUpdate: &scm.UpdateMergeRequestOptions{
-				ReviewerIDs: scm.Ptr([]int{1, 2}),
+				ReviewerIDs: scm.Ptr([]int{3, 2}),
+			},
+			wantErr: nil,
+		},
+		{
+			name: "should update reviewers with eligible codeowners when limit is higher than eligible reviewers",
+			step: config.ActionStep{
+				"source": "codeowners",
+				"limit":  6,
+				"mode":   "random",
+			},
+			mockGetCodeOwnersResponse: scm.Actors{
+				{ID: "1", Username: "user1"},
+				{ID: "2", Username: "user2"},
+				{ID: "3", Username: "user3"},
+			},
+			wantUpdate: &scm.UpdateMergeRequestOptions{
+				ReviewerIDs: scm.Ptr([]int{1, 2, 3}),
 			},
 			wantErr: nil,
 		},
@@ -137,9 +154,9 @@ func TestAssignReviewers(t *testing.T) {
 				{ID: "2", Username: "user2"},
 			},
 			mockGetCodeOwnersResponse: scm.Actors{
-				{ID: "1", Username: "user1"},
+				{ID: "3", Username: "user1"},
 				{ID: "2", Username: "user2"},
-				{ID: "3", Username: "user3"},
+				{ID: "1", Username: "user3"},
 			},
 			wantUpdate: &scm.UpdateMergeRequestOptions{},
 			wantErr:    nil,
@@ -166,7 +183,7 @@ func TestAssignReviewers(t *testing.T) {
 			assert.Equal(t, tt.wantErr, err)
 
 			if tt.wantUpdate.ReviewerIDs != nil {
-				wantLimit, _ := tt.step["limit"].(int)
+				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
 				assert.Len(t, *update.ReviewerIDs, wantLimit)
 				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
 			}
