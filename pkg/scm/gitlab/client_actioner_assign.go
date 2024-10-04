@@ -80,14 +80,15 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 
 	for _, reviewer := range reviewers {
 		id := reviewer.IntID()
+
 		// skip invalid int ids, this should not happen but still safeguard against it
-		if id == -1 {
+		if id == 0 {
 			slogctx.Warn(ctx, "Invalid reviewer ID", slog.String("id", reviewer.ID))
 
 			continue
 		}
 
-		reviewerIDs = append(reviewerIDs, reviewer.IntID())
+		reviewerIDs = append(reviewerIDs, id)
 	}
 
 	if state.IsDryRun(ctx) {
