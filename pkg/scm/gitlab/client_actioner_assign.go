@@ -18,7 +18,7 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 		randSource = rand.New(rand.NewSource(state.RandomSeed(ctx))) //nolint:gosec
 	}
 
-	source, err := step.RequiredStringEnum("source", "codeowners")
+	source, err := step.OptionalStringEnum("source", "codeowners", "codeowners")
 	if err != nil {
 		return err
 	}
