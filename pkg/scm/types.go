@@ -33,15 +33,12 @@ type Actor struct {
 	IsBot    bool
 }
 
-// IntID is a safe parser for the ID field of an Actor, returning -1 if
-// the ID cannot be parsed as an integer.
+// IntID is a safe parser for the ID field of an Actor, returning 0 if
+// the ID cannot be parsed as an integer since Gitlab user IDs start at 1.
 func (a Actor) IntID() int {
 	id := strings.Replace(a.ID, "gid://gitlab/User/", "", 1)
 
-	intID, err := strconv.Atoi(id)
-	if err != nil {
-		return -1
-	}
+	intID, _ := strconv.Atoi(id)
 
 	return intID
 }
