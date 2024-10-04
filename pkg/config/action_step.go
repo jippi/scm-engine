@@ -77,11 +77,11 @@ type AssignReviewers struct {
 	BaseAction
 
 	// The source of the reviewers
-	Source string `json:"source" yaml:"source"`
+	Source *string `json:"source,omitempty" yaml:"source,omitempty"`
 	// The max number of reviewers to assign
-	Limit int `json:"limit" yaml:"limit"`
+	Limit int `json:"limit,omitempty" yaml:"limit,omitempty"`
 	// The mode of assigning reviewers
-	Mode string `json:"mode" yaml:"mode"`
+	Mode string `json:"mode,omitempty" yaml:"mode,omitempty"`
 }
 
 type AddLabelAction struct {
