@@ -3,21 +3,13 @@ package gitlab
 import (
 	"context"
 	"log/slog"
-	"math/rand"
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
 )
 
-var randSource *rand.Rand
-
 func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
-	// ensure random seed is set
-	if randSource == nil {
-		randSource = rand.New(rand.NewSource(state.RandomSeed(ctx))) //nolint:gosec
-	}
-
 	source, err := step.OptionalStringEnum("source", "codeowners", "codeowners")
 	if err != nil {
 		return err
@@ -67,7 +59,8 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 	case "random":
 		reviewers = make(scm.Actors, limit)
 
-		perm := randSource.Perm(len(eligibleReviewers))
+		rand := state.RandomSeed(ctx)
+		perm := rand.Perm(len(eligibleReviewers))
 
 		for i := 0; i < limit; i++ {
 			reviewers[i] = eligibleReviewers[perm[i]]
