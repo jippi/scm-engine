@@ -2,7 +2,6 @@ package gitlab_test
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	"github.com/jippi/scm-engine/pkg/config"
@@ -99,14 +98,14 @@ func TestAssignReviewers(t *testing.T) {
 			wantErr:                   nil,
 		},
 		{
-			name: "should error on no limit provided",
+			name: "should not error on no limit provided",
 			step: config.ActionStep{
 				"source": "codeowners",
 			},
 			mockGetReviewersResponse:  nil,
 			mockGetCodeOwnersResponse: nil,
 			wantUpdate:                &scm.UpdateMergeRequestOptions{},
-			wantErr:                   errors.New("Required 'step' key 'limit' is missing"),
+			wantErr:                   nil,
 		},
 		{
 			name: "should update reviewers with eligible codeowners",

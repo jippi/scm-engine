@@ -23,7 +23,7 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 		return err
 	}
 
-	desiredLimit, err := step.RequiredInt("limit")
+	desiredLimit, err := step.OptionalInt("limit", 1)
 	if err != nil {
 		return err
 	}
