@@ -113,3 +113,13 @@ func (c *Context) HasExecutedActionGroup(name string) bool {
 func (c *Context) AllowPipelineFailure(ctx context.Context) bool {
 	return len(c.PullRequest.findModifiedFiles(state.ConfigFilePath(ctx))) == 1
 }
+
+func (c *Context) GetCodeOwners() scm.Actors {
+	// unimplemented
+	return make(scm.Actors, 0)
+}
+
+func (c *Context) GetReviewers() scm.Actors {
+	// unimplemented
+	return make(scm.Actors, 0)
+}

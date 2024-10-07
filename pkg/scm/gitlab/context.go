@@ -52,6 +52,12 @@ func NewContext(ctx context.Context, baseURL, token string) (*Context, error) {
 	evalContext.MergeRequest = evalContext.Project.MergeRequest
 	evalContext.Project.MergeRequest = nil
 
+	evalContext.MergeRequest.Assignees = evalContext.MergeRequest.CurrentAssignees.Nodes
+	evalContext.MergeRequest.CurrentAssignees = nil
+
+	evalContext.MergeRequest.Reviewers = evalContext.MergeRequest.CurrentReviewers.Nodes
+	evalContext.MergeRequest.CurrentReviewers = nil
+
 	// Copy "current user" into MR
 	evalContext.MergeRequest.CurrentUser = evalContext.CurrentUser
 
@@ -157,4 +163,50 @@ func (c *Context) HasExecutedActionGroup(group string) bool {
 	_, ok := c.ActionGroups[group]
 
 	return ok
+}
+
+// GetCodeOwners returns the eligible code owners for the merge request
+//
+// This is based on the elibible approvers in the rules of the merge request approval
+// state api.
+func (c *Context) GetCodeOwners() scm.Actors {
+	actors := make(scm.Actors, 0)
+
+	for _, rule := range c.MergeRequest.ApprovalState.Rules {
+		// Multiple code owner paths could be matched when sections are used, so
+		// flatten the list of eligible approvers
+		if rule.Type == nil || *rule.Type != ApprovalRuleTypeCodeOwner {
+			continue
+		}
+
+		// Note that the anyone who has authored a commit in the MR won't be considered
+		// an eligible approver as part of the GitLab API response.
+		if rule.EligibleApprovers != nil {
+			for _, user := range rule.EligibleApprovers {
+				if user.Bot == true {
+					continue
+				}
+
+				actor := user.ToActor()
+				if actors.Has(actor) {
+					continue
+				}
+
+				actors.Add(actor)
+			}
+		}
+	}
+
+	return actors
+}
+
+func (c *Context) GetReviewers() scm.Actors {
+	actors := make(scm.Actors, 0)
+
+	for _, reviewer := range c.MergeRequest.Reviewers {
+		actor := reviewer.ToActor()
+		actors.Add(actor)
+	}
+
+	return actors
 }

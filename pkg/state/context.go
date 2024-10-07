@@ -3,6 +3,7 @@ package state
 import (
 	"context"
 	"log/slog"
+	"math/rand"
 	"strconv"
 	"time"
 
@@ -25,6 +26,7 @@ const (
 	updatePipeline
 	updatePipelineURL
 	evaluationID
+	randomSeed
 )
 
 func ProjectID(ctx context.Context) string {
@@ -162,4 +164,14 @@ func MergeRequestIDUint(ctx context.Context) uint64 {
 	}
 
 	return number
+}
+
+func RandomSeed(ctx context.Context) *rand.Rand {
+	return ctx.Value(randomSeed).(*rand.Rand) //nolint:forcetypeassert
+}
+
+func WithRandomSeed(ctx context.Context, seed int64) context.Context {
+	randSource := rand.New(rand.NewSource(seed)) //nolint:gosec
+
+	return context.WithValue(ctx, randomSeed, randSource)
 }

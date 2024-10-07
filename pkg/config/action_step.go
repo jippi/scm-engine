@@ -16,6 +16,7 @@ type actionList struct {
 var actions = []actionList{
 	{name: "add_label", instance: AddLabelAction{}},
 	{name: "approve", instance: ApproveAction{}},
+	{name: "assign_reviewers", instance: AssignReviewers{}},
 	{name: "close", instance: CloseAction{}},
 	{name: "comment", instance: CommentAction{}},
 	{name: "lock_discussion", instance: LockDiscussionAction{}},
@@ -70,6 +71,17 @@ type CommentAction struct {
 	//
 	// See: https://jippi.github.io/scm-engine/configuration/#actions.if.then.action
 	Message string `json:"message" yaml:"message"`
+}
+
+type AssignReviewers struct {
+	BaseAction
+
+	// The source of the reviewers
+	Source *string `json:"source,omitempty" yaml:"source,omitempty" jsonschema:"enum=codeowners"`
+	// The max number of reviewers to assign
+	Limit int `json:"limit,omitempty" yaml:"limit,omitempty"`
+	// The mode of assigning reviewers
+	Mode string `json:"mode,omitempty" yaml:"mode,omitempty" jsonschema:"enum=random"`
 }
 
 type AddLabelAction struct {
@@ -149,6 +161,20 @@ func (step ActionStep) JSONSchema() *jsonschema.Schema {
 	}
 }
 
+func (step ActionStep) RequiredInt(name string) (int, error) {
+	value, ok := step[name]
+	if !ok {
+		return 0, fmt.Errorf("Required 'step' key '%s' is missing", name)
+	}
+
+	valueInt, ok := value.(int)
+	if !ok {
+		return 0, fmt.Errorf("Required 'step' key '%s' must be of type int, got %T", name, value)
+	}
+
+	return valueInt, nil
+}
+
 func (step ActionStep) RequiredString(name string) (string, error) {
 	value, ok := step[name]
 	if !ok {
@@ -163,6 +189,40 @@ func (step ActionStep) RequiredString(name string) (string, error) {
 	return valueString, nil
 }
 
+func (step ActionStep) RequiredStringEnum(name string, values ...string) (string, error) {
+	value, ok := step[name]
+	if !ok {
+		return "", fmt.Errorf("Required 'step' key '%s' is missing", name)
+	}
+
+	valueString, ok := value.(string)
+	if !ok {
+		return "", fmt.Errorf("Required 'step' key '%s' must be of type string, got %T", name, value)
+	}
+
+	for _, validValue := range values {
+		if valueString == validValue {
+			return valueString, nil
+		}
+	}
+
+	return "", fmt.Errorf("Required 'step' key '%s' must be one of %v, got %s", name, values, valueString)
+}
+
+func (step ActionStep) OptionalInt(name string, fallback int) (int, error) {
+	value, ok := step[name]
+	if !ok {
+		return fallback, nil
+	}
+
+	valueInt, ok := value.(int)
+	if !ok {
+		return fallback, fmt.Errorf("Optional step field '%s' must be of type int, got %T", name, value)
+	}
+
+	return valueInt, nil
+}
+
 func (step ActionStep) OptionalString(name, defaultValue string) (string, error) {
 	value, ok := step[name]
 	if !ok {
@@ -175,6 +235,26 @@ func (step ActionStep) OptionalString(name, defaultValue string) (string, error)
 	}
 
 	return valueString, nil
+}
+
+func (step ActionStep) OptionalStringEnum(name string, fallback string, values ...string) (string, error) {
+	value, ok := step[name]
+	if !ok {
+		return fallback, nil
+	}
+
+	valueString, ok := value.(string)
+	if !ok {
+		return fallback, fmt.Errorf("Optional step field '%s' must be of type string, got %T", name, value)
+	}
+
+	for _, validValue := range values {
+		if valueString == validValue {
+			return valueString, nil
+		}
+	}
+
+	return fallback, fmt.Errorf("Optional step field '%s' must be one of %v, got %s", name, values, valueString)
 }
 
 func (step ActionStep) Get(name string) (any, error) {
