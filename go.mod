@@ -23,7 +23,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
-	github.com/urfave/cli/v2 v2.27.4
+	github.com/urfave/cli/v2 v2.27.5
 	github.com/vektah/gqlparser/v2 v2.5.17
 	github.com/veqryn/slog-context v0.7.0
 	github.com/veqryn/slog-dedup v0.5.0
@@ -41,7 +41,7 @@ require (
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/charmbracelet/x/ansi v0.1.4 // indirect
 	github.com/coder/websocket v1.8.12 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/fatih/color v1.17.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
