@@ -30,7 +30,7 @@ require (
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xanzy/go-gitlab v0.113.0
 	github.com/xhit/go-str2duration/v2 v2.1.0
-	golang.org/x/oauth2 v0.23.0
+	golang.org/x/oauth2 v0.24.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
