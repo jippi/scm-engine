@@ -20,7 +20,7 @@ require (
 	github.com/muesli/termenv v0.15.2
 	github.com/samber/slog-multi v1.2.4
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/urfave/cli/v2 v2.27.5
