@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	go_github "github.com/google/go-github/v66/github"
+	go_github "github.com/google/go-github/v67/github"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
