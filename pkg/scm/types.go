@@ -3,16 +3,44 @@ package scm
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/types"
 )
 
+type Actors []Actor
+
+func (a Actors) Has(actor Actor) bool {
+	for _, item := range a {
+		if item.ID == actor.ID && item.Username == actor.Username {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (a *Actors) Add(actor Actor) {
+	*a = append(*a, actor)
+}
+
 type Actor struct {
+	ID       string
 	Username string
 	Email    *string
 	IsBot    bool
+}
+
+// IntID is a safe parser for the ID field of an Actor, returning 0 if
+// the ID cannot be parsed as an integer since Gitlab user IDs start at 1.
+func (a Actor) IntID() int {
+	id := strings.Replace(a.ID, "gid://gitlab/User/", "", 1)
+
+	intID, _ := strconv.Atoi(id)
+
+	return intID
 }
 
 // Label represents a GitLab label.
@@ -74,6 +102,14 @@ type UpdateMergeRequestOptions struct {
 	Squash             *bool         `json:"squash,omitempty"               url:"squash,omitempty"`
 	DiscussionLocked   *bool         `json:"discussion_locked,omitempty"    url:"discussion_locked,omitempty"`
 	AllowCollaboration *bool         `json:"allow_collaboration,omitempty"  url:"allow_collaboration,omitempty"`
+}
+
+func (o *UpdateMergeRequestOptions) AppendReviewerIDs(reviewerIDs []int) {
+	if o.ReviewerIDs == nil {
+		o.ReviewerIDs = &reviewerIDs
+	} else {
+		*o.ReviewerIDs = append(*o.ReviewerIDs, reviewerIDs...)
+	}
 }
 
 // ListLabelsOptions represents the available ListLabels() options.

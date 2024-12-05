@@ -37,10 +37,16 @@ type EvalContext interface {
 	SetContext(ctx context.Context)
 	SetWebhookEvent(in any)
 	TrackActionGroupExecution(name string)
+	GetCodeOwners() Actors
+	GetReviewers() Actors
 }
 
 type ActionStep interface {
+	RequiredInt(name string) (int, error)
 	RequiredString(name string) (string, error)
+	RequiredStringEnum(name string, values ...string) (string, error)
+	OptionalInt(name string, fallback int) (int, error)
 	OptionalString(name, fallback string) (string, error)
+	OptionalStringEnum(name string, fallback string, values ...string) (string, error)
 	Get(name string) (any, error)
 }

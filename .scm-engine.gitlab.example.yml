@@ -65,6 +65,16 @@ actions:
       - action: comment
         message: "Approving the MR since it has the 'break-glass-approve' label. Talk to ITGC about this!"
 
+  - name: Assign Reviewers to MR (only when MR is unassigned)
+    group: assign_mr
+    if: |1
+         merge_request.state_is("opened")
+      && not merge_request.approved
+    then:
+      - action: assign_reviewers
+        source: codeowners
+        limit: 1
+
 label:
   - name: lang/go
     color: $indigo
