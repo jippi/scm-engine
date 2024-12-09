@@ -177,31 +177,27 @@ func (c *Context) GetCodeOwners() scm.Actors {
 		// Multiple code owner paths could be matched when sections are used, so
 		// flatten the list of eligible approvers
 		if rule.Type == nil || *rule.Type != ApprovalRuleTypeCodeOwner {
-			slogctx.Debug(c.Context, "Skipping rule", slog.Any("rule", rule.Type))
-
 			continue
 		}
 
 		// Note that the anyone who has authored a commit in the MR won't be considered
-		// an eligible approver as part of the GitLab API response.
+		// an eligible approver as part of the GitLab API response. Also, the groups/users
+		// must be direct members of the project to be considered eligible approvers, see
+		// https://gitlab.com/gitlab-org/gitlab/-/issues/288851/.
 		if rule.EligibleApprovers != nil {
 			if len(rule.EligibleApprovers) == 0 {
-				slogctx.Debug(c.Context, "No eligible approvers for rule", slog.Any("rule", rule.Type))
+				slogctx.Debug(c.Context, "No eligible approvers for rule, ensure the groups/users are direct members of the project", slog.Any("rule", rule.Type))
 
 				continue
 			}
 
 			for _, user := range rule.EligibleApprovers {
 				if user.Bot == true {
-					slogctx.Debug(c.Context, "Skipping bot", slog.Any("user", user.Username))
-
 					continue
 				}
 
 				actor := user.ToActor()
 				if actors.Has(actor) {
-					slogctx.Debug(c.Context, "Skipping user", slog.Any("user", actor.Username))
-
 					continue
 				}
 

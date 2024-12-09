@@ -2,11 +2,13 @@ package gitlab
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
+	"github.com/xanzy/go-gitlab"
 )
 
 func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
@@ -90,7 +92,17 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 		return nil
 	}
 
-	update.AppendReviewerIDs(reviewerIDs)
+	// call GitLab API to update reviewers immediately, we don't want to wait for the next evaluation
+	_, _, err = c.wrapped.MergeRequests.UpdateMergeRequest(
+		state.ProjectID(ctx),
+		state.MergeRequestIDInt(ctx),
+		&gitlab.UpdateMergeRequestOptions{
+			ReviewerIDs: &reviewerIDs,
+		},
+	)
+	if err != nil {
+		return fmt.Errorf("failed to assign reviewers: %w", err)
+	}
 
 	return nil
 }
