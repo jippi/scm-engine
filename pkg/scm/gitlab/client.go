@@ -98,11 +98,12 @@ func NewClient(ctx context.Context, opts ...ClientOption) (*Client, error) {
 		return nil, err
 	}
 
+	client.wrapped = gitlabClient
+
 	// setup backstage client
-	var backstageClient *backstage.Client
 	if len(state.BackstageURL(ctx)) > 0 {
 		// setup auth if token is provided
-		var backstageHTTPClient = client.httpClient
+		backstageHTTPClient := client.httpClient
 		if backstageHTTPClient == nil && len(state.BackstageToken(ctx)) > 0 {
 			backstageHTTPClient = oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{
 				AccessToken: state.BackstageToken(ctx),
@@ -110,13 +111,15 @@ func NewClient(ctx context.Context, opts ...ClientOption) (*Client, error) {
 			}))
 		}
 
-		backstageClient, err = backstage.NewClient(state.BackstageURL(ctx), state.BackstageNamespace(ctx), backstageHTTPClient)
+		backstageClient, err := backstage.NewClient(state.BackstageURL(ctx), state.BackstageNamespace(ctx), backstageHTTPClient)
 		if err != nil {
 			return nil, err
 		}
+
+		client.backstage = backstageClient
 	}
 
-	return &Client{wrapped: gitlabClient, backstage: backstageClient}, nil
+	return client, nil
 }
 
 // Labels returns a client target at managing labels/tags

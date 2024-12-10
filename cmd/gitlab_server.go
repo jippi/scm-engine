@@ -26,6 +26,11 @@ func Server(cCtx *cli.Context) error {
 	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 
+	// Optional Backstage catalog integration
+	ctx = state.WithBackstageURL(ctx, cCtx.String(FlagBackstageURL))
+	ctx = state.WithBackstageNamespace(ctx, cCtx.String(FlagBackstageNamespace))
+	ctx = state.WithBackstageToken(ctx, cCtx.String(FlagBackstageToken))
+
 	// Add logging context key/value pairs
 	ctx = slogctx.With(ctx, slog.String("gitlab_url", cCtx.String(FlagSCMBaseURL)))
 	ctx = slogctx.With(ctx, slog.Duration("server_timeout", cCtx.Duration(FlagServerTimeout)))

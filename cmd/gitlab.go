@@ -15,11 +15,6 @@ var GitLab = &cli.Command{
 		cCtx.Context = state.WithProvider(cCtx.Context, "gitlab")
 		cCtx.Context = state.WithToken(cCtx.Context, cCtx.String(FlagAPIToken))
 
-		// Optional Backstage catalog integration
-		cCtx.Context = state.WithBackstageURL(cCtx.Context, cCtx.String(FlagBackstageURL))
-		cCtx.Context = state.WithBackstageNamespace(cCtx.Context, cCtx.String(FlagBackstageNamespace))
-		cCtx.Context = state.WithBackstageToken(cCtx.Context, cCtx.String(FlagBackstageToken))
-
 		return nil
 	},
 	Flags: []cli.Flag{
