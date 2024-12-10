@@ -123,3 +123,8 @@ func (c *Context) GetReviewers() scm.Actors {
 	// unimplemented
 	return make(scm.Actors, 0)
 }
+
+func (c *Context) GetAuthor() scm.Actor {
+	// unimplemented
+	return scm.Actor{}
+}

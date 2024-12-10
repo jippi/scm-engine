@@ -210,3 +210,7 @@ func (c *Context) GetReviewers() scm.Actors {
 
 	return actors
 }
+
+func (c *Context) GetAuthor() scm.Actor {
+	return c.MergeRequest.Author.ToActor()
+}

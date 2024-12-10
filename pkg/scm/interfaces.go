@@ -39,6 +39,7 @@ type EvalContext interface {
 	TrackActionGroupExecution(name string)
 	GetCodeOwners() Actors
 	GetReviewers() Actors
+	GetAuthor() Actor
 }
 
 type ActionStep interface {
