@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/aquilax/truncate"
+	"github.com/datolabs-io/go-backstage/v3"
 	"github.com/hasura/go-graphql-client"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
@@ -53,6 +54,15 @@ var SkipPipelineUpdateIfPeriodicAndPipelineStatusIs = []string{
 	"SKIPPED",
 }
 
+type ClientOption func(*Client)
+
+// WithHTTPClient sets the HTTP client for testing
+func WithHTTPClient(client *http.Client) ClientOption {
+	return func(c *Client) {
+		c.httpClient = client
+	}
+}
+
 // Ensure the GitLab client implements the [scm.Client]
 var _ scm.Client = (*Client)(nil)
 
@@ -62,16 +72,51 @@ type Client struct {
 
 	labels        *LabelClient
 	mergeRequests *MergeRequestClient
+	backstage     *backstage.Client
+
+	httpClient *http.Client // used for testing
 }
 
 // NewClient creates a new GitLab client
-func NewClient(ctx context.Context) (*Client, error) {
-	client, err := go_gitlab.NewClient(state.Token(ctx), go_gitlab.WithBaseURL(state.BaseURL(ctx)))
+func NewClient(ctx context.Context, opts ...ClientOption) (*Client, error) {
+	client := &Client{}
+
+	for _, opt := range opts {
+		opt(client)
+	}
+
+	// setup gitlab client with options
+	gitlabOptions := []go_gitlab.ClientOptionFunc{
+		go_gitlab.WithBaseURL(state.BaseURL(ctx)),
+	}
+	if client.httpClient != nil {
+		gitlabOptions = append(gitlabOptions, go_gitlab.WithHTTPClient(client.httpClient))
+	}
+
+	gitlabClient, err := go_gitlab.NewClient(state.Token(ctx), gitlabOptions...)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Client{wrapped: client}, nil
+	// setup backstage client
+	var backstageClient *backstage.Client
+	if len(state.BackstageURL(ctx)) > 0 {
+		// setup auth if token is provided
+		var backstageHTTPClient = client.httpClient
+		if backstageHTTPClient == nil && len(state.BackstageToken(ctx)) > 0 {
+			backstageHTTPClient = oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{
+				AccessToken: state.BackstageToken(ctx),
+				TokenType:   "Bearer",
+			}))
+		}
+
+		backstageClient, err = backstage.NewClient(state.BackstageURL(ctx), state.BackstageNamespace(ctx), backstageHTTPClient)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &Client{wrapped: gitlabClient, backstage: backstageClient}, nil
 }
 
 // Labels returns a client target at managing labels/tags
