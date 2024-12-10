@@ -15,6 +15,11 @@ var GitLab = &cli.Command{
 		cCtx.Context = state.WithProvider(cCtx.Context, "gitlab")
 		cCtx.Context = state.WithToken(cCtx.Context, cCtx.String(FlagAPIToken))
 
+		// Optional Backstage catalog integration
+		cCtx.Context = state.WithBackstageURL(cCtx.Context, cCtx.String(FlagBackstageURL))
+		cCtx.Context = state.WithBackstageNamespace(cCtx.Context, cCtx.String(FlagBackstageNamespace))
+		cCtx.Context = state.WithBackstageToken(cCtx.Context, cCtx.String(FlagBackstageToken))
+
 		return nil
 	},
 	Flags: []cli.Flag{
@@ -93,6 +98,9 @@ var GitLab = &cli.Command{
 						"CI_COMMIT_SHA", // GitLab CI
 					},
 				},
+				StringFlagBackstageURL,
+				StringFlagBackstageNamespace,
+				StringFlagBackstageToken,
 			},
 		},
 		{
@@ -184,6 +192,9 @@ var GitLab = &cli.Command{
 						"SCM_ENGINE_PERIODIC_EVALUATION_ONLY_PROJECTS_WITH_MEMBERSHIP",
 					},
 				},
+				StringFlagBackstageURL,
+				StringFlagBackstageNamespace,
+				StringFlagBackstageToken,
 			},
 		},
 	},
