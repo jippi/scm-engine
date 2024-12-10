@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"time"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/jippi/scm-engine/cmd"
@@ -47,6 +48,7 @@ func main() {
 
 			// Write global flags to context
 			cCtx.Context = state.WithDryRun(cCtx.Context, cCtx.Bool(cmd.FlagDryRun))
+			cCtx.Context = state.WithRandomSeed(cCtx.Context, time.Now().UnixNano()) // weak seed since only used for codeowner selection
 
 			return nil
 		},

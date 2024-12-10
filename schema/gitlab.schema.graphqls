@@ -172,6 +172,18 @@ enum PipelineStatusEnum {
   WAITING_FOR_RESOURCE
 }
 
+# https://docs.gitlab.com/ee/api/graphql/reference/#approvalruletype
+enum ApprovalRuleType {
+  "A regular approval rule"
+  REGULAR
+  "A code_owner approval rule"
+  CODE_OWNER
+  "A report_approver approval rule"
+  REPORT_APPROVER
+  "A any_approver approval rule"
+  ANY_APPROVER
+}
+
 input ListMergeRequestsQueryInput {
   project_id: ID!
   state: MergeRequestState! = "opened"
@@ -270,8 +282,12 @@ type ContextMergeRequest {
   ApprovalsLeft: Int
   "Number of approvals required"
   ApprovalsRequired: Int
+  "Information relating to rules that must be satisfied to merge this merge request"
+  ApprovalState: ContextApprovalState!
   "Indicates if the merge request has all the required approvals"
   Approved: Boolean!
+  "Users assigned to a merge request"
+  Assignees: [ContextUser] @generated
   "User who created this merge request"
   Author: ContextUser!
   "Indicates if auto merge is enabled for the merge request"
@@ -314,6 +330,8 @@ type ContextMergeRequest {
   MergeStatusEnum: MergeStatus
   "Timestamp of when the merge request was prepared"
   PreparedAt: Time
+  "Users assigned to a merge request as a reviewer."
+  Reviewers: [ContextUser] @generated
   "Indicates if the merge request will be rebased"
   ShouldBeRebased: Boolean!
   "Indicates if the source branch of the merge request will be deleted after merge"
@@ -378,6 +396,8 @@ type ContextMergeRequest {
   # scm-engine internal
   #
 
+  CurrentAssignees: ContextUsersNode @internal @graphql(key: "assignees")
+  CurrentReviewers: ContextUsersNode @internal @graphql(key: "reviewers")
   CurrentUser: ContextUser! @generated @internal
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
   ResponseFirstCommits: ContextCommitsNode
@@ -406,8 +426,15 @@ type ContextNotesNode {
   Nodes: [ContextNote!] @internal
 }
 
+# Internal only, used to de-nest connections
+type ContextUsersNode {
+  Nodes: [ContextUser] @internal
+}
+
 # https://docs.gitlab.com/ee/api/graphql/reference/#user
 type ContextUser {
+  "ID of the user"
+  ID: String!
   "Indicates if the user is a bot"
   Bot: Boolean!
   "Username of the user. Unique within this instance of GitLab"
@@ -416,6 +443,23 @@ type ContextUser {
   PublicEmail: String
   "State of the user"
   State: UserState!
+}
+
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#mergerequestapprovalstate
+type ContextApprovalState {
+  "List of approval rules associated with the merge request"
+  Rules: [ContextApprovalRule!]
+}
+
+# https://docs.gitlab.com/ee/api/graphql/reference/#approvalrule
+type ContextApprovalRule {
+  "Name of the rule"
+  Name: String
+  "Type of the rule"
+  Type: ApprovalRuleType
+  "List of all users eligible to approve the merge request (defined explicitly and from associated groups)"
+  EligibleApprovers: [ContextUser!]
 }
 
 # https://docs.gitlab.com/ee/api/graphql/reference/#commit
