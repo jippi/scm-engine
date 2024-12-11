@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/99designs/gqlgen v0.17.60
-	github.com/aquilax/truncate v1.0.0
+	github.com/aquilax/truncate v1.0.1
 	github.com/charmbracelet/lipgloss v1.0.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/expr-lang/expr v1.16.9
