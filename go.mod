@@ -16,7 +16,7 @@ require (
 	github.com/hasura/go-graphql-client v0.13.1
 	github.com/iancoleman/strcase v0.3.0
 	github.com/invopop/jsonschema v0.12.0
-	github.com/lmittmann/tint v1.0.5
+	github.com/lmittmann/tint v1.0.6
 	github.com/muesli/termenv v0.15.2
 	github.com/samber/slog-multi v1.2.4
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.1
