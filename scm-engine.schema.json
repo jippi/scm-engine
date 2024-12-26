@@ -89,6 +89,46 @@
           "if": {
             "properties": {
               "action": {
+                "const": "assign_reviewers"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "action": {
+                "type": "string",
+                "description": "The action to take\n\nSee: https://jippi.github.io/scm-engine/configuration/#actions.if.then.action"
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "codeowners"
+                ],
+                "description": "The source of the reviewers"
+              },
+              "limit": {
+                "type": "integer",
+                "description": "The max number of reviewers to assign"
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "random"
+                ],
+                "description": "The mode of assigning reviewers"
+              }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+              "action"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
                 "const": "close"
               }
             }
@@ -287,6 +327,7 @@
           "enum": [
             "add_label",
             "approve",
+            "assign_reviewers",
             "close",
             "comment",
             "lock_discussion",

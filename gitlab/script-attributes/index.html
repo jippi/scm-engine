@@ -579,6 +579,15 @@ GitLab
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#merge_request.reviewers[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      reviewers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#merge_request.diff_stats[]" class="md-nav__link">
     <span class="md-ellipsis">
       diff_stats
@@ -683,6 +692,54 @@ GitLab
       author
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.assignees[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      assignees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.approval_state" class="md-nav__link">
+    <span class="md-ellipsis">
+      approval_state
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="approval_state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.approval_state.rules[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      rules
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.approval_state.rules[].eligible_approvers[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      eligible_approvers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -957,6 +1014,15 @@ GitHub (WIP)
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#merge_request.reviewers[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      reviewers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#merge_request.diff_stats[]" class="md-nav__link">
     <span class="md-ellipsis">
       diff_stats
@@ -1061,6 +1127,54 @@ GitHub (WIP)
       author
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.assignees[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      assignees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.approval_state" class="md-nav__link">
+    <span class="md-ellipsis">
+      approval_state
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="approval_state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.approval_state.rules[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      rules
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.approval_state.rules[].eligible_approvers[]" class="md-nav__link">
+    <span class="md-ellipsis">
+      eligible_approvers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1247,6 +1361,28 @@ GitHub (WIP)
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">user_discussions_count</span></code> ; <code>optional int</code>. Number of user discussions in the merge request</li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">user_notes_count</span></code> ; <code>optional int</code>. User notes count of the merge request</li>
 </ul>
+<h3 id="merge_request.reviewers[]"><code>merge_request.reviewers[]</code><a class="headerlink" href="#merge_request.reviewers[]" title="Permanent link">&para;</a></h3>
+<p>Users assigned to a merge request as a reviewer.</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">reviewers</span><span class="o">[]</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">reviewers</span><span class="o">[]</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">reviewers</span><span class="o">[]</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">reviewers</span><span class="o">[]</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>active</code> User is active and can use the system</li>
+<li><code>blocked</code> User has been blocked by an administrator and cannot use the system</li>
+<li><code>deactivated</code> User is no longer active and cannot use the system</li>
+<li><code>banned</code> User is blocked, and their contributions are hidden</li>
+<li><code>ldap_blocked</code> User has been blocked by the system</li>
+<li><code>blocked_pending_approval</code> User is blocked and pending approval</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">reviewers</span><span class="o">[]</span><span class="p">.</span><span class="nc">username</span></code> ; <code>string</code>. Username of the user. Unique within this instance of GitLab</p>
+</li>
+</ul>
 <h3 id="merge_request.diff_stats[]"><code>merge_request.diff_stats[]</code><a class="headerlink" href="#merge_request.diff_stats[]" title="Permanent link">&para;</a></h3>
 <p>Changes to a single file</p>
 <ul>
@@ -1315,6 +1451,7 @@ GitHub (WIP)
 <p>User who wrote the note</p>
 <ul>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">notes</span><span class="o">[]</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">notes</span><span class="o">[]</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">notes</span><span class="o">[]</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
 <li>
 <p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">notes</span><span class="o">[]</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
@@ -1354,6 +1491,7 @@ GitHub (WIP)
 <p>Author of the commit</p>
 <ul>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
 <li>
 <p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">first_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
@@ -1393,6 +1531,7 @@ GitHub (WIP)
 <p>Author of the commit</p>
 <ul>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
 <li>
 <p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">last_commit</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
@@ -1414,6 +1553,7 @@ GitHub (WIP)
 <p>User who created this merge request</p>
 <ul>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
 <li>
 <p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
@@ -1431,10 +1571,72 @@ GitHub (WIP)
 <p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">author</span><span class="p">.</span><span class="nc">username</span></code> ; <code>string</code>. Username of the user. Unique within this instance of GitLab</p>
 </li>
 </ul>
+<h3 id="merge_request.assignees[]"><code>merge_request.assignees[]</code><a class="headerlink" href="#merge_request.assignees[]" title="Permanent link">&para;</a></h3>
+<p>Users assigned to a merge request</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">assignees</span><span class="o">[]</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">assignees</span><span class="o">[]</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">assignees</span><span class="o">[]</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">assignees</span><span class="o">[]</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>active</code> User is active and can use the system</li>
+<li><code>blocked</code> User has been blocked by an administrator and cannot use the system</li>
+<li><code>deactivated</code> User is no longer active and cannot use the system</li>
+<li><code>banned</code> User is blocked, and their contributions are hidden</li>
+<li><code>ldap_blocked</code> User has been blocked by the system</li>
+<li><code>blocked_pending_approval</code> User is blocked and pending approval</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">assignees</span><span class="o">[]</span><span class="p">.</span><span class="nc">username</span></code> ; <code>string</code>. Username of the user. Unique within this instance of GitLab</p>
+</li>
+</ul>
+<h3 id="merge_request.approval_state"><code>merge_request.approval_state</code><a class="headerlink" href="#merge_request.approval_state" title="Permanent link">&para;</a></h3>
+<p>Information relating to rules that must be satisfied to merge this merge request</p>
+<h4 id="merge_request.approval_state.rules[]"><code>merge_request.approval_state.rules[]</code><a class="headerlink" href="#merge_request.approval_state.rules[]" title="Permanent link">&para;</a></h4>
+<p>List of approval rules associated with the merge request</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">approval_state</span><span class="p">.</span><span class="nc">rules</span><span class="o">[]</span><span class="p">.</span><span class="nc">name</span></code> ; <code>optional string</code>. Name of the rule</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">approval_state</span><span class="p">.</span><span class="nc">rules</span><span class="o">[]</span><span class="p">.</span><span class="nc">type</span></code> (optional enum) Type of the rule</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>REGULAR</code> A regular approval rule</li>
+<li><code>CODE_OWNER</code> A code_owner approval rule</li>
+<li><code>REPORT_APPROVER</code> A report_approver approval rule</li>
+<li><code>ANY_APPROVER</code> A any_approver approval rule</li>
+</ul>
+</li>
+</ul>
+<h5 id="merge_request.approval_state.rules[].eligible_approvers[]"><code>merge_request.approval_state.rules[].eligible_approvers[]</code><a class="headerlink" href="#merge_request.approval_state.rules[].eligible_approvers[]" title="Permanent link">&para;</a></h5>
+<p>List of all users eligible to approve the merge request (defined explicitly and from associated groups)</p>
+<ul>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">approval_state</span><span class="p">.</span><span class="nc">rules</span><span class="o">[]</span><span class="p">.</span><span class="nc">eligible_approvers</span><span class="o">[]</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">approval_state</span><span class="p">.</span><span class="nc">rules</span><span class="o">[]</span><span class="p">.</span><span class="nc">eligible_approvers</span><span class="o">[]</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
+<li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">approval_state</span><span class="p">.</span><span class="nc">rules</span><span class="o">[]</span><span class="p">.</span><span class="nc">eligible_approvers</span><span class="o">[]</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">approval_state</span><span class="p">.</span><span class="nc">rules</span><span class="o">[]</span><span class="p">.</span><span class="nc">eligible_approvers</span><span class="o">[]</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
+<p><em>The following values are valid:</em></p>
+<ul>
+<li><code>active</code> User is active and can use the system</li>
+<li><code>blocked</code> User has been blocked by an administrator and cannot use the system</li>
+<li><code>deactivated</code> User is no longer active and cannot use the system</li>
+<li><code>banned</code> User is blocked, and their contributions are hidden</li>
+<li><code>ldap_blocked</code> User has been blocked by the system</li>
+<li><code>blocked_pending_approval</code> User is blocked and pending approval</li>
+</ul>
+</li>
+<li>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">approval_state</span><span class="p">.</span><span class="nc">rules</span><span class="o">[]</span><span class="p">.</span><span class="nc">eligible_approvers</span><span class="o">[]</span><span class="p">.</span><span class="nc">username</span></code> ; <code>string</code>. Username of the user. Unique within this instance of GitLab</p>
+</li>
+</ul>
 <h2 id="current_user"><code>current_user</code><a class="headerlink" href="#current_user" title="Permanent link">&para;</a></h2>
 <p>Get information about current user</p>
 <ul>
 <li><code class="language-css highlight"><span class="nt">current_user</span><span class="p">.</span><span class="nc">bot</span></code> ; <code>boolean</code>. Indicates if the user is a bot</li>
+<li><code class="language-css highlight"><span class="nt">current_user</span><span class="p">.</span><span class="nc">id</span></code> ; <code>string</code>. ID of the user</li>
 <li><code class="language-css highlight"><span class="nt">current_user</span><span class="p">.</span><span class="nc">public_email</span></code> ; <code>optional string</code>. User’s public email</li>
 <li>
 <p><code class="language-css highlight"><span class="nt">current_user</span><span class="p">.</span><span class="nc">state</span></code> (enum) State of the user</p>
