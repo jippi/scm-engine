@@ -15,7 +15,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hasura/go-graphql-client v0.13.1
 	github.com/iancoleman/strcase v0.3.0
-	github.com/invopop/jsonschema v0.12.0
+	github.com/invopop/jsonschema v0.13.0
 	github.com/lmittmann/tint v1.0.6
 	github.com/muesli/termenv v0.15.2
 	github.com/samber/slog-multi v1.3.1
