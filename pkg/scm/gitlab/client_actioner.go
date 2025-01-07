@@ -15,7 +15,7 @@ import (
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/stdlib"
 	slogctx "github.com/veqryn/slog-context"
-	"github.com/xanzy/go-gitlab"
+	"gitlab.com/gitlab-org/api/client-go"
 )
 
 func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {

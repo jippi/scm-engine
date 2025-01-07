@@ -17,7 +17,7 @@ import (
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
-	go_gitlab "github.com/xanzy/go-gitlab"
+	go_gitlab "gitlab.com/gitlab-org/api/client-go"
 	"golang.org/x/oauth2"
 )
 

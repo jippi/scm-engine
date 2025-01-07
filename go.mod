@@ -1,6 +1,6 @@
 module github.com/jippi/scm-engine
 
-go 1.23
+go 1.23.4
 
 require (
 	github.com/99designs/gqlgen v0.17.62
@@ -28,8 +28,8 @@ require (
 	github.com/veqryn/slog-context v0.7.0
 	github.com/veqryn/slog-dedup v0.5.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
-	github.com/xanzy/go-gitlab v0.115.0
 	github.com/xhit/go-str2duration/v2 v2.1.0
+	gitlab.com/gitlab-org/api/client-go v0.118.0
 	golang.org/x/oauth2 v0.25.0
 	gopkg.in/yaml.v3 v3.0.1
 )
