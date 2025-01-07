@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/jippi/scm-engine/pkg/scm"
-	go_gitlab "github.com/xanzy/go-gitlab"
+	go_gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
 // Helper function to accept and format both the project ID or name as project
