@@ -29,7 +29,7 @@ require (
 	github.com/veqryn/slog-dedup v0.5.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xhit/go-str2duration/v2 v2.1.0
-	gitlab.com/gitlab-org/api/client-go v0.118.0
+	gitlab.com/gitlab-org/api/client-go v0.119.0
 	golang.org/x/oauth2 v0.25.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -65,7 +65,7 @@ require (
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
-	golang.org/x/time v0.3.0 // indirect
+	golang.org/x/time v0.8.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	modernc.org/b/v2 v2.1.0 // indirect
