@@ -32,6 +32,11 @@
       groupName: "go",
     },
     {
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "enabled": true
+    }
+    {
       matchDepTypes: ["golang-version"],
       prPriority: 999,
     },
