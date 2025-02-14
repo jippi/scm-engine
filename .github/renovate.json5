@@ -24,7 +24,6 @@
   packageRules: [
     {
       matchPackageNames: ["go", "golang"],
-      versioning: "go",
       groupName: "go",
     },
     {
