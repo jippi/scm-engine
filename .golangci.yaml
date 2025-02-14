@@ -14,7 +14,7 @@ linters:
     - staticcheck
 
     # Like the front-end of a Go compiler, parses and type-checks Go code [fast: false, auto-fix: false]
-    #- typecheck
+    - typecheck
 
     # (gas): Inspects source code for security problems [fast: false, auto-fix: false]
     - gosec
