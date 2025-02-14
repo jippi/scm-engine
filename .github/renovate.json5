@@ -45,6 +45,11 @@
       groupName: "charmbracelet",
       matchPackagePrefixes: ["github.com/charmbracelet/"],
     },
+    {
+      description: "Group golang.org/x/ packages",
+      matchPackageNames: ["golang.org/x/{/,}**"],
+      groupName: "x",
+    },
   ],
   customManagers: [
     {
