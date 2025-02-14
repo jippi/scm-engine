@@ -10,7 +10,7 @@
   ],
   postUpdateOptions: ["gomodTidy", "gomodUpdateImportPaths"],
   commitMessageSuffix: " in {{packageFile}}",
-  dependencyDashboardAutoclose: true,
+  dependencyDashboardAutoclose: false,
   automerge: true,
   baseBranches: ["main"],
   platformAutomerge: true,
@@ -24,6 +24,11 @@
   packageRules: [
     {
       matchPackageNames: ["go", "golang"],
+      groupName: "go",
+    },
+    {
+      matchDatasources: ["golang-version"],
+      rangeStrategy: "bump",
       groupName: "go",
     },
     {
