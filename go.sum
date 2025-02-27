@@ -122,8 +122,8 @@ github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 h1:xzABM9let0HLLq
 github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569/go.mod h1:2Ly+NIftZN4de9zRmENdYbvPQeaVIYKWpLFStLFEBgI=
 github.com/urfave/cli/v2 v2.27.5 h1:WoHEJLdsXr6dDWoJgMq/CboDmyY/8HMMH1fTECbih+w=
 github.com/urfave/cli/v2 v2.27.5/go.mod h1:3Sevf16NykTbInEnD0yKkjDAeZDS0A6bzhBH5hrMvTQ=
-github.com/vektah/gqlparser/v2 v2.5.23-0.20250224231641-94fb1f6ad8f6 h1:xREkGblsLvT/H/Ynlc8rNay7pHC47C5n4rwTN9sra8A=
-github.com/vektah/gqlparser/v2 v2.5.23-0.20250224231641-94fb1f6ad8f6/go.mod h1:D1/VCZtV3LPnQrcPBeR/q5jkSQIPti0uYCP/RI0gIeo=
+github.com/vektah/gqlparser/v2 v2.5.23 h1:PurJ9wpgEVB7tty1seRUwkIDa/QH5RzkzraiKIjKLfA=
+github.com/vektah/gqlparser/v2 v2.5.23/go.mod h1:D1/VCZtV3LPnQrcPBeR/q5jkSQIPti0uYCP/RI0gIeo=
 github.com/veqryn/slog-context v0.7.0 h1:Ne7ajlR6Mjs2rQQtpg8k0eO6krR5wzpareh5VpV+V2s=
 github.com/veqryn/slog-context v0.7.0/go.mod h1:E+qpdyiQs2YKRxFnX1JjpdFE1z3Ka94Kem2q9ZG6Jjo=
 github.com/veqryn/slog-dedup v0.5.0 h1:2pc4va3q8p7Tor1SjVvi1ZbVK/oKNPgsqG15XFEt0iM=
