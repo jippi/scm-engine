@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/guregu/null/v5"
+	"github.com/guregu/null/v6"
 	"github.com/invopop/jsonschema"
 	"gopkg.in/yaml.v3"
 )
