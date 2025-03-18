@@ -142,8 +142,8 @@ github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e h1:JVG44RsyaB9T2KIHavM
 github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e/go.mod h1:RbqR21r5mrJuqunuUZ/Dhy/avygyECGrLceyNeo4LiM=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 h1:gEOO8jv9F4OT7lGCjxCBTO/36wtF6j2nSip77qHd4x4=
 github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1/go.mod h1:Ohn+xnUBiLI6FVj/9LpzZWtj1/D6lUovWYBkxHVV3aM=
-gitlab.com/gitlab-org/api/client-go v0.125.0 h1:T+L13tpjE1s3Hkqyq+ontvYVSwRyMlfOLDd75IiRY5g=
-gitlab.com/gitlab-org/api/client-go v0.125.0/go.mod h1:SEN5CKASOsKoA6rv6Y3cPiM5ikH2HxFaqCUwZOquttI=
+gitlab.com/gitlab-org/api/client-go v0.126.0 h1:VV5TdkF6pMbEdFGvbR2CwEgJwg6qdg1u3bj5eD2tiWk=
+gitlab.com/gitlab-org/api/client-go v0.126.0/go.mod h1:bYC6fPORKSmtuPRyD9Z2rtbAjE7UeNatu2VWHRf4/LE=
 golang.org/x/exp v0.0.0-20220909182711-5c715a9e8561 h1:MDc5xs78ZrZr3HMQugiXOAkSZtfTpbJLDr/lwfgO53E=
 golang.org/x/exp v0.0.0-20220909182711-5c715a9e8561/go.mod h1:cyybsKvd6eL0RnXn6p/Grxp8F5bW7iYuBgsNCOHpMYE=
 golang.org/x/mod v0.24.0 h1:ZfthKaKaT4NrhGVZHO1/WDTwGES4De8KtWO0SIbNJMU=
