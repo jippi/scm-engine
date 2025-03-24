@@ -7,7 +7,7 @@ require (
 	github.com/aquilax/truncate v1.0.1
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/expr-lang/expr v1.17.1
+	github.com/expr-lang/expr v1.17.2
 	github.com/fatih/structtag v1.2.0
 	github.com/golang-cz/devslog v0.0.11
 	github.com/google/go-github/v70 v70.0.0
