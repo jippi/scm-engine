@@ -132,8 +132,8 @@ github.com/vektah/gqlparser/v2 v2.5.23 h1:PurJ9wpgEVB7tty1seRUwkIDa/QH5RzkzraiKI
 github.com/vektah/gqlparser/v2 v2.5.23/go.mod h1:D1/VCZtV3LPnQrcPBeR/q5jkSQIPti0uYCP/RI0gIeo=
 github.com/veqryn/slog-context v0.7.0 h1:Ne7ajlR6Mjs2rQQtpg8k0eO6krR5wzpareh5VpV+V2s=
 github.com/veqryn/slog-context v0.7.0/go.mod h1:E+qpdyiQs2YKRxFnX1JjpdFE1z3Ka94Kem2q9ZG6Jjo=
-github.com/veqryn/slog-dedup v0.5.0 h1:2pc4va3q8p7Tor1SjVvi1ZbVK/oKNPgsqG15XFEt0iM=
-github.com/veqryn/slog-dedup v0.5.0/go.mod h1:/iQU008M3qFa5RovtfiHiODxJFvxZLjWRG/qf/zKFHw=
+github.com/veqryn/slog-dedup v0.6.0 h1:h3pm+Wl3IuQkq2f7bv4V4GJsJRyETQlPMNjCfXU929s=
+github.com/veqryn/slog-dedup v0.6.0/go.mod h1:sJzvkleUbwNS92fs14L5n5ZsmCcaZGyZEtCdEwgCBU4=
 github.com/wk8/go-ordered-map/v2 v2.1.8 h1:5h/BUHu93oj4gIdvHHHGsScSTMijfx5PeYkE/fJgbpc=
 github.com/wk8/go-ordered-map/v2 v2.1.8/go.mod h1:5nJHM5DyteebpVlHnWMV0rPz6Zp7+xBAnxjb1X5vnTw=
 github.com/xhit/go-str2duration/v2 v2.1.0 h1:lxklc02Drh6ynqX+DdPyp5pCKLUQpRT8bp8Ydu2Bstc=
