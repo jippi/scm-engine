@@ -26,7 +26,7 @@ require (
 	github.com/urfave/cli/v2 v2.27.6
 	github.com/vektah/gqlparser/v2 v2.5.23
 	github.com/veqryn/slog-context v0.7.0
-	github.com/veqryn/slog-dedup v0.5.0
+	github.com/veqryn/slog-dedup v0.6.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xhit/go-str2duration/v2 v2.1.0
 	gitlab.com/gitlab-org/api/client-go v0.126.0
