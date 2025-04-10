@@ -14,7 +14,7 @@ import (
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	slogctx "github.com/veqryn/slog-context"
 )
 
