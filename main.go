@@ -13,7 +13,7 @@ import (
 	"github.com/jippi/scm-engine/cmd"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/tui"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	slogctx "github.com/veqryn/slog-context"
 )
 

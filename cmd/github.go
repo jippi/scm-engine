@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/jippi/scm-engine/pkg/state"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var GitHub = &cli.Command{
