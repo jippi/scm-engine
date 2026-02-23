@@ -19,4 +19,6 @@ func errHandler(ctx context.Context, w http.ResponseWriter, code int, err error)
 
 	w.WriteHeader(code)
 	w.Write([]byte(err.Error()))
+
+	return
 }

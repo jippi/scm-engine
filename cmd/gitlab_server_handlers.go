@@ -9,6 +9,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/state"
@@ -75,43 +76,23 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		// Initialize context
 		ctx = state.WithProjectID(ctx, payload.Project.PathWithNamespace)
 
-		// Determine effective event type - pipeline events don't send event_type, only object_kind
-		eventType := payload.EventType
-		if eventType == "" && payload.ObjectKind == "pipeline" {
-			eventType = "pipeline"
-		}
-
 		// Grab event specific information
 		var (
-			id         string
-			gitSha     string
-			pipelineID string
+			id     string
+			gitSha string
 		)
 
-		switch eventType {
+		switch payload.EventType {
 		case "merge_request":
-			id = payload.ObjectAttributes.GetIID()
-			gitSha = payload.ObjectAttributes.GetCommitID()
+			id = strconv.Itoa(payload.ObjectAttributes.IID)
+			gitSha = payload.ObjectAttributes.LastCommit.ID
 
 		case "note":
-			id = payload.MergeRequest.GetIID()
-			gitSha = payload.MergeRequest.GetCommitID()
-
-		case "pipeline":
-			// For pipeline events, MR info is in merge_request field, SHA in commit or object_attributes
-			id = payload.MergeRequest.GetIID()
-			gitSha = payload.ObjectAttributes.GetCommitID()
-			pipelineID = payload.ObjectAttributes.GetIID()
+			id = strconv.Itoa(payload.MergeRequest.IID)
+			gitSha = payload.MergeRequest.LastCommit.ID
 
 		default:
-			errHandler(ctx, w, http.StatusInternalServerError, fmt.Errorf("unknown event type: %s (object_kind: %s)", payload.EventType, payload.ObjectKind))
-
-			return
-		}
-
-		// Validate that the payload is associated with a merge request
-		if id == "" {
-			errHandler(ctx, w, http.StatusBadRequest, errors.New("payload is not associated with a merge request, skipping"))
+			errHandler(ctx, w, http.StatusInternalServerError, fmt.Errorf("unknown event type: %s", payload.EventType))
 
 			return
 		}
@@ -119,12 +100,7 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		// Build context for rest of the pipeline
 		ctx = state.WithCommitSHA(ctx, gitSha)
 		ctx = state.WithMergeRequestID(ctx, id)
-
-		if pipelineID != "" {
-			ctx = state.WithPipelineID(ctx, pipelineID)
-		}
-
-		ctx = slogctx.With(ctx, slog.String("event_type", eventType))
+		ctx = slogctx.With(ctx, slog.String("event_type", payload.EventType))
 
 		slogctx.Info(ctx, "GET /gitlab webhook")
 

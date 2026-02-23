@@ -79,15 +79,9 @@ tasks:
       - gofumpt -w -l .
 
   lint:
-    desc: Lint the code with golangci-lint (uses same version as CI)
+    desc: Lint the code with golangci-lint
     cmds:
       - golangci-lint run --config ./.golangci.yaml ./...
-
-  lint:install:
-    desc: Install golangci-lint v1.64.8 (same as CI)
-    cmds:
-      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
-      - golangci-lint --version
 
   ci:
     desc: Run all CI steps

@@ -19,7 +19,6 @@ const (
 	configFilePath
 	dryRun
 	mergeRequestID
-	pipelineID
 	projectID
 	provider
 	startTime
@@ -146,21 +145,6 @@ func ShouldUpdatePipeline(ctx context.Context) (bool, string) {
 
 func MergeRequestID(ctx context.Context) string {
 	return ctx.Value(mergeRequestID).(string) //nolint:forcetypeassert
-}
-
-func PipelineID(ctx context.Context) string {
-	val := ctx.Value(pipelineID)
-	if val == nil {
-		return ""
-	}
-
-	return val.(string) //nolint:forcetypeassert
-}
-
-func WithPipelineID(ctx context.Context, id string) context.Context {
-	ctx = slogctx.With(ctx, slog.String("pipeline_id", id))
-
-	return context.WithValue(ctx, pipelineID, id)
 }
 
 func MergeRequestIDInt(ctx context.Context) int {

@@ -47,9 +47,6 @@ type Context {
   "Information about the event that triggered the evaluation. Empty when not using webhook server."
   WebhookEvent: Any @generated @expr(key: "webhook_event")
 
-  "Information about the Pipeline that triggered the evaluation. Only populated for pipeline webhook events."
-  Pipeline: ContextPipeline @generated
-
   "Internal state for tracing what actions has been executed during evaluation"
   ActionGroups: Map @generated @internal
 }
@@ -252,9 +249,6 @@ type ContextProject {
   MergeRequest: ContextMergeRequest
     @internal
     @graphql(key: "mergeRequest(iid: $mr_id)")
-  ResponsePipeline: ContextPipeline
-    @internal
-    @graphql(key: "pipeline(iid: $pipeline_id) @include(if: $request_pipeline_by_id)")
   ResponseGroup: ContextGroup @internal @graphql(key: "group")
 }
 
@@ -379,8 +373,6 @@ type ContextMergeRequest {
   Labels: [ContextLabel!] @generated
   "Pipeline running on the branch HEAD of the merge request"
   HeadPipeline: ContextPipeline
-    @internal
-    @graphql(key: "headPipeline @skip(if: $request_pipeline_by_id)")
 
   #
   # scm-engine customs
@@ -548,8 +540,12 @@ type ContextPipeline {
   Cancelable: Boolean!
   "Indicates if a pipeline is complete"
   Complete: Boolean!
+  "Duration of the pipeline in seconds"
+  Duration: Int
   "The reason why the pipeline failed"
   FailureReason: String
+  "Timestamp of the pipeline's completion"
+  FinishedAt: Time
   "ID of the pipeline"
   ID: String!
   "Internal ID of the pipeline"
@@ -560,62 +556,18 @@ type ContextPipeline {
   Name: String
   "Relative path to the pipeline's page"
   Path: String
-  "Git ref (branch or tag) that the pipeline ran on"
-  Ref: String
   "Specifies if a pipeline can be retried"
   Retryable: Boolean!
-  "SHA of the commit the pipeline ran on"
-  Sha: String
-  "How the pipeline was triggered (push, web, trigger, schedule, api, external, pipeline, etc.)"
-  Source: String
+  "Timestamp when the pipeline was started"
+  StartedAt: Time
   "Status of the pipeline"
   Status: PipelineStatusEnum!
   "If the pipeline is stuck"
   Stuck: Boolean!
   "The total number of jobs in the pipeline"
   TotalJobs: Int!
+  "Timestamp of the pipeline's last activity"
+  UpdatedAt: Time!
   "Indicates if a pipeline has warnings"
   Warnings: Boolean!
-
-  #
-  # Connections
-  #
-
-  "Jobs in this pipeline"
-  Jobs: [ContextPipelineJob!] @generated
-  ResponseJobs: ContextPipelineJobsNode @internal @graphql(key: "jobs(first: 100)")
 }
-
-# Job in a pipeline
-type ContextPipelineJob {
-  "Whether the job is active"
-  Active: Boolean!
-  "Whether this job is allowed to fail"
-  AllowFailure: Boolean!
-  "ID of the job"
-  ID: String!
-  "Whether the job is a manual action"
-  ManualJob: Boolean!
-  "Name of the job"
-  Name: String
-  "Indicates that the job is retried"
-  Retried: Boolean
-  "Stage of the job"
-  Stage: ContextPipelineStage
-  "Status of the job"
-  Status: String
-  "Indicates the job is stuck"
-  Stuck: Boolean!
-}
-
-# Stage in a pipeline
-type ContextPipelineStage {
-  "Name of the stage"
-  Name: String
-}
-
-# Internal only, used to de-nest connections
-type ContextPipelineJobsNode {
-  Nodes: [ContextPipelineJob!] @internal
-}
-
