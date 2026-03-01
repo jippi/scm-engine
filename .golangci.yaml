@@ -107,7 +107,7 @@ linters:
     - wastedassign
 
     # Whitespace Linter - Forces you to use empty lines!
-    - wsl
+    - wsl_v5
     - whitespace
 
     # A linter that detect the possibility to use variables/constants from the Go standard library.
@@ -227,3 +227,13 @@ linters:
       # Note: This option will be ignored if 'align' or 'sort' is false.
       # Default: false
       strict: true
+
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
+
+formatters:
+  enable:
+    # Gofumpt checks whether code was gofumpt-ed.
+    - gofumpt

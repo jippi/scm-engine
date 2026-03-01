@@ -38,8 +38,6 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 	switch source {
 	case "codeowners":
 		eligibleReviewers = evalContext.GetCodeOwners()
-
-		break
 	}
 
 	if len(eligibleReviewers) == 0 {
@@ -65,8 +63,6 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 		for i := 0; i < limit; i++ {
 			reviewers[i] = eligibleReviewers[perm[i]]
 		}
-
-		break
 	}
 
 	reviewerIDs := make([]int, 0, len(reviewers))

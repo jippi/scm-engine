@@ -150,7 +150,7 @@ func (p Printer) Box(header string, bodies ...string) {
 
 	// If there are no body, just render the header box directly
 	if len(body) == 0 {
-		fmt.Fprintln(
+		_, _ = fmt.Fprintln(
 			p.writer,
 			headerStyle.
 				Width(p.boxWidth-borderWidth).
@@ -167,7 +167,7 @@ func (p Printer) Box(header string, bodies ...string) {
 
 	// If a BoxWidth is set, the boxes will be aligned automatically to the max
 	if p.boxWidth > 0 {
-		fmt.Fprintln(
+		_, _ = fmt.Fprintln(
 			p.writer,
 			lipgloss.JoinVertical(
 				lipgloss.Left,
@@ -192,7 +192,7 @@ func (p Printer) Box(header string, bodies ...string) {
 		boxHeader = headerStyle.Width(bodyWidth).Render(header)
 	}
 
-	fmt.Fprintln(
+	_, _ = fmt.Fprintln(
 		p.writer,
 		lipgloss.JoinVertical(lipgloss.Left, boxHeader, boxBody),
 	)

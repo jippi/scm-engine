@@ -8,10 +8,6 @@ import (
 
 var FunctionRenamer = expr.Patch(functionRenamer{})
 
-var renames = map[string]string{
-	"modified_files": "ModifiedFiles",
-}
-
 type functionRenamer struct{}
 
 func (x functionRenamer) Visit(node *ast.Node) {

@@ -54,7 +54,7 @@ func Evaluate(cCtx *cli.Context) error {
 
 	// If no flag is set, we require arguments
 	case cCtx.Args().Len() == 0:
-		return fmt.Errorf("Missing required argument: %s", FlagMergeRequestID)
+		return fmt.Errorf("missing required argument: %s", FlagMergeRequestID)
 
 	default:
 		for _, mr := range cCtx.Args().Slice() {

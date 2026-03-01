@@ -271,7 +271,7 @@ func (e ContextMergeRequest) ModifiedFiles(patterns ...string) bool {
 }
 
 func (e ContextMergeRequest) findModifiedFiles(patterns ...string) []string {
-	files := []string{}
+	files := make([]string, 0, len(e.DiffStats))
 	for _, f := range e.DiffStats {
 		files = append(files, f.Path)
 	}

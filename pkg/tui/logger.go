@@ -11,8 +11,6 @@ import (
 	"github.com/lmittmann/tint"
 )
 
-const pkgPrefix = "github.com/jippi/dottie"
-
 func ParseLogLevel(name string, fallback slog.Level) slog.Level {
 	switch strings.ToUpper(name) {
 	case "DEBUG":

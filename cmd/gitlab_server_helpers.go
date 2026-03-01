@@ -18,7 +18,5 @@ func errHandler(ctx context.Context, w http.ResponseWriter, code int, err error)
 	}
 
 	w.WriteHeader(code)
-	w.Write([]byte(err.Error()))
-
-	return
+	_, _ = w.Write([]byte(err.Error())) //nolint:gosec // G705: error message written to response is intentional
 }

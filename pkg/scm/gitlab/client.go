@@ -145,11 +145,11 @@ func (client *Client) EvalContext(ctx context.Context) (scm.EvalContext, error) 
 
 func (client *Client) GetProjectFiles(ctx context.Context, project string, ref *string, files []string) (map[string]string, error) {
 	if len(project) == 0 {
-		return nil, errors.New("Missing required 'project' value for include")
+		return nil, errors.New("missing required 'project' value for include")
 	}
 
 	if len(files) == 0 {
-		return nil, fmt.Errorf("Missing list of files to include from project [%s]", project)
+		return nil, fmt.Errorf("missing list of files to include from project [%s]", project)
 	}
 
 	var (

@@ -93,12 +93,12 @@ func (l *HTTPURLLoader) Load(url string) (any, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
+		_ = resp.Body.Close()
 
 		return nil, fmt.Errorf("%s returned status code %d", url, resp.StatusCode)
 	}
 
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	return jsonschema.UnmarshalJSON(resp.Body)
 }

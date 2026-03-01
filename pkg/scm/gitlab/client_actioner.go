@@ -56,7 +56,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 			// Build the ExprLang VM program
 			// TODO(jippi): make this something generic/shared somewhere more central so we keep settings in sync
-			opts := []expr.Option{}
+			opts := make([]expr.Option, 0, 5)
 			opts = append(opts, expr.AsKind(reflect.TypeFor[string]().Kind()))
 			opts = append(opts, expr.Env(evalContext))
 			opts = append(opts, stdlib.FunctionRenamer)

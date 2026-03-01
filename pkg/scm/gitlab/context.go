@@ -183,7 +183,7 @@ func (c *Context) GetCodeOwners() scm.Actors {
 		// an eligible approver as part of the GitLab API response.
 		if rule.EligibleApprovers != nil {
 			for _, user := range rule.EligibleApprovers {
-				if user.Bot == true {
+				if user.Bot {
 					continue
 				}
 

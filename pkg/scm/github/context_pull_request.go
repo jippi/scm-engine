@@ -48,7 +48,7 @@ func (e ContextPullRequest) ModifiedFiles(patterns ...string) bool {
 }
 
 func (e ContextPullRequest) findModifiedFiles(patterns ...string) []string {
-	files := []string{}
+	files := make([]string, 0, len(e.Files))
 	for _, f := range e.Files {
 		files = append(files, f.Path)
 	}

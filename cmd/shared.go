@@ -116,7 +116,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	// Sanity check for having a configuration loaded
 	if cfg == nil {
-		return errors.New("cfg==nil; this is unexpected an error, please report!")
+		return errors.New("cfg==nil; this is unexpected an error, please report")
 	}
 
 	// Load any remote configuration files
@@ -133,7 +133,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 	// Lint the configuration file to catch any misconfigurations
 	if err := cfg.Lint(ctx, evalContext); err != nil {
-		return fmt.Errorf("Configuration failed validation: %w", err)
+		return fmt.Errorf("configuration failed validation: %w", err)
 	}
 
 	// Write the config to context so we can pull it out later

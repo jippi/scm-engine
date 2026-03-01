@@ -53,7 +53,7 @@ func (client *LabelClient) List(ctx context.Context) ([]*scm.Label, error) {
 			break
 		}
 
-		opts.ListOptions.Page = resp.NextPage
+		opts.Page = resp.NextPage
 	}
 
 	// Store cache

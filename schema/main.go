@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"cmp"
+	"context"
 	_ "embed"
 	"fmt"
 	"go/types"
@@ -67,7 +68,7 @@ func process(scm string) {
 		panic(err)
 	}
 
-	if err := os.WriteFile(getRootPath()+"/docs/"+scm+"/script-attributes.md", []byte(index.String()), 0o600); err != nil {
+	if err := os.WriteFile(getRootPath()+"/docs/"+scm+"/script-attributes.md", index.Bytes(), 0o600); err != nil {
 		panic(err)
 	}
 
@@ -103,7 +104,7 @@ func nest(props []*Property) {
 }
 
 func getRootPath() string {
-	path, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+	path, err := exec.CommandContext(context.Background(), "git", "rev-parse", "--show-toplevel").Output()
 	if err != nil {
 		panic(err)
 	}
@@ -128,22 +129,30 @@ func fieldHook(td *ast.Definition, fd *ast.FieldDefinition, f *modelgen.Field) (
 	tags.Delete("json")
 
 	if c := fd.Directives.ForName("internal"); c != nil {
-		tags.Set(&structtag.Tag{Key: "expr", Name: "-"})
+		if err := tags.Set(&structtag.Tag{Key: "expr", Name: "-"}); err != nil {
+			return nil, fmt.Errorf("failed to set expr tag: %w", err)
+		}
 	} else if c := fd.Directives.ForName("expr"); c != nil {
 		value := c.Arguments.ForName("key")
 
 		if value != nil {
-			tags.Set(&structtag.Tag{Key: "expr", Name: value.Value.Raw})
+			if err := tags.Set(&structtag.Tag{Key: "expr", Name: value.Value.Raw}); err != nil {
+				return nil, fmt.Errorf("failed to set expr tag: %w", err)
+			}
 		}
 	}
 
 	if c := fd.Directives.ForName("generated"); c != nil {
-		tags.Set(&structtag.Tag{Key: "graphql", Name: "-"})
+		if err := tags.Set(&structtag.Tag{Key: "graphql", Name: "-"}); err != nil {
+			return nil, fmt.Errorf("failed to set graphql tag: %w", err)
+		}
 	} else if c := fd.Directives.ForName("graphql"); c != nil {
 		value := c.Arguments.ForName("key")
 
 		if value != nil {
-			tags.Set(&structtag.Tag{Key: "graphql", Name: value.Value.Raw})
+			if err := tags.Set(&structtag.Tag{Key: "graphql", Name: value.Value.Raw}); err != nil {
+				return nil, fmt.Errorf("failed to set graphql tag: %w", err)
+			}
 		}
 	}
 
@@ -188,11 +197,15 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
 			}
 
 			if !strings.Contains(field.Tag, "expr:") {
-				tags.Set(&structtag.Tag{Key: "expr", Name: strcase.ToSnake(field.Name)})
+				if err := tags.Set(&structtag.Tag{Key: "expr", Name: strcase.ToSnake(field.Name)}); err != nil {
+					return b
+				}
 			}
 
 			if !strings.Contains(field.Tag, "graphql:") {
-				tags.Set(&structtag.Tag{Key: "graphql", Name: strcase.ToLowerCamel(field.Name)})
+				if err := tags.Set(&structtag.Tag{Key: "graphql", Name: strcase.ToLowerCamel(field.Name)}); err != nil {
+					return b
+				}
 			}
 
 			exprTags, err := tags.Get("expr")

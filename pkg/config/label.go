@@ -58,12 +58,12 @@ func (labels Labels) Evaluate(ctx context.Context, evalContext scm.EvalContext) 
 	for _, result := range results {
 		// Check labels has a proper name
 		if len(result.Name) == 0 {
-			return nil, errors.New("A label was generated with empty name, please check your configuration.")
+			return nil, errors.New("a label was generated with empty name, please check your configuration")
 		}
 
 		// Check uniqueness of labels
 		if _, ok := seen[result.Name]; ok {
-			return nil, fmt.Errorf("The label %q was generated multiple times, please check your configuration. Hint: If you use [compute] label type, you can use the 'uniq()' function (example: '| uniq()')", result.Name)
+			return nil, fmt.Errorf("the label %q was generated multiple times, please check your configuration. Hint: If you use [compute] label type, you can use the 'uniq()' function (example: '| uniq()')", result.Name)
 		}
 
 		seen[result.Name] = true
@@ -172,7 +172,7 @@ func (p *Label) Setup(evalContext scm.EvalContext) error {
 	if p.scriptCompiled == nil {
 		p.Color = tui.Replace(p.Color)
 
-		opts := []expr.Option{}
+		opts := make([]expr.Option, 0, 5)
 		opts = append(opts, scriptReturnType)
 		opts = append(opts, expr.Env(evalContext))
 		opts = append(opts, stdlib.FunctionRenamer)
@@ -188,7 +188,7 @@ func (p *Label) Setup(evalContext scm.EvalContext) error {
 	if p.skipIfCompiled == nil && len(p.SkipIf) > 0 {
 		p.Color = tui.Replace(p.Color)
 
-		opts := []expr.Option{}
+		opts := make([]expr.Option, 0, 5)
 		opts = append(opts, expr.AsBool())
 		opts = append(opts, expr.Env(evalContext))
 		opts = append(opts, stdlib.FunctionRenamer)
@@ -233,7 +233,7 @@ func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]sc
 	switch outputValue := output.(type) {
 	case bool:
 		if p.Strategy != ConditionalLabel {
-			return nil, errors.New("Script returned an unexpected boolean; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("script returned an unexpected boolean; did you forget the 'type: computed' on your label?")
 		}
 
 		result = append(result, p.resultForLabel(p.Name, outputValue))
@@ -241,7 +241,7 @@ func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]sc
 	// When using 'uniq' function, the result is a correct []string slice
 	case []string:
 		if p.Strategy != GenerateLabels {
-			return nil, errors.New("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("script returned an unexpected list of strings; did you forget the 'type: computed' on your label?")
 		}
 
 		for _, label := range outputValue {
@@ -251,7 +251,7 @@ func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]sc
 	// In some cases the slice can be of 'any' type, thats fine, as long as the underlying type is 'string'
 	case []any:
 		if p.Strategy != GenerateLabels {
-			return nil, errors.New("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("script returned an unexpected list of strings; did you forget the 'type: computed' on your label?")
 		}
 
 		for _, label := range outputValue {
@@ -260,7 +260,7 @@ func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]sc
 				result = append(result, p.resultForLabel(labelVal, true))
 
 			default:
-				return nil, fmt.Errorf("Script must return a list of strings but encountered a value of type %T (%v)", labelVal, labelVal)
+				return nil, fmt.Errorf("script must return a list of strings but encountered a value of type %T (%v)", labelVal, labelVal)
 			}
 		}
 

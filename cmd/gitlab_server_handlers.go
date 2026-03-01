@@ -22,7 +22,7 @@ func GitLabStatusHandler(w http.ResponseWriter, r *http.Request) {
 	slogctx.Debug(ctx, "GET /_status")
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("scm-engine status: OK\n\nNOTE: this is a static 'OK', no actual checks are being made"))
+	_, _ = w.Write([]byte("scm-engine status: OK\n\nNOTE: this is a static 'OK', no actual checks are being made"))
 }
 
 func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.HandlerFunc {
@@ -39,7 +39,7 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		if len(webhookSecret) > 0 {
 			theirSecret := r.Header.Get("X-Gitlab-Token")
 			if webhookSecret != theirSecret {
-				errHandler(ctx, w, http.StatusForbidden, errors.New("Missing or invalid X-Gitlab-Token header"))
+				errHandler(ctx, w, http.StatusForbidden, errors.New("missing or invalid X-Gitlab-Token header"))
 
 				return
 			}
@@ -47,7 +47,7 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 
 		// Validate content type
 		if r.Header.Get("Content-Type") != "application/json" {
-			errHandler(ctx, w, http.StatusNotAcceptable, errors.New("The request is not using Content-Type: application/json"))
+			errHandler(ctx, w, http.StatusNotAcceptable, errors.New("the request is not using Content-Type: application/json"))
 
 			return
 		}
@@ -62,7 +62,7 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 
 		// Ensure we have content in the POST body
 		if len(body) == 0 {
-			errHandler(ctx, w, http.StatusBadRequest, errors.New("The POST body is empty; expected a JSON payload"))
+			errHandler(ctx, w, http.StatusBadRequest, errors.New("the POST body is empty; expected a JSON payload"))
 		}
 
 		// Decode request payload
@@ -135,6 +135,6 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		}
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		_, _ = w.Write([]byte("OK"))
 	}
 }

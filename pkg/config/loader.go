@@ -11,7 +11,7 @@ import (
 
 // LoadFile loads and parses a GITLAB_LABELS file at the path specified.
 func LoadFile(path string) (*Config, error) {
-	f, err := os.Open(path)
+	f, err := os.Open(path) //nolint:gosec // intentional: loading user-specified config file
 	if err != nil {
 		return nil, err
 	}

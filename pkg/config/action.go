@@ -78,7 +78,7 @@ func (p *Action) Evaluate(ctx context.Context, evalContext scm.EvalContext) (boo
 }
 
 func (p *Action) Setup(evalContext scm.EvalContext) (*vm.Program, error) {
-	opts := []expr.Option{}
+	opts := make([]expr.Option, 0, 5)
 	opts = append(opts, expr.AsBool())
 	opts = append(opts, expr.Env(evalContext))
 	opts = append(opts, stdlib.FunctionRenamer)

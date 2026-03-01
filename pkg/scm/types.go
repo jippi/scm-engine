@@ -223,8 +223,6 @@ type PeriodicEvaluationMergeRequest struct {
 
 type EvalContextualizer struct{}
 
-func (e EvalContextualizer) _isEvalContext() {}
-
 type EvaluationResult struct {
 	// Name of the label being generated.
 	//

@@ -184,7 +184,7 @@ func TestAssignReviewers(t *testing.T) {
 			if tt.wantUpdate.ReviewerIDs != nil {
 				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
 				assert.Len(t, *update.ReviewerIDs, wantLimit)
-				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
+				assert.Equal(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
 			}
 		})
 	}
