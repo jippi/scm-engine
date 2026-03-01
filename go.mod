@@ -1,13 +1,13 @@
 module github.com/jippi/scm-engine
 
-go 1.24.9
+go 1.24.11
 
 require (
 	github.com/99designs/gqlgen v0.17.73
 	github.com/aquilax/truncate v1.0.1
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/expr-lang/expr v1.17.2
+	github.com/expr-lang/expr v1.17.8
 	github.com/fatih/structtag v1.2.0
 	github.com/golang-cz/devslog v0.0.13
 	github.com/google/go-github/v71 v71.0.0
