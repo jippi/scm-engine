@@ -75,5 +75,5 @@ require (
 	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/tools v0.47.0 // indirect
 	gopkg.in/dnaeon/go-vcr.v4 v4.0.2
-	modernc.org/b/v2 v2.1.2 // indirect
+	modernc.org/b/v2 v2.1.11 // indirect
 )
