@@ -20,7 +20,7 @@ linters:
     - errorlint
     - exhaustive
     - forcetypeassert
-    - gomodguard
+    - gomodguard_v2
     - gosec
     - govet
     - inamedparam

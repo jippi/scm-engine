@@ -18,7 +18,7 @@ func TestGitLabStatusHandler(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
 
-	GitLabStatusHandler(recorder, httptest.NewRequest(http.MethodGet, "/_status", nil))
+	GitLabStatusHandler(recorder, httptest.NewRequestWithContext(t.Context(), http.MethodGet, "/_status", nil))
 
 	require.Equal(t, http.StatusOK, recorder.Code)
 	require.Contains(t, recorder.Body.String(), "scm-engine status: OK")
@@ -52,7 +52,7 @@ func newWebhook(t *testing.T, secret string) func(string, map[string]string) *ht
 	handler := GitLabWebhookHandler(ctx, secret)
 
 	return func(body string, headers map[string]string) *httptest.ResponseRecorder {
-		req := httptest.NewRequest(http.MethodPost, "/gitlab", strings.NewReader(body)).WithContext(ctx)
+		req := httptest.NewRequestWithContext(ctx, http.MethodPost, "/gitlab", strings.NewReader(body))
 
 		for key, value := range headers {
 			req.Header.Set(key, value)
