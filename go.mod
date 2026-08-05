@@ -1,13 +1,13 @@
 module github.com/jippi/scm-engine
 
-go 1.24.3
+go 1.26.5
 
 require (
 	github.com/99designs/gqlgen v0.17.73
 	github.com/aquilax/truncate v1.0.1
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/expr-lang/expr v1.17.2
+	github.com/expr-lang/expr v1.17.7
 	github.com/fatih/structtag v1.2.0
 	github.com/golang-cz/devslog v0.0.13
 	github.com/google/go-github/v71 v71.0.0
@@ -68,12 +68,12 @@ require (
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/mod v0.24.0 // indirect
-	golang.org/x/sync v0.14.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/mod v0.37.0 // indirect
+	golang.org/x/sync v0.21.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/text v0.39.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
-	golang.org/x/tools v0.33.0 // indirect
+	golang.org/x/tools v0.47.0 // indirect
 	gopkg.in/dnaeon/go-vcr.v4 v4.0.2
 	modernc.org/b/v2 v2.1.2 // indirect
 )
