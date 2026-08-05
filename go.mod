@@ -23,7 +23,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
-	github.com/urfave/cli/v3 v3.10.1
+	github.com/urfave/cli/v2 v2.27.6
 	github.com/vektah/gqlparser/v2 v2.5.26
 	github.com/veqryn/slog-context v0.8.0
 	github.com/veqryn/slog-dedup v0.6.0
@@ -35,10 +35,7 @@ require (
 	gotest.tools/v3 v3.5.1
 )
 
-require (
-	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/urfave/cli/v2 v2.27.6 // indirect
-)
+require github.com/google/go-cmp v0.7.0 // indirect
 
 require (
 	github.com/agnivade/levenshtein v1.2.1 // indirect
