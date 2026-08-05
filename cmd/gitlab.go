@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/state"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var GitLab = &cli.Command{

@@ -12,7 +12,7 @@ import (
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/santhosh-tekuri/jsonschema/v6"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	slogctx "github.com/veqryn/slog-context"
 	"gopkg.in/yaml.v3"
 )
