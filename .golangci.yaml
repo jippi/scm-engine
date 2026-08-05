@@ -46,7 +46,7 @@ linters:
     # check exhaustiveness of enum switch statements
     - exhaustive
 
-    # checks for pointers to enclosing loop variables
+    # checks for pointers to enclosing loop variables (replaced exportloopref since Go 1.22)
     - copyloopvar
 
     # finds forced type assertions
@@ -85,6 +85,9 @@ linters:
 
     # Checks that package variables are not reassigned
     - reassign
+
+    # usetesting detects using os.Setenv instead of t.Setenv since Go1.17 (replaced tenv)
+    - usetesting
 
     # linter that makes you use a separate _test package
     - testpackage

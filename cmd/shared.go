@@ -6,9 +6,12 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"reflect"
+	"slices"
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
+	"github.com/jippi/scm-engine/pkg/integration/backstage"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/scm/github"
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
@@ -20,12 +23,17 @@ import (
 var sid = shortid.MustNew(1, shortid.DefaultABC, 2342)
 
 func getClient(ctx context.Context) (scm.Client, error) {
+	backstageClient, err := backstage.NewClient(ctx, state.BackstageURL(ctx), state.BackstageToken(ctx), nil)
+	if err != nil {
+		slogctx.Warn(ctx, "Backstage client is not available, actions requiring it will be skipped", slog.Any("error", err))
+	}
+
 	switch state.Provider(ctx) {
 	case "github":
 		return github.NewClient(ctx), nil
 
 	case "gitlab":
-		return gitlab.NewClient(ctx)
+		return gitlab.NewClient(ctx, backstageClient)
 
 	default:
 		return nil, fmt.Errorf("unknown provider %q - we only support 'github' and 'gitlab'", state.Provider(ctx))
@@ -104,14 +112,20 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 
 		file, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), configSourceRef)
 		if err != nil {
-			return fmt.Errorf("could not read remote config file: %w", err)
+			slogctx.Warn(ctx, "Could not read remote config file", slog.Any("error", err))
+		} else {
+			// Parse the file
+			cfg, err = config.ParseFile(file)
+			if err != nil { // error on parsing failures when present
+				return fmt.Errorf("could not parse config file: %w", err)
+			}
 		}
+	}
 
-		// Parse the file
-		cfg, err = config.ParseFile(file)
-		if err != nil {
-			return fmt.Errorf("could not parse config file: %w", err)
-		}
+	// Merge previously loaded config with Repository config
+	globalConfig := config.GlobalConfigFromContext(ctx) // the global config if previously loaded
+	if globalConfig != nil && cfg != nil {
+		cfg = globalConfig.Merge(cfg)
 	}
 
 	// Sanity check for having a configuration loaded
@@ -137,6 +151,7 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	}
 
 	// Write the config to context so we can pull it out later
+	// If a global config file was set, this overrides the global config with the merged global and repository config
 	ctx = config.WithConfig(ctx, cfg)
 
 	//
@@ -170,10 +185,12 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 		remove scm.LabelOptions
 	)
 
+	existingLabels := evalContext.GetLabels()
+
 	for _, e := range labels {
-		if e.Matched {
+		if e.Matched && !slices.Contains(existingLabels, e.Name) {
 			add = append(add, e.Name)
-		} else {
+		} else if !e.Matched && slices.Contains(existingLabels, e.Name) {
 			remove = append(remove, e.Name)
 		}
 	}
@@ -182,9 +199,14 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 	// Post-evaluation sync of actions
 	//
 
-	update := &scm.UpdateMergeRequestOptions{
-		AddLabels:    &add,
-		RemoveLabels: &remove,
+	update := &scm.UpdateMergeRequestOptions{}
+
+	if len(add) > 0 {
+		update.AddLabels = &add
+	}
+
+	if len(remove) > 0 {
+		update.RemoveLabels = &remove
 	}
 
 	slogctx.Info(ctx, "Applying actions")
@@ -203,6 +225,12 @@ func ProcessMR(ctx context.Context, client scm.Client, cfg *config.Config, event
 }
 
 func updateMergeRequest(ctx context.Context, client scm.Client, update *scm.UpdateMergeRequestOptions) error {
+	if update == nil || reflect.DeepEqual(update, &scm.UpdateMergeRequestOptions{}) {
+		slogctx.Info(ctx, "No changes to apply to Merge Request")
+
+		return nil
+	}
+
 	if state.IsDryRun(ctx) {
 		slogctx.Info(ctx, "In dry-run, dumping the update struct we would send to GitLab", slog.Any("changes", update))
 

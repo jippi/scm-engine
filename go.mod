@@ -20,7 +20,7 @@ require (
 	github.com/muesli/termenv v0.16.0
 	github.com/samber/slog-multi v1.4.0
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/urfave/cli/v2 v2.27.6
@@ -32,7 +32,10 @@ require (
 	gitlab.com/gitlab-org/api/client-go v0.128.0
 	golang.org/x/oauth2 v0.30.0
 	gopkg.in/yaml.v3 v3.0.1
+	gotest.tools/v3 v3.5.1
 )
+
+require github.com/google/go-cmp v0.7.0 // indirect
 
 require (
 	github.com/agnivade/levenshtein v1.2.1 // indirect
@@ -45,6 +48,7 @@ require (
 	github.com/charmbracelet/x/term v0.2.1 // indirect
 	github.com/coder/websocket v1.8.13 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
+	github.com/datolabs-io/go-backstage/v3 v3.0.0
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
@@ -70,5 +74,6 @@ require (
 	golang.org/x/text v0.25.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/tools v0.33.0 // indirect
+	gopkg.in/dnaeon/go-vcr.v4 v4.0.2
 	modernc.org/b/v2 v2.1.2 // indirect
 )

@@ -2,14 +2,19 @@ package gitlab_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/jippi/scm-engine/pkg/config"
+	"github.com/jippi/scm-engine/pkg/integration/backstage"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+
+	"github.com/jippi/scm-engine/testutils"
 )
 
 type evalContextMock struct {
@@ -76,7 +81,27 @@ func (c *evalContextMock) GetReviewers() scm.Actors {
 	return nil
 }
 
-func TestAssignReviewers(t *testing.T) {
+func (c *evalContextMock) GetAuthor() scm.Actor {
+	args := c.Called()
+
+	if actor, ok := args.Get(0).(scm.Actor); ok {
+		return actor
+	}
+
+	return scm.Actor{}
+}
+
+func (c *evalContextMock) GetLabels() []string {
+	args := c.Called()
+
+	if labels, ok := args.Get(0).([]string); ok {
+		return labels
+	}
+
+	return nil
+}
+
+func TestAssignReviewers_codeowners(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -88,7 +113,7 @@ func TestAssignReviewers(t *testing.T) {
 		wantErr                   error
 	}{
 		{
-			name: "should not error on no source provided",
+			name: "should default to codeowners when no source provided",
 			step: config.ActionStep{
 				"limit": 2,
 			},
@@ -174,7 +199,7 @@ func TestAssignReviewers(t *testing.T) {
 			update := &scm.UpdateMergeRequestOptions{}
 			step := tt.step
 
-			ctx := state.WithDryRun(context.Background(), false)
+			ctx := state.WithDryRun(t.Context(), false)
 			ctx = state.WithRandomSeed(ctx, 1)
 
 			err := client.AssignReviewers(ctx, evalContext, update, step)
@@ -183,6 +208,169 @@ func TestAssignReviewers(t *testing.T) {
 
 			if tt.wantUpdate.ReviewerIDs != nil {
 				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
+				assert.Len(t, *update.ReviewerIDs, wantLimit)
+				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
+			}
+		})
+	}
+}
+
+func TestAssignReviewers_static(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name                     string
+		step                     config.ActionStep
+		mockGetReviewersResponse scm.Actors
+		wantUpdate               *scm.UpdateMergeRequestOptions
+		wantErr                  error
+	}{
+		{
+			name: "should assign static user ids",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100", "200", "300"},
+				"limit":    2,
+			},
+			mockGetReviewersResponse: nil,
+			wantUpdate: &scm.UpdateMergeRequestOptions{
+				ReviewerIDs: scm.Ptr([]int{100, 200}),
+			},
+			wantErr: nil,
+		},
+		{
+			name: "should assign all static user ids when limit exceeds count",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100", "200"},
+				"limit":    5,
+			},
+			mockGetReviewersResponse: nil,
+			wantUpdate: &scm.UpdateMergeRequestOptions{
+				ReviewerIDs: scm.Ptr([]int{100, 200}),
+			},
+			wantErr: nil,
+		},
+		{
+			name: "should error when user_ids is missing for static source",
+			step: config.ActionStep{
+				"source": "static",
+			},
+			mockGetReviewersResponse: nil,
+			wantUpdate:               &scm.UpdateMergeRequestOptions{},
+			wantErr:                  errors.New("Required 'step' key 'user_ids' is missing"),
+		},
+		{
+			name: "should not assign if reviewers already exist",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100", "200"},
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "50", Username: "existing"},
+			},
+			wantUpdate: &scm.UpdateMergeRequestOptions{},
+			wantErr:    nil,
+		},
+		{
+			name: "should assign single user with default limit",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100", "200", "300"},
+			},
+			mockGetReviewersResponse: nil,
+			wantUpdate: &scm.UpdateMergeRequestOptions{
+				ReviewerIDs: scm.Ptr([]int{100}),
+			},
+			wantErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			evalContext := new(evalContextMock)
+			evalContext.On("GetReviewers").Return(tt.mockGetReviewersResponse)
+
+			client := &gitlab.Client{}
+			update := &scm.UpdateMergeRequestOptions{}
+
+			ctx := state.WithDryRun(t.Context(), false)
+			ctx = state.WithRandomSeed(ctx, 1)
+
+			err := client.AssignReviewers(ctx, evalContext, update, tt.step)
+
+			assert.Equal(t, tt.wantErr, err)
+
+			if tt.wantUpdate.ReviewerIDs != nil {
+				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
+				require.NotNil(t, update.ReviewerIDs)
+				assert.Len(t, *update.ReviewerIDs, wantLimit)
+				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
+			}
+		})
+	}
+}
+
+func TestAssignReviewers_backstage(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name                     string
+		step                     config.ActionStep
+		mockGetReviewersResponse scm.Actors
+		wantUpdate               *scm.UpdateMergeRequestOptions
+		wantErr                  error
+	}{
+		{
+			name: "should skip adding author to reviewers",
+			step: config.ActionStep{
+				"source": "backstage",
+			},
+			mockGetReviewersResponse: scm.Actors{},
+			wantUpdate: &scm.UpdateMergeRequestOptions{
+				ReviewerIDs: scm.Ptr([]int{2}),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			evalContext := new(evalContextMock)
+			evalContext.On("GetAuthor").Return(scm.Actor{ID: "1", Username: "user1"})
+			evalContext.On("GetReviewers").Return(tt.mockGetReviewersResponse)
+
+			ctx := state.WithDryRun(t.Context(), false)
+			ctx = state.WithBaseURL(ctx, "https://gitlab.example.com")
+			ctx = state.WithToken(ctx, "token")
+			ctx = state.WithProjectID(ctx, "group/test-system")
+			ctx = state.WithRandomSeed(ctx, 1)
+
+			r := testutils.GetRecorder(t)
+			defer r.Stop()
+
+			backstageClient, err := backstage.NewClient(ctx, "https://backstage.example.com", "", r.GetDefaultClient())
+			if err != nil {
+				t.Fatalf("failed to create backstage client: %v", err)
+			}
+
+			client, err := gitlab.NewClient(ctx, backstageClient)
+			if err != nil {
+				t.Fatalf("failed to create gitlab client: %v", err)
+			}
+
+			update := &scm.UpdateMergeRequestOptions{}
+
+			err = client.AssignReviewers(ctx, evalContext, update, tt.step)
+
+			assert.Equal(t, tt.wantErr, err)
+
+			if tt.wantUpdate.ReviewerIDs != nil {
+				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
+				require.NotNil(t, update.ReviewerIDs)
 				assert.Len(t, *update.ReviewerIDs, wantLimit)
 				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
 			}

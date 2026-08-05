@@ -3,6 +3,7 @@ package gitlab
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/jippi/scm-engine/pkg/scm"
 	go_gitlab "gitlab.com/gitlab-org/api/client-go"
@@ -21,6 +22,26 @@ func ParseID(id interface{}) (string, error) { //nolint:varnamelen
 	default:
 		return "", fmt.Errorf("invalid ID type %#v, the ID must be an int or a string", id)
 	}
+}
+
+// ParseProjectName returns the project name from a project slug.
+//
+// The project slug must be in the format of group/project.
+func ParseProjectName(id interface{}) (string, error) {
+	projectID, err := ParseID(id)
+	if err != nil {
+		return "", err
+	}
+
+	projectParts := strings.Split(projectID, "/")
+	if len(projectParts) < 2 {
+		return "", fmt.Errorf("invalid project ID %s, the ID must be a group/project", projectID)
+	}
+
+	// the project name is the last part of the project ID.
+	projectName := projectParts[len(projectParts)-1]
+
+	return projectName, nil
 }
 
 // Convert a GitLab native response to a SCM agnostic one

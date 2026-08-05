@@ -6,6 +6,7 @@ import (
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetCodeOwners(t *testing.T) {
@@ -92,6 +93,77 @@ func TestGetCodeOwners(t *testing.T) {
 			}
 			owners := ctx.GetCodeOwners()
 			assert.Equal(t, tt.expectedOwners, owners)
+		})
+	}
+}
+
+func TestTotalLinesAddedAndDeleted(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name            string
+		mr              *gitlab.ContextMergeRequest
+		expectedAdded   int
+		expectedDeleted int
+	}{
+		{
+			name:            "Empty diff stats",
+			mr:              &gitlab.ContextMergeRequest{},
+			expectedAdded:   0,
+			expectedDeleted: 0,
+		},
+		{
+			name: "Single file",
+			mr: &gitlab.ContextMergeRequest{
+				DiffStats: []gitlab.ContextDiffStat{
+					{Path: "file1.go", Additions: 10, Deletions: 5},
+				},
+			},
+			expectedAdded:   10,
+			expectedDeleted: 5,
+		},
+		{
+			name: "Multiple files",
+			mr: &gitlab.ContextMergeRequest{
+				DiffStats: []gitlab.ContextDiffStat{
+					{Path: "file1.go", Additions: 10, Deletions: 5},
+					{Path: "file2.go", Additions: 20, Deletions: 3},
+					{Path: "file3.go", Additions: 5, Deletions: 12},
+				},
+			},
+			expectedAdded:   35,
+			expectedDeleted: 20,
+		},
+		{
+			name: "Files with zero additions",
+			mr: &gitlab.ContextMergeRequest{
+				DiffStats: []gitlab.ContextDiffStat{
+					{Path: "file1.go", Additions: 0, Deletions: 10},
+					{Path: "file2.go", Additions: 0, Deletions: 5},
+				},
+			},
+			expectedAdded:   0,
+			expectedDeleted: 15,
+		},
+		{
+			name: "Files with zero deletions",
+			mr: &gitlab.ContextMergeRequest{
+				DiffStats: []gitlab.ContextDiffStat{
+					{Path: "file1.go", Additions: 10, Deletions: 0},
+					{Path: "file2.go", Additions: 5, Deletions: 0},
+				},
+			},
+			expectedAdded:   15,
+			expectedDeleted: 0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			require.Equal(t, tt.expectedAdded, tt.mr.TotalLinesAdded())
+			require.Equal(t, tt.expectedDeleted, tt.mr.TotalLinesDeleted())
 		})
 	}
 }

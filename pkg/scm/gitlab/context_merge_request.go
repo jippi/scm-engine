@@ -270,6 +270,24 @@ func (e ContextMergeRequest) ModifiedFiles(patterns ...string) bool {
 	return len(e.findModifiedFiles(patterns...)) > 0
 }
 
+func (e ContextMergeRequest) TotalLinesAdded() int {
+	total := 0
+	for _, f := range e.DiffStats {
+		total += f.Additions
+	}
+
+	return total
+}
+
+func (e ContextMergeRequest) TotalLinesDeleted() int {
+	total := 0
+	for _, f := range e.DiffStats {
+		total += f.Deletions
+	}
+
+	return total
+}
+
 func (e ContextMergeRequest) findModifiedFiles(patterns ...string) []string {
 	files := []string{}
 	for _, f := range e.DiffStats {

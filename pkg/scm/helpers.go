@@ -203,3 +203,24 @@ func buildPatternRegex(pattern string) (*regexp.Regexp, error) {
 
 	return regexp.Compile(regexString.String())
 }
+
+func MergeSlices[T any](aSlice []T, bSlice []T, uniqFunc func(T) string) []T {
+	uniques := map[string]bool{}
+	result := []T{}
+
+	for _, item := range aSlice {
+		uniques[uniqFunc(item)] = true
+
+		result = append(result, item)
+	}
+
+	for _, item := range bSlice {
+		if _, ok := uniques[uniqFunc(item)]; !ok {
+			uniques[uniqFunc(item)] = true
+
+			result = append(result, item)
+		}
+	}
+
+	return result
+}

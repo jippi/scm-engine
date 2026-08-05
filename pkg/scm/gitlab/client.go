@@ -14,6 +14,7 @@ import (
 
 	"github.com/aquilax/truncate"
 	"github.com/hasura/go-graphql-client"
+	"github.com/jippi/scm-engine/pkg/integration/backstage"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	slogctx "github.com/veqryn/slog-context"
@@ -62,16 +63,19 @@ type Client struct {
 
 	labels        *LabelClient
 	mergeRequests *MergeRequestClient
+	backstage     *backstage.Client
+
+	httpClient *http.Client // used for testing
 }
 
-// NewClient creates a new GitLab client
-func NewClient(ctx context.Context) (*Client, error) {
+// NewClient creates a new GitLab client with an optional backstage client
+func NewClient(ctx context.Context, backstageClient *backstage.Client) (*Client, error) {
 	client, err := go_gitlab.NewClient(state.Token(ctx), go_gitlab.WithBaseURL(state.BaseURL(ctx)))
 	if err != nil {
 		return nil, err
 	}
 
-	return &Client{wrapped: client}, nil
+	return &Client{wrapped: client, backstage: backstageClient}, nil
 }
 
 // Labels returns a client target at managing labels/tags

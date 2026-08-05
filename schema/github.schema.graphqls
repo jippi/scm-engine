@@ -423,9 +423,9 @@ type ContextPullRequest {
     @graphql(key: "files(first:100)")
     @internal
 
-  "Information about the first commit made"
+  "Information about the first (oldest) commit made"
   FirstCommit: ContextCommit @generated
-  "Information about the last commit made"
+  "Information about the last (newest) commit made"
   LastCommit: ContextCommit @generated
   "Duration between first and last commit made"
   TimeBetweenFirstAndLastCommit: Duration @generated
@@ -436,10 +436,10 @@ type ContextPullRequest {
   "Labels available on this project"
   Labels: [ContextLabel!] @generated
 
-  ResponseFirstCommits: ContextCommitsNode
+  ResponseOldestCommits: ContextCommitsNode
     @internal
     @graphql(key: "first_commit: commits(first:1)")
-  ResponseLastCommits: ContextCommitsNode
+  ResponseNewestCommits: ContextCommitsNode
     @internal
     @graphql(key: "last_commit: commits(last:1)")
   ResponseLabels: ContextLabelConnection

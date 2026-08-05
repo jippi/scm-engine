@@ -381,9 +381,9 @@ type ContextMergeRequest {
   "All notes on this MR"
   Notes: [ContextNote!] @generated
 
-  "Information about the first commit made"
+  "Information about the first (oldest) commit made"
   FirstCommit: ContextCommit @generated
-  "Information about the last commit made"
+  "Information about the last (newest) commit made"
   LastCommit: ContextCommit @generated
   "Duration between first and last commit made"
   TimeBetweenFirstAndLastCommit: Duration @generated
@@ -400,12 +400,15 @@ type ContextMergeRequest {
   CurrentReviewers: ContextUsersNode @internal @graphql(key: "reviewers")
   CurrentUser: ContextUser! @generated @internal
   ResponseLabels: ContextLabelNode @internal @graphql(key: "labels(first: 200)")
-  ResponseFirstCommits: ContextCommitsNode
+  # Note: commits() seems to be in descending order, meaning that:
+  # - The "last:1" commit is the oldest one, which we refer to as the "first commit on the MR"
+  # - The "first:1" commit is the newest one, which we refer to as the "last commit on the MR"
+  ResponseOldestCommits: ContextCommitsNode
     @internal
-    @graphql(key: "first_commit: commits(first:1)")
-  ResponseLastCommits: ContextCommitsNode
+    @graphql(key: "oldest_commit: commits(last:1)")
+  ResponseNewestCommits: ContextCommitsNode
     @internal
-    @graphql(key: "last_commit: commits(last:1)")
+    @graphql(key: "newest_commit: commits(first:1)")
   ResponseNotes: ContextNotesNode @internal @graphql(key: "notes(last: 10)")
 }
 

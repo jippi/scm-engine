@@ -1,0 +1,67 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: backstage.example.com
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Accept:
+                - application/json
+            Authorization:
+                - REDACTED
+        url: https://backstage.example.com/api/catalog/entities?fields=spec.owner&filter=kind%3Dsystem%2Cmetadata.name%3Dtest-system&filter=kind%3Dsystem%2Cmetadata.annotations.gitlab.com%2Fproject%3Dtest-system
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: 57
+        uncompressed: false
+        body: '[{"spec":{"owner":"group:default/test-group"}}]'
+        status: 200 OK
+        code: 200
+        duration: 454.200208ms
+    - id: 1
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: backstage.example.com
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Accept:
+                - application/json
+            Authorization:
+                - REDACTED
+        url: https://backstage.example.com/api/catalog/entities?filter=kind%3Duser%2Crelations.memberof%3Dgroup%3Adefault%2Ftest-group
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: -1
+        uncompressed: true
+        body: '[{"metadata":{"namespace":"default","annotations":{"gitlab.com/user_id":"1"},"name":"test-user","labels":{},"uid":"00000000-0000-0000-0000-000000000000","etag":"0"},"apiVersion":"backstage.io/v1alpha1","kind":"User","spec":{"profile":{"displayName":"Test User","email":"test-user@example.com"}}},{"metadata":{"namespace":"default","annotations":{"gitlab.com/user_id":"2"},"name":"test-user-2","labels":{},"uid":"00000000-0000-0000-0000-000000000002","etag":"2"},"apiVersion":"backstage.io/v1alpha1","kind":"User","spec":{"profile":{"displayName":"Test User 2","email":"test-user-2@example.com"}}}]'
+        status: 200 OK
+        code: 200
+        duration: 458.236667ms

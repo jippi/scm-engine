@@ -4,6 +4,10 @@ The default configuration filename is `.scm-engine.yml`, either in current worki
 
 The file path can be changed via `--config` CLI flag and `#!css $SCM_ENGINE_CONFIG_FILE` environment variable.
 
+A global configuration file can be specified via the `--global-config` CLI flag and `#!css $SCM_ENGINE_GLOBAL_CONFIG_FILE` environment variable.
+
+The global configuration file is optional, and if specified, the repository's configuration will be merged on top of the global configuration. This means that includes, actions, and labels in the repository configuration will be appended to what is set in the global configuration.
+
 ## `ignore_activity_from` {#ignore_activity_from data-toc-label="ignore_activity_from"}
 
 !!! question "What is 'activity'?"

@@ -39,12 +39,15 @@ type EvalContext interface {
 	TrackActionGroupExecution(name string)
 	GetCodeOwners() Actors
 	GetReviewers() Actors
+	GetAuthor() Actor
+	GetLabels() []string
 }
 
 type ActionStep interface {
 	RequiredInt(name string) (int, error)
 	RequiredString(name string) (string, error)
 	RequiredStringEnum(name string, values ...string) (string, error)
+	RequiredStringSlice(name string) ([]string, error)
 	OptionalInt(name string, fallback int) (int, error)
 	OptionalString(name, fallback string) (string, error)
 	OptionalStringEnum(name string, fallback string, values ...string) (string, error)

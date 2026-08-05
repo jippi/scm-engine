@@ -1,0 +1,35 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: backstage.example.com
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Accept:
+                - application/json
+            Authorization:
+                - REDACTED
+        url: https://backstage.example.com/api/catalog/entities/by-name/user/default/missing-user
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: 233
+        uncompressed: false
+        body: '{"error":{"name":"NotFoundError","message":"No entity named ''missing-user'' found, with kind ''user'' in namespace ''default''"},"request":{"method":"GET","url":"/entities/by-name/user/default/missing-user"},"response":{"statusCode":404}}'
+        status: 404 Not Found
+        code: 404
+        duration: 452.979083ms

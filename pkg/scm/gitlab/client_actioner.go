@@ -90,7 +90,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		update.Description = &body
 
 	case "add_label":
-		name, err := step.RequiredString("name")
+		name, err := step.RequiredString("label")
 		if err != nil {
 			return err
 		}
@@ -105,7 +105,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		update.AddLabels = &tmp
 
 	case "remove_label":
-		name, err := step.RequiredString("name")
+		name, err := step.RequiredString("label")
 		if err != nil {
 			return err
 		}
@@ -117,7 +117,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 		tmp := append(*labels, name)
 
-		update.AddLabels = &tmp
+		update.RemoveLabels = &tmp
 
 	case "close":
 		update.StateEvent = scm.Ptr("close")
