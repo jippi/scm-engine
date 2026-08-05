@@ -157,6 +157,39 @@ This key controls what kind of action that should be taken.
         label: example
       ```
 
+* `#!yaml assign_reviewers` to assign reviewers to the Merge Request
+
+      Reviewers are only assigned when the Merge Request has no reviewers yet, so
+      re-running `scm-engine` will not keep adding people. The Merge Request author
+      is never assigned as their own reviewer.
+
+      *Additional fields:*
+
+      - (optional) `#!css source` Where to take the eligible reviewers from. Defaults to `codeowners`.
+
+          * `#!yaml codeowners` use the Code Owners that may approve the Merge Request.
+          * `#!yaml backstage` use the owners of the project in the [Backstage](https://backstage.io/) catalog. Requires `--backstage-url` and `--backstage-token`; the action is skipped with a warning when they are not configured.
+          * `#!yaml static` use the user IDs listed in `user_ids`.
+
+      - (optional) `#!css user_ids` A list of user IDs to pick from. Required when `source` is `static`, ignored otherwise.
+      - (optional) `#!css limit` The maximum number of reviewers to assign. Defaults to `1`.
+      - (optional) `#!css mode` How reviewers are picked from the eligible set. Only `random` is supported, which is also the default.
+
+      ```{.yaml title="'assign_reviewers' example"}
+      - action: assign_reviewers
+        source: codeowners
+        limit: 2
+      ```
+
+      ```{.yaml title="'assign_reviewers' with static users example"}
+      - action: assign_reviewers
+        source: static
+        user_ids:
+          - "100"
+          - "200"
+        limit: 1
+      ```
+
 * `#!yaml update_description` updates the Merge Request Description
 
       *Additional fields:*

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"strings"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/jippi/scm-engine/pkg/scm"
@@ -173,55 +172,66 @@ func (c *Config) Merge(other *Config) *Config {
 		})
 	}
 
-	// Merge includes, but skip adding duplicate files under a project/ref
+	// Merge includes, but skip adding duplicate files under a project/ref.
+	//
+	// Both the includes and the files within them keep first-seen order: the
+	// maps below are only used for de-duplication, never for iteration, since
+	// ranging over a map would make the merged config order random.
 	if c.Includes != nil || other.Includes != nil {
-		includes := map[string]map[string]*bool{}
+		var (
+			order = make([]string, 0, len(c.Includes)+len(other.Includes))
+			merge = make(map[string]*mergedInclude, len(c.Includes)+len(other.Includes))
+		)
 
-		for _, include := range c.Includes {
-			for _, file := range include.Files {
-				if _, ok := includes[key(include.Project, include.Ref)]; !ok {
-					includes[key(include.Project, include.Ref)] = map[string]*bool{}
+		for _, includes := range [][]Include{c.Includes, other.Includes} {
+			for _, include := range includes {
+				mapKey := key(include.Project, include.Ref)
+
+				entry, ok := merge[mapKey]
+				if !ok {
+					entry = &mergedInclude{
+						project:   include.Project,
+						ref:       include.Ref,
+						seenFiles: make(map[string]struct{}, len(include.Files)),
+					}
+					merge[mapKey] = entry
+					order = append(order, mapKey)
 				}
 
-				includes[key(include.Project, include.Ref)][file] = nil
+				for _, file := range include.Files {
+					if _, seen := entry.seenFiles[file]; seen {
+						continue
+					}
+
+					entry.seenFiles[file] = struct{}{}
+					entry.files = append(entry.files, file)
+				}
 			}
 		}
 
-		for _, include := range other.Includes {
-			for _, file := range include.Files {
-				if _, ok := includes[key(include.Project, include.Ref)]; !ok {
-					includes[key(include.Project, include.Ref)] = map[string]*bool{}
-				}
+		cfg.Includes = make([]Include, 0, len(order))
 
-				includes[key(include.Project, include.Ref)][file] = nil
-			}
-		}
-
-		cfg.Includes = make([]Include, 0, len(includes))
-
-		for key, fileMap := range includes {
-			keyParts := strings.Split(key, ":")
-			project := keyParts[0]
-
-			var ref *string
-			if refStr := keyParts[1]; refStr != "" {
-				ref = scm.Ptr(refStr)
-			}
-
-			files := make([]string, 0, len(fileMap))
-			for file := range fileMap {
-				files = append(files, file)
-			}
+		for _, mapKey := range order {
+			entry := merge[mapKey]
 
 			cfg.Includes = append(cfg.Includes, Include{
-				Project: project,
-				Ref:     ref,
-				Files:   files,
+				Project: entry.project,
+				Ref:     entry.ref,
+				Files:   entry.files,
 			})
 		}
 	}
 
 	return cfg
+}
+
+// mergedInclude accumulates the files seen for a single project/ref pair while
+// merging two configurations, keeping the files in the order they were seen.
+type mergedInclude struct {
+	project   string
+	ref       *string
+	files     []string
+	seenFiles map[string]struct{}
 }
 
 func key(project string, ref *string) string {

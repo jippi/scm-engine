@@ -27,6 +27,18 @@ var actions = []actionList{
 	{name: "update_description", instance: UpdateDescriptionAction{}},
 }
 
+// ActionNames returns the name of every action that may be used in the
+// `actions[].if.then[].action` key, in the order they are registered.
+func ActionNames() []string {
+	names := make([]string, 0, len(actions))
+
+	for _, action := range actions {
+		names = append(names, action.name)
+	}
+
+	return names
+}
+
 type BaseAction struct {
 	// The action to take
 	//

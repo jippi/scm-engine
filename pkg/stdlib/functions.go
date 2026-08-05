@@ -20,10 +20,17 @@ var FilepathDir = expr.Function(
 	filepath.Dir, // string => string
 )
 
+// UniqSlice returns a sorted copy of in with duplicate values removed.
+//
+// The input is cloned first: sorting in place would reorder the slice the
+// caller handed us, which for script functions is the evaluation context
+// itself (e.g. the Merge Request label list).
 func UniqSlice[T cmp.Ordered](in []T) []T {
-	slices.Sort(in)
+	out := slices.Clone(in)
 
-	return slices.Compact(in)
+	slices.Sort(out)
+
+	return slices.Compact(out)
 }
 
 // Uniq takes a list of strings or interface{}, sorts them
@@ -83,7 +90,7 @@ var LimitPathDepthTo = expr.Function(
 			return input, nil
 		}
 
-		return strings.Join(chunks[0:length-1], "/"), nil // nosemgrep
+		return strings.Join(chunks[0:length], "/"), nil // nosemgrep
 	},
 	new(func(string, int) string), // (string, int) => string
 )
