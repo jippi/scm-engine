@@ -102,9 +102,18 @@
               "source": {
                 "type": "string",
                 "enum": [
-                  "codeowners"
+                  "codeowners",
+                  "backstage",
+                  "static"
                 ],
                 "description": "The source of the reviewers"
+              },
+              "user_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "description": "The static user IDs set for source=static"
               },
               "limit": {
                 "type": "integer",
