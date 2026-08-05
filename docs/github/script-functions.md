@@ -4,6 +4,16 @@
 
 ## pull_request
 
+### `pull_request.is_approved() -> boolean` {: #pull_request.is_approved data-toc-label="is_approved"}
+
+Returns wether the Pull Request review decision is `APPROVED`.
+
+A Pull Request that is awaiting review, or that has changes requested, is not approved.
+
+```css
+pull_request.is_approved()
+```
+
 ### `pull_request.state_is(string...) -> boolean` {: #pull_request.state_is data-toc-label="state_is"}
 
 Check if the `pull_request` state is any of the provided states

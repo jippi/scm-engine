@@ -93,6 +93,27 @@ merge_request.has_activity_within("7d")
 merge_request.has_activity_within(duration("7d"))
 ```
 
+### `merge_request.has_any_activity_within(duration|string...) -> boolean` {: #merge_request.has_any_activity_within data-toc-label="has_any_activity_within"}
+
+!!! info "This function *INCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_user_activity_within`](#merge_request.has_user_activity_within) if you want to exclude those"
+
+Return wether **any** activity has happened with the provided duration, including bots and the `scm-engine` account.
+
+[`merge_request.has_activity_within`](#merge_request.has_activity_within) is an alias for this function.
+
+*Activity* is defined as:
+
+- The Merge Request `updated_at` timestamp being within the duration.
+- Commits pushed to the Merge Request branch.
+- Comments on the Merge Request itself (e.g. reviews and comments).
+
+Users configured in [`ignore_activity_from`](../configuration.md#ignore_activity_from) are not considered.
+
+```css
+merge_request.has_any_activity_within("7d")
+merge_request.has_any_activity_within(duration("7d"))
+```
+
 ### `merge_request.has_no_activity_within(duration|string...) -> boolean` {: #merge_request.has_no_activity_within data-toc-label="has_no_activity_within"}
 
 !!! info "This function *INCLUDE* changes made by `scm-engine` and other bots, use [`merge_request.has_no_user_activity_within`](#merge_request.has_no_user_activity_within) if you want to exclude those"
@@ -107,6 +128,22 @@ Return wether **no** activity has happened with the provided duration, including
 ```css
 merge_request.has_no_activity_within("7d")
 merge_request.has_no_activity_within(duration("7d"))
+```
+
+### `merge_request.total_lines_added() -> int` {: #merge_request.total_lines_added data-toc-label="total_lines_added"}
+
+Returns the total number of lines added across all files changed in the Merge Request.
+
+```css
+merge_request.total_lines_added() > 500
+```
+
+### `merge_request.total_lines_deleted() -> int` {: #merge_request.total_lines_deleted data-toc-label="total_lines_deleted"}
+
+Returns the total number of lines deleted across all files changed in the Merge Request.
+
+```css
+(merge_request.total_lines_added() + merge_request.total_lines_deleted()) > 1000
 ```
 
 ### `merge_request.modified_files(string...) -> boolean` {: #merge_request.modified_files data-toc-label="modified_files"}
