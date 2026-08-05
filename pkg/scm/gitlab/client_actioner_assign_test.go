@@ -261,10 +261,11 @@ func TestAssignReviewers_static(t *testing.T) {
 			wantErr:                  errors.New("Required 'step' key 'user_ids' is missing"),
 		},
 		{
-			name: "should not assign if reviewers already exist",
+			name: "should not assign if list members already satisfy the limit",
 			step: config.ActionStep{
 				"source":   "static",
-				"user_ids": []string{"100", "200"},
+				"user_ids": []string{"50", "100"},
+				"limit":    1,
 			},
 			mockGetReviewersResponse: scm.Actors{
 				{ID: "50", Username: "existing"},
@@ -309,6 +310,199 @@ func TestAssignReviewers_static(t *testing.T) {
 				assert.Len(t, *update.ReviewerIDs, wantLimit)
 				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
 			}
+		})
+	}
+}
+
+func TestAssignReviewers_staticMode(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name                     string
+		step                     config.ActionStep
+		mockGetReviewersResponse scm.Actors
+		wantReviewerIDs          *[]int
+		wantErr                  error
+	}{
+		{
+			name: "should assign listed user when no reviewers exist",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100"},
+				"mode":     "static",
+			},
+			mockGetReviewersResponse: nil,
+			wantReviewerIDs:          scm.Ptr([]int{100}),
+			wantErr:                  nil,
+		},
+		{
+			name: "should assign listed user and preserve existing reviewers",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100"},
+				"mode":     "static",
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "50", Username: "existing"},
+			},
+			wantReviewerIDs: scm.Ptr([]int{50, 100}),
+			wantErr:         nil,
+		},
+		{
+			name: "should be a no-op when listed user is already a reviewer",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"50"},
+				"mode":     "static",
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "50", Username: "existing"},
+			},
+			wantReviewerIDs: nil,
+			wantErr:         nil,
+		},
+		{
+			name: "should dedup listed users against existing reviewers",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"50", "100"},
+				"mode":     "static",
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "50", Username: "existing"},
+			},
+			wantReviewerIDs: scm.Ptr([]int{50, 100}),
+			wantErr:         nil,
+		},
+		{
+			name: "should assign all listed users, ignoring limit",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100", "200", "300"},
+				"mode":     "static",
+				"limit":    2,
+			},
+			mockGetReviewersResponse: nil,
+			wantReviewerIDs:          scm.Ptr([]int{100, 200, 300}),
+			wantErr:                  nil,
+		},
+		{
+			name: "should error when static mode is used with a non-static source",
+			step: config.ActionStep{
+				"source": "codeowners",
+				"mode":   "static",
+			},
+			mockGetReviewersResponse: nil,
+			wantReviewerIDs:          nil,
+			wantErr:                  errors.New("step field 'mode: static' is only supported with 'source: static'"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			evalContext := new(evalContextMock)
+			evalContext.On("GetReviewers").Return(tt.mockGetReviewersResponse)
+
+			client := &gitlab.Client{}
+			update := &scm.UpdateMergeRequestOptions{}
+
+			ctx := state.WithDryRun(t.Context(), false)
+			ctx = state.WithRandomSeed(ctx, 1)
+
+			err := client.AssignReviewers(ctx, evalContext, update, tt.step)
+
+			assert.Equal(t, tt.wantErr, err)
+			assert.EqualValues(t, tt.wantReviewerIDs, update.ReviewerIDs)
+		})
+	}
+}
+
+func TestAssignReviewers_randomTopUp(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name                     string
+		step                     config.ActionStep
+		mockGetReviewersResponse scm.Actors
+		wantReviewerIDs          *[]int
+		wantErr                  error
+	}{
+		{
+			name: "should top up from the list when an existing reviewer is not in the list",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100"},
+				"mode":     "random",
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "50", Username: "not-in-list"},
+			},
+			wantReviewerIDs: scm.Ptr([]int{50, 100}),
+			wantErr:         nil,
+		},
+		{
+			name: "should count existing list members towards the limit and top up the remainder",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100", "200"},
+				"mode":     "random",
+				"limit":    2,
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "100", Username: "already-assigned"},
+			},
+			wantReviewerIDs: scm.Ptr([]int{100, 200}),
+			wantErr:         nil,
+		},
+		{
+			name: "should do nothing when list members already satisfy the limit",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100", "200"},
+				"mode":     "random",
+				"limit":    1,
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "100", Username: "already-assigned"},
+			},
+			wantReviewerIDs: nil,
+			wantErr:         nil,
+		},
+		{
+			name: "should do nothing when all list members are already assigned",
+			step: config.ActionStep{
+				"source":   "static",
+				"user_ids": []string{"100"},
+				"mode":     "random",
+				"limit":    5,
+			},
+			mockGetReviewersResponse: scm.Actors{
+				{ID: "100", Username: "already-assigned"},
+			},
+			wantReviewerIDs: nil,
+			wantErr:         nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			evalContext := new(evalContextMock)
+			evalContext.On("GetReviewers").Return(tt.mockGetReviewersResponse)
+
+			client := &gitlab.Client{}
+			update := &scm.UpdateMergeRequestOptions{}
+
+			ctx := state.WithDryRun(t.Context(), false)
+			ctx = state.WithRandomSeed(ctx, 1)
+
+			err := client.AssignReviewers(ctx, evalContext, update, tt.step)
+
+			assert.Equal(t, tt.wantErr, err)
+			assert.EqualValues(t, tt.wantReviewerIDs, update.ReviewerIDs)
 		})
 	}
 }

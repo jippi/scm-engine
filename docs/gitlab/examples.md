@@ -255,3 +255,45 @@ actions:
         limit: 2
         mode: random
 ```
+
+## Reviewer assignment modes
+
+The `mode` field controls how reviewers are selected from the `source`.
+
+### `mode: random` (default)
+
+`random` picks reviewers at random from the source, "topping up" the Merge Request until `limit` reviewers **from the source** are assigned:
+
+- It counts how many of the source's reviewers are already assigned towards the `limit`.
+- If the `limit` is already satisfied by reviewers from the source, it does nothing.
+- Otherwise it randomly assigns just enough not-yet-assigned reviewers from the source to reach the `limit`.
+- Existing reviewers are always preserved, and reviewers are never added twice, so repeated evaluations are idempotent.
+
+Reviewers that are not part of the source (for example, someone added manually) do not count towards the `limit`.
+
+### `mode: static`
+
+The `random` mode only ever assigns reviewers that come from the source. When you need specific, explicitly listed reviewers to **always** be assigned — even alongside unrelated reviewers, and regardless of `limit` — use `mode: static`:
+
+```yaml
+# yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
+actions:
+  - name: "assign"
+    if: |1
+        --8<-- "docs/gitlab/snippets/assign-merge-request/assign-if.expr"
+    then:
+      - action: assign_reviewers
+        source: static
+        user_ids:
+          - "123"
+        mode: static
+```
+
+`mode: static` behaves as follows:
+
+- It assigns **all** listed `user_ids`. The `limit` field is ignored in this mode.
+- It **always** ensures those users are assigned, even when other reviewers are already present.
+- Existing reviewers are **preserved** — the listed users are added alongside them, never replacing them.
+- It is **idempotent**: if a listed user is already a reviewer, they are not re-added and the Merge Request is left untouched.
+- It is only supported with `source: static`. Using it with `codeowners` or `backstage` is a configuration error.

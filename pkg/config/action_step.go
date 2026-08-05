@@ -82,8 +82,16 @@ type AssignReviewers struct {
 	UserIDs []string `json:"user_ids,omitempty" yaml:"user_ids,omitempty"`
 	// The max number of reviewers to assign
 	Limit int `json:"limit,omitempty" yaml:"limit,omitempty"`
-	// The mode of assigning reviewers
-	Mode string `json:"mode,omitempty" yaml:"mode,omitempty" jsonschema:"enum=random"`
+	// The mode of assigning reviewers.
+	//
+	// "random" (default) randomly assigns reviewers from the source, topping up until
+	// `limit` reviewers from the source are assigned. Reviewers from the source that are
+	// already assigned count towards the `limit`, and existing reviewers are preserved.
+	//
+	// "static" assigns all explicitly listed `user_ids` (`limit` is ignored), always
+	// ensuring they are present even when other reviewers are already assigned. Only
+	// supported with `source: static`.
+	Mode string `json:"mode,omitempty" yaml:"mode,omitempty" jsonschema:"enum=random,enum=static"`
 }
 
 type AddLabelAction struct {

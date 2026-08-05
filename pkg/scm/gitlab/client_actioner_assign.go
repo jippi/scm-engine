@@ -2,6 +2,7 @@ package gitlab
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"strconv"
 
@@ -21,17 +22,27 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 		return err
 	}
 
-	mode, err := step.OptionalStringEnum("mode", "random", "random")
+	mode, err := step.OptionalStringEnum("mode", "random", "random", "static")
 	if err != nil {
 		return err
 	}
 
-	// prevents misuse and situations where evaluate will assign reviewers endlessly
-	existingReviewers := evalContext.GetReviewers()
-	if len(existingReviewers) > 0 {
-		slogctx.Debug(ctx, "Reviewers already assigned", slog.Any("reviewers", existingReviewers))
+	// "static" mode assigns an explicitly listed set of reviewers, so it is only
+	// meaningful together with an explicit "static" user list.
+	if mode == "static" && source != "static" {
+		return fmt.Errorf("step field 'mode: static' is only supported with 'source: static'")
+	}
 
-		return nil
+	existingReviewers := evalContext.GetReviewers()
+
+	// Look up which reviewers are already assigned. Both modes use this to avoid
+	// re-adding people and to preserve the existing reviewers when updating, since
+	// GitLab's "reviewer_ids" replaces the whole set on update.
+	alreadyAssigned := make(map[int]struct{}, len(existingReviewers))
+	for _, reviewer := range existingReviewers {
+		if id := reviewer.IntID(); id != 0 {
+			alreadyAssigned[id] = struct{}{}
+		}
 	}
 
 	var eligibleReviewers []scm.Actor
@@ -87,26 +98,74 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 
 	var reviewers scm.Actors
 
-	limit := desiredLimit
-	if limit > len(eligibleReviewers) {
-		limit = len(eligibleReviewers)
-	}
-
 	switch mode {
 	case "random":
-		reviewers = make(scm.Actors, limit)
+		// Only the eligible reviewers that are not already assigned are candidates for
+		// selection, and the ones already assigned count towards the limit. This "tops
+		// up" reviewers from the list until the limit is satisfied, rather than skipping
+		// entirely when reviewers already exist or endlessly adding on repeat runs.
+		var candidates scm.Actors
+
+		satisfied := 0
+
+		for _, actor := range eligibleReviewers {
+			if _, ok := alreadyAssigned[actor.IntID()]; ok {
+				satisfied++
+
+				continue
+			}
+
+			candidates = append(candidates, actor)
+		}
+
+		needed := desiredLimit - satisfied
+		if needed > len(candidates) {
+			needed = len(candidates)
+		}
+
+		if needed < 0 {
+			needed = 0
+		}
+
+		reviewers = make(scm.Actors, needed)
 
 		rand := state.RandomSeed(ctx)
-		perm := rand.Perm(len(eligibleReviewers))
+		perm := rand.Perm(len(candidates))
 
-		for i := 0; i < limit; i++ {
-			reviewers[i] = eligibleReviewers[perm[i]]
+		for i := 0; i < needed; i++ {
+			reviewers[i] = candidates[perm[i]]
 		}
+
+		break
+	case "static":
+		// Assign every explicitly listed reviewer; "limit" is ignored in this mode.
+		reviewers = append(scm.Actors{}, eligibleReviewers...)
 
 		break
 	}
 
-	reviewerIDs := make([]int, 0, len(reviewers))
+	// Build the final reviewer set. GitLab's "reviewer_ids" replaces the whole set on
+	// update, so any existing reviewers must be preserved to avoid removing them. Newly
+	// selected reviewers are de-duplicated against the reviewers already present.
+	reviewerIDs := make([]int, 0, len(existingReviewers)+len(reviewers))
+	seen := make(map[int]struct{}, cap(reviewerIDs))
+
+	// Preserve the reviewers already assigned; selected reviewers are added alongside them.
+	for _, reviewer := range existingReviewers {
+		id := reviewer.IntID()
+		if id == 0 {
+			continue
+		}
+
+		if _, ok := seen[id]; ok {
+			continue
+		}
+
+		seen[id] = struct{}{}
+		reviewerIDs = append(reviewerIDs, id)
+	}
+
+	added := 0
 
 	for _, reviewer := range reviewers {
 		id := reviewer.IntID()
@@ -118,11 +177,25 @@ func (c *Client) AssignReviewers(ctx context.Context, evalContext scm.EvalContex
 			continue
 		}
 
+		if _, ok := seen[id]; ok {
+			continue
+		}
+
+		seen[id] = struct{}{}
 		reviewerIDs = append(reviewerIDs, id)
+		added++
+	}
+
+	// If there are no new reviewers to add, skip the update to avoid needless MR churn.
+	// This makes both modes idempotent across repeated evaluations.
+	if added == 0 {
+		slogctx.Debug(ctx, "No new reviewers to assign")
+
+		return nil
 	}
 
 	if state.IsDryRun(ctx) {
-		slogctx.Info(ctx, "(Dry Run) Assigning MR", slog.String("source", source), slog.Int("limit", limit), slog.String("mode", mode), slog.Any("reviewers", reviewers))
+		slogctx.Info(ctx, "(Dry Run) Assigning MR", slog.String("source", source), slog.Int("limit", desiredLimit), slog.String("mode", mode), slog.Any("reviewers", reviewers))
 
 		return nil
 	}
