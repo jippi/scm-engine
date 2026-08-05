@@ -229,7 +229,7 @@ func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]sc
 	switch outputValue := output.(type) {
 	case bool:
 		if p.Strategy != ConditionalLabel {
-			return nil, errors.New("Script returned an unexpected boolean; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("Script returned an unexpected boolean; Did you mean to use 'strategy: conditional' on your label?")
 		}
 
 		result = append(result, p.resultForLabel(p.Name, outputValue))
@@ -237,7 +237,7 @@ func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]sc
 	// When using 'uniq' function, the result is a correct []string slice
 	case []string:
 		if p.Strategy != GenerateLabels {
-			return nil, errors.New("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("Script returned an unexpected list of strings; Did you mean to use 'strategy: generate' on your label?")
 		}
 
 		for _, label := range outputValue {
@@ -247,7 +247,7 @@ func (p *Label) Evaluate(ctx context.Context, evalContext scm.EvalContext) ([]sc
 	// In some cases the slice can be of 'any' type, thats fine, as long as the underlying type is 'string'
 	case []any:
 		if p.Strategy != GenerateLabels {
-			return nil, errors.New("Script returned an unexpected list of strings; Did you forget the 'type: computed' on your label?")
+			return nil, errors.New("Script returned an unexpected list of strings; Did you mean to use 'strategy: generate' on your label?")
 		}
 
 		for _, label := range outputValue {
