@@ -1587,14 +1587,47 @@ GitHub (WIP)
 </code></pre></div>
 </li>
 <li>
+<p><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">assign_reviewers</span></code> to assign reviewers to the Merge Request</p>
+<p>Reviewers are only assigned when the Merge Request has no reviewers yet, so
+  re-running <code>scm-engine</code> will not keep adding people. The Merge Request author
+  is never assigned as their own reviewer.</p>
+<p><em>Additional fields:</em></p>
+<ul>
+<li>
+<p>(optional) <code class="language-css highlight"><span class="nt">source</span></code> Where to take the eligible reviewers from. Defaults to <code>codeowners</code>.</p>
+<ul>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">codeowners</span></code> use the Code Owners that may approve the Merge Request.</li>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">backstage</span></code> use the owners of the project in the <a href="https://backstage.io/">Backstage</a> catalog. Requires <code>--backstage-url</code> and <code>--backstage-token</code>; the action is skipped with a warning when they are not configured.</li>
+<li><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">static</span></code> use the user IDs listed in <code>user_ids</code>.</li>
+</ul>
+</li>
+<li>
+<p>(optional) <code class="language-css highlight"><span class="nt">user_ids</span></code> A list of user IDs to pick from. Required when <code>source</code> is <code>static</code>, ignored otherwise.</p>
+</li>
+<li>(optional) <code class="language-css highlight"><span class="nt">limit</span></code> The maximum number of reviewers to assign. Defaults to <code>1</code>.</li>
+<li>(optional) <code class="language-css highlight"><span class="nt">mode</span></code> How reviewers are picked from the eligible set. Only <code>random</code> is supported, which is also the default.</li>
+</ul>
+<div class="language-yaml highlight"><span class="filename">&#x27;assign_reviewers&#x27; example</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assign_reviewers</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codeowners</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+</code></pre></div>
+<div class="language-yaml highlight"><span class="filename">&#x27;assign_reviewers&#x27; with static users example</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assign_reviewers</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">static</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">user_ids</span><span class="p">:</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;100&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;200&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</code></pre></div>
+</li>
+<li>
 <p><code class="language-yaml highlight"><span class="l l-Scalar l-Scalar-Plain">update_description</span></code> updates the Merge Request Description</p>
 <p><em>Additional fields:</em></p>
 <ul>
 <li>(required) <code class="language-css highlight"><span class="nt">replace</span></code> A list of key/value pairs to replace in the description. The <code>key</code> is the raw string to replace in the Merge Request description. The <code>value</code> is an Expr Lang expression returning a <code>string</code> that <code>key</code> will be replaced with - all Script Attributes and Script Functions are available within the script.</li>
 </ul>
-<div class="language-yaml highlight"><span class="filename">update_description example</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update_description</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">replace</span><span class="p">:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="s">&quot;${{CI_MERGE_REQUEST_IID}}&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;merge_request.iid&quot;</span>
+<div class="language-yaml highlight"><span class="filename">update_description example</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update_description</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">replace</span><span class="p">:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="s">&quot;${{CI_MERGE_REQUEST_IID}}&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;merge_request.iid&quot;</span>
 </code></pre></div>
 </li>
 </ul>
