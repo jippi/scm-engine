@@ -101,10 +101,22 @@ func (c *Context) CanUseConfigurationFileFromChangeRequest(ctx context.Context) 
 }
 
 func (c *Context) TrackActionGroupExecution(name string) {
+	// Ungrouped actions shouldn't be tracked, otherwise the first ungrouped
+	// action would claim the empty group and every later ungrouped action would
+	// be skipped as a duplicate.
+	if len(name) == 0 {
+		return
+	}
+
 	c.ActionGroups[name] = true
 }
 
 func (c *Context) HasExecutedActionGroup(name string) bool {
+	// Ungrouped actions shouldn't be tracked
+	if len(name) == 0 {
+		return false
+	}
+
 	_, ok := c.ActionGroups[name]
 
 	return ok

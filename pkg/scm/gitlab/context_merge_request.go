@@ -220,8 +220,12 @@ func (e ContextMergeRequest) HasUserActivityWithin(ctx context.Context, input an
 			continue
 		}
 
-		// Ignore "scm-engine" activity since we shouldn't consider ourself a user
-		if e.CurrentUser.Username == note.Author.Username {
+		// Ignore "scm-engine" activity since we shouldn't consider ourself a user.
+		//
+		// CurrentUser is non-null in the GraphQL schema, but guard anyway: without
+		// it a context that was not fully populated turns this into a panic that
+		// takes down the whole evaluation instead of one script function.
+		if e.CurrentUser != nil && e.CurrentUser.Username == note.Author.Username {
 			continue
 		}
 

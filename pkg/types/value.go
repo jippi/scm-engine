@@ -75,13 +75,18 @@ func (t Value[T]) MarshalYAML() ([]byte, error) {
 // UnmarshalJSON implements yaml.Unmarshaler.
 // It supports string and null input.
 func (t *Value[T]) UnmarshalYAML(value *yaml.Node) error {
-	data := []byte(value.Value)
-
-	if len(data) > 0 && data[0] == 'n' {
+	// Ask the parser whether this is a null rather than sniffing the raw text.
+	// Matching on a leading "n" swallowed every value starting with that letter,
+	// so a typo such as `priority: nope` silently became null instead of being
+	// reported, and the other YAML spellings of null (`~`, an empty value) were
+	// not recognised at all.
+	if value.Tag == "!!null" {
 		t.Valid = false
 
 		return nil
 	}
+
+	data := []byte(value.Value)
 
 	if err := yaml.Unmarshal(data, &t.V); err != nil {
 		return fmt.Errorf("null: couldn't unmarshal JSON: %w", err)
