@@ -689,10 +689,43 @@ GitLab
 </li>
         
           <li class="md-nav__item">
+  <a href="#merge_request.has_any_activity_within" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_any_activity_within
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#merge_request.has_no_activity_within" class="md-nav__link">
     <span class="md-ellipsis">
       
         has_no_activity_within
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.total_lines_added" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        total_lines_added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.total_lines_deleted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        total_lines_deleted
       
     </span>
   </a>
@@ -1111,10 +1144,43 @@ GitHub (WIP)
 </li>
         
           <li class="md-nav__item">
+  <a href="#merge_request.has_any_activity_within" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_any_activity_within
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#merge_request.has_no_activity_within" class="md-nav__link">
     <span class="md-ellipsis">
       
         has_no_activity_within
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.total_lines_added" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        total_lines_added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge_request.total_lines_deleted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        total_lines_deleted
       
     </span>
   </a>
@@ -1352,6 +1418,22 @@ GitHub (WIP)
 <div class="language-css highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_activity_within</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_activity_within</span><span class="o">(</span><span class="nt">duration</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">))</span>
 </code></pre></div>
+<h3 id="merge_request.has_any_activity_within"><code>merge_request.has_any_activity_within(duration|string...) -&gt; boolean</code><a class="headerlink" href="#merge_request.has_any_activity_within" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">This function <em>INCLUDE</em> changes made by <code>scm-engine</code> and other bots, use <a href="#merge_request.has_user_activity_within"><code>merge_request.has_user_activity_within</code></a> if you want to exclude those</p>
+</div>
+<p>Return wether <strong>any</strong> activity has happened with the provided duration, including bots and the <code>scm-engine</code> account.</p>
+<p><a href="#merge_request.has_activity_within"><code>merge_request.has_activity_within</code></a> is an alias for this function.</p>
+<p><em>Activity</em> is defined as:</p>
+<ul>
+<li>The Merge Request <code>updated_at</code> timestamp being within the duration.</li>
+<li>Commits pushed to the Merge Request branch.</li>
+<li>Comments on the Merge Request itself (e.g. reviews and comments).</li>
+</ul>
+<p>Users configured in <a href="../../configuration/#ignore_activity_from"><code>ignore_activity_from</code></a> are not considered.</p>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_any_activity_within</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_any_activity_within</span><span class="o">(</span><span class="nt">duration</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">))</span>
+</code></pre></div>
 <h3 id="merge_request.has_no_activity_within"><code>merge_request.has_no_activity_within(duration|string...) -&gt; boolean</code><a class="headerlink" href="#merge_request.has_no_activity_within" title="Permanent link">&para;</a></h3>
 <div class="admonition info">
 <p class="admonition-title">This function <em>INCLUDE</em> changes made by <code>scm-engine</code> and other bots, use <a href="#merge_request.has_no_user_activity_within"><code>merge_request.has_no_user_activity_within</code></a> if you want to exclude those</p>
@@ -1362,56 +1444,64 @@ GitHub (WIP)
 <li>Commits pushed to the Merge Request branch.</li>
 <li>Comments on the Merge Request itself (e.g. reviews and comments).</li>
 </ul>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_activity_within</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_activity_within</span><span class="o">(</span><span class="nt">duration</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">))</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_activity_within</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_activity_within</span><span class="o">(</span><span class="nt">duration</span><span class="o">(</span><span class="s2">&quot;7d&quot;</span><span class="o">))</span>
+</code></pre></div>
+<h3 id="merge_request.total_lines_added"><code>merge_request.total_lines_added() -&gt; int</code><a class="headerlink" href="#merge_request.total_lines_added" title="Permanent link">&para;</a></h3>
+<p>Returns the total number of lines added across all files changed in the Merge Request.</p>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">total_lines_added</span><span class="o">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nt">500</span>
+</code></pre></div>
+<h3 id="merge_request.total_lines_deleted"><code>merge_request.total_lines_deleted() -&gt; int</code><a class="headerlink" href="#merge_request.total_lines_deleted" title="Permanent link">&para;</a></h3>
+<p>Returns the total number of lines deleted across all files changed in the Merge Request.</p>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="o">(</span><span class="nt">merge_request</span><span class="p">.</span><span class="nc">total_lines_added</span><span class="o">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nt">merge_request</span><span class="p">.</span><span class="nc">total_lines_deleted</span><span class="o">())</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nt">1000</span>
 </code></pre></div>
 <h3 id="merge_request.modified_files"><code>merge_request.modified_files(string...) -&gt; boolean</code><a class="headerlink" href="#merge_request.modified_files" title="Permanent link">&para;</a></h3>
 <p>Returns wether any of the provided files patterns have been modified in the Merge Request.</p>
 <p>The file patterns use the <a href="https://git-scm.com/docs/gitignore#_pattern_format"><code>.gitignore</code> format</a>.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">modified_files</span><span class="o">(</span><span class="s2">&quot;*.go&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;docs/&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">true</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">modified_files</span><span class="o">(</span><span class="s2">&quot;*.go&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;docs/&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">true</span>
 </code></pre></div>
 <h3 id="merge_request.modified_files_list"><code>merge_request.modified_files_list(string...) -&gt; []string</code><a class="headerlink" href="#merge_request.modified_files_list" title="Permanent link">&para;</a></h3>
 <p>Returns an array of files matching the provided (optional) pattern thas has been modified in the Merge Request.</p>
 <p>The file patterns use the <a href="https://git-scm.com/docs/gitignore#_pattern_format"><code>.gitignore</code> format</a>.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">modified_files_list</span><span class="o">(</span><span class="s2">&quot;*.go&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;docs/&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;example/file.go&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;docs/index.md&quot;</span><span class="o">]</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">modified_files_list</span><span class="o">(</span><span class="s2">&quot;*.go&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;docs/&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;example/file.go&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;docs/index.md&quot;</span><span class="o">]</span>
 </code></pre></div>
 <h3 id="merge_request.has_label"><code>merge_request.has_label(string) -&gt; boolean</code><a class="headerlink" href="#merge_request.has_label" title="Permanent link">&para;</a></h3>
 <p>Returns wether any of the provided label exist on the Merge Request.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;hello&quot;</span><span class="o">]</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_label</span><span class="o">(</span><span class="s2">&quot;hello&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">true</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_label</span><span class="o">(</span><span class="s2">&quot;world&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">false</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;hello&quot;</span><span class="o">]</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_label</span><span class="o">(</span><span class="s2">&quot;hello&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">true</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_label</span><span class="o">(</span><span class="s2">&quot;world&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">false</span>
 </code></pre></div>
 <h3 id="merge_request.has_no_label"><code>merge_request.has_no_label(string) -&gt; boolean</code><a class="headerlink" href="#merge_request.has_no_label" title="Permanent link">&para;</a></h3>
 <p>Returns wether the merge request has the provided label or not.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;hello&quot;</span><span class="o">]</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_label</span><span class="o">(</span><span class="s2">&quot;hello&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">false</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_label</span><span class="o">(</span><span class="s2">&quot;world&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">true</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;hello&quot;</span><span class="o">]</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_label</span><span class="o">(</span><span class="s2">&quot;hello&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">false</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nt">merge_request</span><span class="p">.</span><span class="nc">has_no_label</span><span class="o">(</span><span class="s2">&quot;world&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">true</span>
 </code></pre></div>
 <h2 id="global">Global<a class="headerlink" href="#global" title="Permanent link">&para;</a></h2>
 <h3 id="duration"><code>duration(string) -&gt; duration</code><a class="headerlink" href="#duration" title="Permanent link">&para;</a></h3>
 <p>Returns the <a href="https://pkg.go.dev/time#Duration"><code>time.Duration</code></a> value of the given string str.</p>
 <p>Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h", "d" and "w".</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">duration</span><span class="o">(</span><span class="s2">&quot;1h&quot;</span><span class="o">)</span><span class="p">.</span><span class="nc">Seconds</span><span class="o">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">3600</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">duration</span><span class="o">(</span><span class="s2">&quot;1h&quot;</span><span class="o">)</span><span class="p">.</span><span class="nc">Seconds</span><span class="o">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">3600</span>
 </code></pre></div>
 <h3 id="duration"><code>since(time.Time) -&gt; duration</code><a class="headerlink" href="#duration" title="Permanent link">&para;</a></h3>
 <p>Returns the <a href="https://pkg.go.dev/time#Duration"><code>time.Duration</code></a> value since the provided <code>time</code>.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">since</span><span class="o">(</span><span class="nt">now</span><span class="o">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nt">duration</span><span class="o">(</span><span class="err">&quot;</span><span class="nt">1h</span><span class="o">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">3600</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">since</span><span class="o">(</span><span class="nt">now</span><span class="o">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nt">duration</span><span class="o">(</span><span class="err">&quot;</span><span class="nt">1h</span><span class="o">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">3600</span>
 </code></pre></div>
 <h3 id="uniq"><code>uniq([]string) -&gt; []string</code><a class="headerlink" href="#uniq" title="Permanent link">&para;</a></h3>
 <p>Returns a new array where all duplicate values has been removed.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="o">([</span><span class="s2">&quot;hello&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;world&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;world&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nt">uniq</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;hello&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;world&quot;</span><span class="o">]</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="o">([</span><span class="s2">&quot;hello&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;world&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;world&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nt">uniq</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;hello&quot;</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;world&quot;</span><span class="o">]</span>
 </code></pre></div>
 <h3 id="filepath_dir"><code>filepath_dir</code><a class="headerlink" href="#filepath_dir" title="Permanent link">&para;</a></h3>
 <p><code>filepath_dir</code> returns all but the last element of path, typically the path's directory. After dropping the final element,</p>
 <p>Dir calls <a href="https://pkg.go.dev/path/filepath#Clean">Clean</a> on the path and trailing slashes are removed.</p>
 <p>If the path is empty, <code>filepath_dir</code> returns ".". If the path consists entirely of separators, <code>filepath_dir</code> returns a single separator.</p>
 <p>The returned path does not end in a separator unless it is the root directory.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">filepath_dir</span><span class="o">(</span><span class="s2">&quot;example/directory/file.go&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;example/directory&quot;</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nt">filepath_dir</span><span class="o">(</span><span class="s2">&quot;example/directory/file.go&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;example/directory&quot;</span>
 </code></pre></div>
 <h3 id="limit_path_depth_to"><code>limit_path_depth_to</code><a class="headerlink" href="#limit_path_depth_to" title="Permanent link">&para;</a></h3>
 <p><code>limit_path_depth_to</code> takes a path structure, and limits it to the configured maximum depth. Particularly useful when using <code>generated</code> labels from a directory structure, and want to to have a label naming scheme that only uses path of the path.</p>
-<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">limit_path_depth_to</span><span class="o">(</span><span class="s2">&quot;path1/path2/path3/path4&quot;</span><span class="o">,</span><span class="w"> </span><span class="nt">2</span><span class="o">),</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;path1/path2&quot;</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nt">limit_path_depth_to</span><span class="o">(</span><span class="s2">&quot;path1/path2&quot;</span><span class="o">,</span><span class="w"> </span><span class="nt">3</span><span class="o">),</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;path1/path2&quot;</span>
+<div class="language-css highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nt">limit_path_depth_to</span><span class="o">(</span><span class="s2">&quot;path1/path2/path3/path4&quot;</span><span class="o">,</span><span class="w"> </span><span class="nt">2</span><span class="o">),</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;path1/path2&quot;</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nt">limit_path_depth_to</span><span class="o">(</span><span class="s2">&quot;path1/path2&quot;</span><span class="o">,</span><span class="w"> </span><span class="nt">3</span><span class="o">),</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;path1/path2&quot;</span>
 </code></pre></div>
 
 
