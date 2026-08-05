@@ -63,6 +63,8 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		// Ensure we have content in the POST body
 		if len(body) == 0 {
 			errHandler(ctx, w, http.StatusBadRequest, errors.New("The POST body is empty; expected a JSON payload"))
+
+			return
 		}
 
 		// Decode request payload

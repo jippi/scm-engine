@@ -216,3 +216,62 @@ func TestEvaluationResult_IsEqual_priorityNullness(t *testing.T) {
 	require.True(t, unset.IsEqual(ctx, &scm.Label{Name: "bug"}),
 		"two unset priorities are equal")
 }
+
+// AsGraphqlVariables feeds the periodic evaluation GraphQL query. An empty
+// filter has to become an explicitly empty list rather than a nil, otherwise
+// GitLab treats the variable as absent and the filter silently does nothing.
+func TestMergeRequestListFilters_AsGraphqlVariables(t *testing.T) {
+	t.Parallel()
+
+	t.Run("an empty filter still sends every variable", func(t *testing.T) {
+		t.Parallel()
+
+		filter := &scm.MergeRequestListFilters{}
+		vars := filter.AsGraphqlVariables()
+
+		require.Equal(t, scm.Ptr[[]string](nil), vars["mr_ignore_labels"])
+		require.Equal(t, scm.Ptr[[]string](nil), vars["mr_require_labels"])
+		require.Equal(t, scm.Ptr[[]string](nil), vars["project_topics"])
+
+		// The config file path falls back to the documented default
+		require.Equal(t, ".scm-engine.yml", vars["scm_config_file_path"])
+	})
+
+	t.Run("values are passed through", func(t *testing.T) {
+		t.Parallel()
+
+		filter := &scm.MergeRequestListFilters{
+			IgnoreMergeRequestWithLabels: []string{"wip"},
+			OnlyMergeRequestsWithLabels:  []string{"ready"},
+			OnlyProjectsWithTopics:       []string{"go"},
+			OnlyProjectsWithMembership:   true,
+			SCMConfigurationFilePath:     "custom.yml",
+		}
+
+		vars := filter.AsGraphqlVariables()
+
+		require.Equal(t, []string{"wip"}, vars["mr_ignore_labels"])
+		require.Equal(t, []string{"ready"}, vars["mr_require_labels"])
+		require.Equal(t, []string{"go"}, vars["project_topics"])
+		require.Equal(t, true, vars["project_membership"])
+		require.Equal(t, "custom.yml", vars["scm_config_file_path"])
+	})
+
+	t.Run("every documented variable is present", func(t *testing.T) {
+		t.Parallel()
+
+		vars := (&scm.MergeRequestListFilters{}).AsGraphqlVariables()
+
+		for _, key := range []string{
+			"mr_ignore_labels",
+			"mr_require_labels",
+			"project_membership",
+			"project_topics",
+			"scm_config_file_path",
+		} {
+			require.Contains(t, vars, key)
+		}
+
+		require.Len(t, vars, 5, "an unexpected variable would be silently ignored by the query")
+	})
+}
