@@ -33,7 +33,7 @@ var Uniq = expr.Function(
 	func(args ...any) (any, error) {
 		switch elements := args[0].(type) {
 		case []any:
-			var result []string
+			result := make([]string, 0, len(elements))
 
 			for _, element := range elements {
 				result = append(result, fmt.Sprintf("%s", element))

@@ -209,7 +209,7 @@ func TestAssignReviewers_codeowners(t *testing.T) {
 			if tt.wantUpdate.ReviewerIDs != nil {
 				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
 				assert.Len(t, *update.ReviewerIDs, wantLimit)
-				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
+				assert.Equal(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
 			}
 		})
 	}
@@ -307,7 +307,7 @@ func TestAssignReviewers_static(t *testing.T) {
 				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
 				require.NotNil(t, update.ReviewerIDs)
 				assert.Len(t, *update.ReviewerIDs, wantLimit)
-				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
+				assert.Equal(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
 			}
 		})
 	}
@@ -372,7 +372,7 @@ func TestAssignReviewers_backstage(t *testing.T) {
 				wantLimit := len(*tt.wantUpdate.ReviewerIDs)
 				require.NotNil(t, update.ReviewerIDs)
 				assert.Len(t, *update.ReviewerIDs, wantLimit)
-				assert.EqualValues(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
+				assert.Equal(t, tt.wantUpdate.ReviewerIDs, update.ReviewerIDs)
 			}
 		})
 	}

@@ -172,10 +172,8 @@ func (p *Label) Setup(evalContext scm.EvalContext) error {
 	if p.scriptCompiled == nil {
 		p.Color = tui.Replace(p.Color)
 
-		opts := []expr.Option{}
-		opts = append(opts, scriptReturnType)
-		opts = append(opts, expr.Env(evalContext))
-		opts = append(opts, stdlib.FunctionRenamer)
+		opts := make([]expr.Option, 0, len(stdlib.Functions)+4)
+		opts = append(opts, scriptReturnType, expr.Env(evalContext), stdlib.FunctionRenamer)
 		opts = append(opts, stdlib.Functions...)
 		opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 
@@ -188,10 +186,8 @@ func (p *Label) Setup(evalContext scm.EvalContext) error {
 	if p.skipIfCompiled == nil && len(p.SkipIf) > 0 {
 		p.Color = tui.Replace(p.Color)
 
-		opts := []expr.Option{}
-		opts = append(opts, expr.AsBool())
-		opts = append(opts, expr.Env(evalContext))
-		opts = append(opts, stdlib.FunctionRenamer)
+		opts := make([]expr.Option, 0, len(stdlib.Functions)+4)
+		opts = append(opts, expr.AsBool(), expr.Env(evalContext), stdlib.FunctionRenamer)
 		opts = append(opts, stdlib.Functions...)
 		opts = append(opts, expr.Patch(patcher.WithContext{Name: "ctx"}))
 

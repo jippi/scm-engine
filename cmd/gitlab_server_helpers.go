@@ -17,8 +17,7 @@ func errHandler(ctx context.Context, w http.ResponseWriter, code int, err error)
 		slogctx.Error(ctx, "Server response", slog.Int("response_code", code), slog.Any("response_message", err))
 	}
 
-	w.WriteHeader(code)
-	w.Write([]byte(err.Error()))
-
-	return
+	// http.Error pins the response to text/plain and disables sniffing, so the
+	// error message can never be interpreted as markup by the client.
+	http.Error(w, err.Error(), code)
 }

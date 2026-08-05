@@ -23,8 +23,7 @@ func GetRecorder(t *testing.T) *recorder.Recorder {
 		return nil
 	}
 
-	var opts []recorder.Option
-	opts = []recorder.Option{
+	opts := []recorder.Option{
 		recorder.WithRealTransport(&oauth2.Transport{
 			Base: http.DefaultTransport,
 			Source: oauth2.ReuseTokenSource(nil, oauth2.StaticTokenSource(

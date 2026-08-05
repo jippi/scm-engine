@@ -117,8 +117,8 @@ type UpdateDescriptionAction struct {
 type ActionStep map[string]any
 
 func (step ActionStep) JSONSchema() *jsonschema.Schema {
-	configs := []*jsonschema.Schema{}
-	validActions := []any{}
+	configs := make([]*jsonschema.Schema, 0, len(actions))
+	validActions := make([]any, 0, len(actions))
 
 	r := new(jsonschema.Reflector)
 	if err := r.AddGoComments("github.com/jippi/scm-engine", "./"); err != nil {

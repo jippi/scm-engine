@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"cmp"
+	"context"
 	_ "embed"
 	"fmt"
 	"go/types"
@@ -103,7 +104,7 @@ func nest(props []*Property) {
 }
 
 func getRootPath() string {
-	path, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+	path, err := exec.CommandContext(context.Background(), "git", "rev-parse", "--show-toplevel").Output()
 	if err != nil {
 		panic(err)
 	}
