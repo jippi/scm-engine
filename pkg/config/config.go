@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/jippi/scm-engine/pkg/scm"
@@ -128,4 +129,107 @@ func (c *Config) LoadIncludes(ctx context.Context, client scm.Client) error {
 	slogctx.Debug(ctx, "Done loading remote configuration files")
 
 	return nil
+}
+
+// Merge merges the other config into the current config
+func (c *Config) Merge(other *Config) *Config {
+	cfg := &Config{}
+
+	if other == nil {
+		return &Config{
+			DryRun:             c.DryRun,
+			IgnoreActivityFrom: c.IgnoreActivityFrom,
+			Actions:            c.Actions,
+			Labels:             c.Labels,
+			Includes:           c.Includes,
+		}
+	}
+
+	cfg.DryRun = other.DryRun
+
+	cfg.IgnoreActivityFrom.IsBot = other.IgnoreActivityFrom.IsBot
+
+	if c.IgnoreActivityFrom.Usernames != nil || other.IgnoreActivityFrom.Usernames != nil {
+		cfg.IgnoreActivityFrom.Usernames = scm.MergeSlices(c.IgnoreActivityFrom.Usernames, other.IgnoreActivityFrom.Usernames, func(username string) string {
+			return username
+		})
+	}
+
+	if c.IgnoreActivityFrom.Emails != nil || other.IgnoreActivityFrom.Emails != nil {
+		cfg.IgnoreActivityFrom.Emails = scm.MergeSlices(c.IgnoreActivityFrom.Emails, other.IgnoreActivityFrom.Emails, func(email string) string {
+			return email
+		})
+	}
+
+	if c.Actions != nil || other.Actions != nil {
+		cfg.Actions = scm.MergeSlices(c.Actions, other.Actions, func(action Action) string {
+			return action.Name
+		})
+	}
+
+	if c.Labels != nil || other.Labels != nil {
+		cfg.Labels = scm.MergeSlices(c.Labels, other.Labels, func(label *Label) string {
+			return label.Name
+		})
+	}
+
+	// Merge includes, but skip adding duplicate files under a project/ref
+	if c.Includes != nil || other.Includes != nil {
+		includes := map[string]map[string]*bool{}
+
+		for _, include := range c.Includes {
+			for _, file := range include.Files {
+				if _, ok := includes[key(include.Project, include.Ref)]; !ok {
+					includes[key(include.Project, include.Ref)] = map[string]*bool{}
+				}
+
+				includes[key(include.Project, include.Ref)][file] = nil
+			}
+		}
+
+		for _, include := range other.Includes {
+			for _, file := range include.Files {
+				if _, ok := includes[key(include.Project, include.Ref)]; !ok {
+					includes[key(include.Project, include.Ref)] = map[string]*bool{}
+				}
+
+				includes[key(include.Project, include.Ref)][file] = nil
+			}
+		}
+
+		cfg.Includes = make([]Include, 0, len(includes))
+
+		for key, fileMap := range includes {
+			keyParts := strings.Split(key, ":")
+			project := keyParts[0]
+
+			var ref *string
+			if refStr := keyParts[1]; refStr != "" {
+				ref = scm.Ptr(refStr)
+			}
+
+			files := make([]string, 0, len(fileMap))
+			for file := range fileMap {
+				files = append(files, file)
+			}
+
+			cfg.Includes = append(cfg.Includes, Include{
+				Project: project,
+				Ref:     ref,
+				Files:   files,
+			})
+		}
+	}
+
+	return cfg
+}
+
+func key(project string, ref *string) string {
+	strRef := ""
+
+	if ref != nil {
+		strRef = *ref
+	}
+
+	return fmt.Sprintf("%s:%s", project, strRef)
 }

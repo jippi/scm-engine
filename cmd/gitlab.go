@@ -14,6 +14,7 @@ var GitLab = &cli.Command{
 		cCtx.Context = state.WithBaseURL(cCtx.Context, cCtx.String(FlagSCMBaseURL))
 		cCtx.Context = state.WithProvider(cCtx.Context, "gitlab")
 		cCtx.Context = state.WithToken(cCtx.Context, cCtx.String(FlagAPIToken))
+		cCtx.Context = state.WithGlobalConfigFilePath(cCtx.Context, cCtx.String(FlagGlobalConfigFile))
 
 		return nil
 	},
@@ -32,6 +33,14 @@ var GitLab = &cli.Command{
 			EnvVars: []string{
 				"SCM_ENGINE_BASE_URL", // SCM Engine Native
 				"CI_SERVER_URL",       // GitLab CI
+			},
+		},
+		&cli.StringFlag{
+			Name:  FlagGlobalConfigFile,
+			Usage: "Path to a global configuration file. Any repository specific configuration will be merged on top of the global configuration",
+			Value: "",
+			EnvVars: []string{
+				"SCM_ENGINE_GLOBAL_CONFIG_FILE",
 			},
 		},
 	},
@@ -93,6 +102,8 @@ var GitLab = &cli.Command{
 						"CI_COMMIT_SHA", // GitLab CI
 					},
 				},
+				StringFlagBackstageURL,
+				StringFlagBackstageToken,
 			},
 		},
 		{
@@ -184,6 +195,8 @@ var GitLab = &cli.Command{
 						"SCM_ENGINE_PERIODIC_EVALUATION_ONLY_PROJECTS_WITH_MEMBERSHIP",
 					},
 				},
+				StringFlagBackstageURL,
+				StringFlagBackstageToken,
 			},
 		},
 	},

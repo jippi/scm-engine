@@ -22,7 +22,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 	switch action {
 	case "add_label":
-		name, err := step.RequiredString("name")
+		name, err := step.RequiredString("label")
 		if err != nil {
 			return err
 		}
@@ -37,7 +37,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		update.AddLabels = &tmp
 
 	case "remove_label":
-		name, err := step.RequiredString("name")
+		name, err := step.RequiredString("label")
 		if err != nil {
 			return err
 		}
@@ -49,7 +49,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 
 		tmp := append(*labels, name)
 
-		update.AddLabels = &tmp
+		update.RemoveLabels = &tmp
 
 	case "close":
 		update.StateEvent = scm.Ptr("close")
@@ -110,7 +110,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 		return err
 
 	default:
-		return fmt.Errorf("GitLab client does not know how to apply action %q", action)
+		return fmt.Errorf("GitHub client does not know how to apply action %q", action)
 	}
 
 	return nil

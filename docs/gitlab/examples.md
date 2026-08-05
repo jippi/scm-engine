@@ -186,3 +186,72 @@ actions:
       /* Remove duplicate values from the output */
       | uniq()
       ```
+
+## Assign reviewers from CODEOWNERS
+
+The `codeowners` source relies on the GitLab [CODE OWNERS](https://docs.gitlab.com/ee/user/project/codeowners/) feature.
+
+For a reviewer to be assigned to a Merge Request, the project must have a CODEOWNERS file and the groups/users mentioned in the file must have [direct membership](https://gitlab.com/gitlab-org/gitlab/-/issues/288851/) to the project.
+
+```yaml
+# yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
+actions:
+  - name: "assign"
+    if: |1
+        --8<-- "docs/gitlab/snippets/assign-merge-request/assign-if.expr"
+    then:
+      - action: assign_reviewers
+        source: codeowners
+        limit: 1
+        mode: random
+```
+
+## Assign reviewers from Backstage
+
+The `backstage` source relies on the [Backstage Catalog](https://backstage.io/docs/features/software-catalog/) to derive ownership information.
+
+This assumes [System](https://backstage.io/docs/features/software-catalog/descriptor-format#kind-system) and [User](https://backstage.io/docs/features/software-catalog/descriptor-format/#kind-user) in Backstage can be mapped directly to a GitLab project and user.
+
+For a Backstage System entity to be mapped to a GitLab project, the system must  have same name as the GitLab project or the `gitlab.com/project` annotation is set to the GitLab project name.
+
+For a Backstage User entity to be mapped to a GitLab user, the user must have the `gitlab.com/user_id` annotation set to the numeric ID of the user. A plugin that can be used to automatically set this annotation is [@seatgeek/backstage-plugin-gitlab-catalog-backend](https://github.com/seatgeek/backstage-plugins/tree/main/plugins/gitlab-catalog-backend).
+
+
+```yaml
+# yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
+actions:
+  - name: "assign"
+    if: |1
+        --8<-- "docs/gitlab/snippets/assign-merge-request/assign-if.expr"
+    then:
+      - action: assign_reviewers
+        source: backstage
+        limit: 1
+        mode: random
+```
+
+## Assign reviewers from static user IDs
+
+The `static` source allows you to specify a fixed list of GitLab user IDs to assign as reviewers. This is useful when you want to assign specific users regardless of CODEOWNERS or Backstage configuration.
+
+You can find a user's numeric ID by visiting their GitLab profile page - the ID is shown in the URL or on the profile.
+
+```yaml
+# yaml-language-server: $schema=https://jippi.github.io/scm-engine/scm-engine.schema.json
+
+actions:
+  - name: "assign"
+    if: |1
+        --8<-- "docs/gitlab/snippets/assign-merge-request/assign-if.expr"
+    then:
+      - action: assign_reviewers
+        source: static
+        user_ids:
+          - "123"
+          - "456"
+          - "789"
+        limit: 2
+        mode: random
+```

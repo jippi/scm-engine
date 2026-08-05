@@ -18,6 +18,23 @@ func Evaluate(cCtx *cli.Context) error {
 	ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
 	ctx = state.WithRandomSeed(ctx, time.Now().UnixNano()) // weak seed since only used for codeowner selection
+	ctx = state.WithGlobalConfigFilePath(ctx, cCtx.String(FlagGlobalConfigFile))
+
+	// Optional Backstage catalog integration
+	ctx = state.WithBackstageURL(ctx, cCtx.String(FlagBackstageURL))
+	ctx = state.WithBackstageToken(ctx, cCtx.String(FlagBackstageToken))
+
+	//
+	// Setup global config if present
+	//
+	if state.GlobalConfigFilePath(ctx) != "" {
+		globalCfg, err := config.LoadFile(state.GlobalConfigFilePath(ctx))
+		if err != nil {
+			return err
+		}
+
+		ctx = config.WithGlobalConfig(ctx, globalCfg)
+	}
 
 	cfg, err := config.LoadFile(state.ConfigFilePath(ctx))
 	if err != nil {

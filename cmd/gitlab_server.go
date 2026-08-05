@@ -12,6 +12,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/urfave/cli/v2"
@@ -24,11 +25,28 @@ func Server(cCtx *cli.Context) error {
 	// Setup context configuration
 	ctx := cCtx.Context
 	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
+	ctx = state.WithGlobalConfigFilePath(ctx, cCtx.String(FlagGlobalConfigFile))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
+
+	// Optional Backstage catalog integration
+	ctx = state.WithBackstageURL(ctx, cCtx.String(FlagBackstageURL))
+	ctx = state.WithBackstageToken(ctx, cCtx.String(FlagBackstageToken))
 
 	// Add logging context key/value pairs
 	ctx = slogctx.With(ctx, slog.String("gitlab_url", cCtx.String(FlagSCMBaseURL)))
 	ctx = slogctx.With(ctx, slog.Duration("server_timeout", cCtx.Duration(FlagServerTimeout)))
+
+	//
+	// Setup global config if present
+	//
+	if state.GlobalConfigFilePath(ctx) != "" {
+		globalCfg, err := config.LoadFile(state.GlobalConfigFilePath(ctx))
+		if err != nil {
+			return err
+		}
+
+		ctx = config.WithGlobalConfig(ctx, globalCfg)
+	}
 
 	//
 	// Setup periodic evaluation logic

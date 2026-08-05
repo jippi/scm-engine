@@ -1,0 +1,2 @@
+   merge_request.state_is("opened")
+&& not merge_request.approved

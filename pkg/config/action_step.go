@@ -77,7 +77,9 @@ type AssignReviewers struct {
 	BaseAction
 
 	// The source of the reviewers
-	Source *string `json:"source,omitempty" yaml:"source,omitempty" jsonschema:"enum=codeowners"`
+	Source *string `json:"source,omitempty" yaml:"source,omitempty" jsonschema:"enum=codeowners,enum=backstage,enum=static"`
+	// The static user IDs set for source=static
+	UserIDs []string `json:"user_ids,omitempty" yaml:"user_ids,omitempty"`
 	// The max number of reviewers to assign
 	Limit int `json:"limit,omitempty" yaml:"limit,omitempty"`
 	// The mode of assigning reviewers
@@ -173,6 +175,37 @@ func (step ActionStep) RequiredInt(name string) (int, error) {
 	}
 
 	return valueInt, nil
+}
+
+func (step ActionStep) RequiredStringSlice(name string) ([]string, error) {
+	value, ok := step[name]
+	if !ok {
+		return nil, fmt.Errorf("Required 'step' key '%s' is missing", name)
+	}
+
+	// Try direct []string assertion first
+	if valueSlice, ok := value.([]string); ok {
+		return valueSlice, nil
+	}
+
+	// YAML unmarshaling produces []interface{} instead of []string,
+	// so we need to convert it manually
+	if interfaceSlice, ok := value.([]interface{}); ok {
+		result := make([]string, len(interfaceSlice))
+
+		for i, v := range interfaceSlice {
+			str, ok := v.(string)
+			if !ok {
+				return nil, fmt.Errorf("Required 'step' key '%s' must be of type []string, but element at index %d is %T", name, i, v)
+			}
+
+			result[i] = str
+		}
+
+		return result, nil
+	}
+
+	return nil, fmt.Errorf("Required 'step' key '%s' must be of type []string, got %T", name, value)
 }
 
 func (step ActionStep) RequiredString(name string) (string, error) {

@@ -114,7 +114,8 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 
 		// Check if there exists scm-config file in the repo before moving forward
 		file, err := client.MergeRequests().GetRemoteConfig(ctx, state.ConfigFilePath(ctx), state.CommitSHA(ctx))
-		if err != nil {
+		// only error when global config is not set
+		if err != nil && state.GlobalConfigFilePath(ctx) == "" {
 			errHandler(ctx, w, http.StatusOK, err)
 
 			return
@@ -125,7 +126,13 @@ func GitLabWebhookHandler(ctx context.Context, webhookSecret string) http.Handle
 		// In case of a parse error cfg remains "nil" and ProcessMR will try to read-and-parse it
 		// (but obviously also fail), but will surface the error within the GitLab External Pipeline (if enabled)
 		// which will surface the issue to the end-user directly
-		cfg, _ := config.ParseFile(file)
+		var cfg *config.Config
+		if file != nil { // file could be nil if no scm-config file is found when global config is set
+			cfg, _ = config.ParseFile(file)
+		} else {
+			// avoid trying to read-and-parse again if global config is set
+			cfg = config.GlobalConfigFromContext(ctx)
+		}
 
 		// Process the MR
 		if err := ProcessMR(ctx, client, cfg, fullEventPayload); err != nil {
