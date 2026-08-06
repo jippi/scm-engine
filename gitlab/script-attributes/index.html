@@ -1504,6 +1504,13 @@ GitHub (WIP)
 <li><code>CONFLICT</code> There are conflicts between the source and target branches</li>
 <li><code>NEED_REBASE</code> Merge request needs to be rebased</li>
 <li><code>REQUESTED_CHANGES</code> Indicates a reviewer has requested change</li>
+<li><code>APPROVALS_SYNCING</code> Merge request approvals currently syncing</li>
+<li><code>LOCKED_PATHS</code> Merge request includes locked paths</li>
+<li><code>LOCKED_LFS_FILES</code> Merge request includes locked LFS files</li>
+<li><code>MERGE_TIME</code> Merge request may not be merged until after the specified time</li>
+<li><code>SECURITY_POLICIES_VIOLATIONS</code> All policy rules must be satisfied</li>
+<li><code>TITLE_NOT_MATCHING</code> Merge request title does not match required regex</li>
+<li><code>SECURITY_POLICY_PIPELINE_CHECK</code> All security policy pipelines must succeed</li>
 </ul>
 </li>
 <li>
@@ -1527,7 +1534,7 @@ GitHub (WIP)
 </ul>
 </li>
 <li>
-<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">merge_when_pipeline_succeeds</span></code> ; <code>optional boolean</code>. Indicates if the merge has been set to auto-merge</p>
+<p><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">merge_when_pipeline_succeeds</span></code> ; <code>optional boolean</code>. Indicates if the merge has been set to auto-merge. Deprecated in GitLab 17.11, use 'auto_merge_enabled' instead</p>
 </li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">mergeable</span></code> ; <code>boolean</code>. Indicates if the merge request is mergeable</li>
 <li><code class="language-css highlight"><span class="nt">merge_request</span><span class="p">.</span><span class="nc">mergeable_discussions_state</span></code> ; <code>optional boolean</code>. Indicates if all discussions in the merge request have been resolved, allowing the merge request to be merged</li>
