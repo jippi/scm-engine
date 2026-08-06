@@ -154,6 +154,27 @@ enum DetailedMergeStatus {
 
   "Indicates a reviewer has requested change"
   REQUESTED_CHANGES
+
+  "Merge request approvals currently syncing"
+  APPROVALS_SYNCING
+
+  "Merge request includes locked paths"
+  LOCKED_PATHS
+
+  "Merge request includes locked LFS files"
+  LOCKED_LFS_FILES
+
+  "Merge request may not be merged until after the specified time"
+  MERGE_TIME
+
+  "All policy rules must be satisfied"
+  SECURITY_POLICIES_VIOLATIONS
+
+  "Merge request title does not match required regex"
+  TITLE_NOT_MATCHING
+
+  "All security policy pipelines must succeed"
+  SECURITY_POLICY_PIPELINE_CHECK
 }
 
 enum PipelineStatusEnum {
@@ -318,8 +339,8 @@ type ContextMergeRequest {
   ID: String!
   "Internal ID of the merge request"
   IID: String!
-  "Indicates if the merge has been set to auto-merge"
-  MergeWhenPipelineSucceeds: Boolean
+  "Indicates if the merge has been set to auto-merge. Deprecated in GitLab 17.11, use 'auto_merge_enabled' instead"
+  MergeWhenPipelineSucceeds: Boolean @deprecated(reason: "Renamed by GitLab in 17.11. Use 'auto_merge_enabled' instead.")
   "Indicates if the merge request is mergeable"
   Mergeable: Boolean!
   "Indicates if all discussions in the merge request have been resolved, allowing the merge request to be merged"
