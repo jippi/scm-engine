@@ -3,7 +3,7 @@ module github.com/jippi/scm-engine
 go 1.26.5
 
 require (
-	github.com/99designs/gqlgen v0.17.73
+	github.com/99designs/gqlgen v0.17.94
 	github.com/aquilax/truncate v1.0.1
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/davecgh/go-spew v1.1.1
@@ -24,7 +24,7 @@ require (
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/urfave/cli/v2 v2.27.6
-	github.com/vektah/gqlparser/v2 v2.5.26
+	github.com/vektah/gqlparser/v2 v2.5.36
 	github.com/veqryn/slog-context v0.8.0
 	github.com/veqryn/slog-dedup v0.6.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
@@ -37,7 +37,9 @@ require (
 
 require (
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
+	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/urfave/cli/v3 v3.10.1 // indirect
 )
 
 require (
