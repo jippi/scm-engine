@@ -15,7 +15,7 @@
   commitMessageSuffix: " in {{packageFile}}",
   dependencyDashboardAutoclose: false,
   automerge: true,
-  baseBranches: ["main"],
+  baseBranchPatterns: ["main"],
   platformAutomerge: true,
   labels: ["dependencies"],
   prHourlyLimit: 1,
@@ -49,20 +49,37 @@
       prPriority: 999,
     },
     {
-      description: "Group charmbracelet packages",
+      description: [
+        "Group charmbracelet packages. They also publish under the 'charm.land'",
+        "vanity path (lipgloss v2 lives at 'charm.land/lipgloss/v2'), so match both.",
+      ],
       groupName: "charmbracelet",
-      matchPackagePrefixes: ["github.com/charmbracelet/"],
+      matchPackageNames: [
+        "github.com/charmbracelet/{/,}**",
+        "charm.land/{/,}**",
+      ],
     },
     {
       description: "Group golang.org/x/ packages",
       matchPackageNames: ["golang.org/x/{/,}**"],
       groupName: "x",
     },
+    {
+      description: [
+        "Major upgrades need a human. A green pipeline only proves the code still",
+        "compiles and the tests still pass, which is not the same as the behaviour",
+        "being unchanged - a major can keep compiling while quietly changing what a",
+        "function returns. Minor, patch and digest updates keep automerging.",
+        "Listed last so it wins over the rules above.",
+      ],
+      matchUpdateTypes: ["major"],
+      automerge: false,
+    },
   ],
   customManagers: [
     {
       customType: "regex",
-      fileMatch: ["(^|/)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
+      managerFilePatterns: ["/(^|/)Dockerfile$/", "/(^|/)Dockerfile\\.[^/]*$/"],
       matchStrings: [
         // example:
         //
@@ -77,7 +94,7 @@
     },
     {
       customType: "regex",
-      fileMatch: ["^\\.github/workflows/[^/]+\\.ya?ml$"],
+      managerFilePatterns: ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
       matchStrings: [
         "renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?: (?<currentValue>.*)\\s",
       ],
