@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"sync"
 	"syscall"
 	"time"
@@ -15,15 +16,14 @@ import (
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	slogctx "github.com/veqryn/slog-context"
 )
 
-func Server(cCtx *cli.Context) error {
+func Server(ctx context.Context, cCtx *cli.Command) error {
 	var wg sync.WaitGroup
 
 	// Setup context configuration
-	ctx := cCtx.Context
 	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
 	ctx = state.WithGlobalConfigFilePath(ctx, cCtx.String(FlagGlobalConfigFile))
 	ctx = state.WithUpdatePipeline(ctx, cCtx.Bool(FlagUpdatePipeline), cCtx.String(FlagUpdatePipelineURL))
@@ -69,7 +69,9 @@ func Server(cCtx *cli.Context) error {
 	// Setup HTTP server
 	//
 
-	listenAddr := net.JoinHostPort(cCtx.String(FlagServerListenHost), cCtx.String(FlagServerListenPort))
+	// NOTE: FlagServerListenPort is an IntFlag; cli/v3 returns an empty string
+	// from String() for non-string flags, so it must be read as an int.
+	listenAddr := net.JoinHostPort(cCtx.String(FlagServerListenHost), strconv.Itoa(cCtx.Int(FlagServerListenPort)))
 	slogctx.Info(ctx, "Starting HTTP server", slog.String("listen_address", listenAddr))
 
 	mux := http.NewServeMux()
@@ -122,7 +124,7 @@ func Server(cCtx *cli.Context) error {
 	shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 10*time.Second)
 	defer shutdownRelease()
 
-	if err := server.Shutdown(shutdownCtx); err != nil {
+	if err := server.Shutdown(shutdownCtx); err != nil { //nolint:contextcheck // deliberate, see NOTE above
 		slogctx.Error(ctx, "HTTP shutdown error", slog.Any("error", err))
 	}
 

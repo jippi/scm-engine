@@ -1,17 +1,17 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/config"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
-func Evaluate(cCtx *cli.Context) error {
-	ctx := cCtx.Context
+func Evaluate(ctx context.Context, cCtx *cli.Command) error {
 	ctx = state.WithCommitSHA(ctx, cCtx.String(FlagCommitSHA))
 	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
 	ctx = state.WithProjectID(ctx, cCtx.String(FlagSCMProject))

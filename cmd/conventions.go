@@ -1,6 +1,6 @@
 package cmd
 
-import "github.com/urfave/cli/v2"
+import "github.com/urfave/cli/v3"
 
 const (
 	FlagAPIToken                                        = "api-token"
@@ -30,15 +30,15 @@ var (
 	StringFlagBackstageURL = &cli.StringFlag{
 		Name:  FlagBackstageURL,
 		Usage: "The Backstage base URL",
-		EnvVars: []string{
+		Sources: cli.EnvVars(
 			"BACKSTAGE_URL", // Backstage catalog integration
-		},
+		),
 	}
 	StringFlagBackstageToken = &cli.StringFlag{
 		Name:  FlagBackstageToken,
 		Usage: "The Backstage static token with access to the catalog plugin", // https://backstage.io/docs/auth/service-to-service-auth/#static-tokens
-		EnvVars: []string{
+		Sources: cli.EnvVars(
 			"BACKSTAGE_TOKEN", // Backstage catalog integration
-		},
+		),
 	}
 )

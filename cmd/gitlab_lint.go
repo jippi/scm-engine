@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -12,13 +13,12 @@ import (
 	"github.com/jippi/scm-engine/pkg/scm/gitlab"
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/santhosh-tekuri/jsonschema/v6"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	slogctx "github.com/veqryn/slog-context"
 	"gopkg.in/yaml.v3"
 )
 
-func Lint(cCtx *cli.Context) error {
-	ctx := cCtx.Context
+func Lint(ctx context.Context, cCtx *cli.Command) error {
 	ctx = state.WithConfigFilePath(ctx, cCtx.String(FlagConfigFile))
 
 	// Read raw YAML file

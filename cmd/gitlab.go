@@ -1,54 +1,52 @@
 package cmd
 
 import (
+	"context"
 	"time"
 
 	"github.com/jippi/scm-engine/pkg/state"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var GitLab = &cli.Command{
 	Name:  "gitlab",
 	Usage: "GitLab related commands",
-	Before: func(cCtx *cli.Context) error {
-		cCtx.Context = state.WithBaseURL(cCtx.Context, cCtx.String(FlagSCMBaseURL))
-		cCtx.Context = state.WithProvider(cCtx.Context, "gitlab")
-		cCtx.Context = state.WithToken(cCtx.Context, cCtx.String(FlagAPIToken))
-		cCtx.Context = state.WithGlobalConfigFilePath(cCtx.Context, cCtx.String(FlagGlobalConfigFile))
+	Before: func(ctx context.Context, cCtx *cli.Command) (context.Context, error) {
+		ctx = state.WithBaseURL(ctx, cCtx.String(FlagSCMBaseURL))
+		ctx = state.WithProvider(ctx, "gitlab")
+		ctx = state.WithToken(ctx, cCtx.String(FlagAPIToken))
+		ctx = state.WithGlobalConfigFilePath(ctx, cCtx.String(FlagGlobalConfigFile))
 
-		return nil
+		return ctx, nil
 	},
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:  FlagAPIToken,
 			Usage: "GitLab API token",
-			EnvVars: []string{
+			Sources: cli.EnvVars(
 				"SCM_ENGINE_TOKEN", // SCM Engine Native
-			},
+			),
 		},
 		&cli.StringFlag{
 			Name:  FlagSCMBaseURL,
 			Usage: "Base URL for the SCM instance",
 			Value: "https://gitlab.com/",
-			EnvVars: []string{
+			Sources: cli.EnvVars(
 				"SCM_ENGINE_BASE_URL", // SCM Engine Native
 				"CI_SERVER_URL",       // GitLab CI
-			},
+			),
 		},
 		&cli.StringFlag{
-			Name:  FlagGlobalConfigFile,
-			Usage: "Path to a global configuration file. Any repository specific configuration will be merged on top of the global configuration",
-			Value: "",
-			EnvVars: []string{
-				"SCM_ENGINE_GLOBAL_CONFIG_FILE",
-			},
+			Name:    FlagGlobalConfigFile,
+			Usage:   "Path to a global configuration file. Any repository specific configuration will be merged on top of the global configuration",
+			Value:   "",
+			Sources: cli.EnvVars("SCM_ENGINE_GLOBAL_CONFIG_FILE"),
 		},
 	},
-	Subcommands: []*cli.Command{
+	Commands: []*cli.Command{
 		{
 			Name:   "lint",
 			Usage:  "lint a configuration file",
-			Args:   false,
 			Action: Lint,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
@@ -61,46 +59,41 @@ var GitLab = &cli.Command{
 		{
 			Name:      "evaluate",
 			Usage:     "Evaluate a Merge Request",
-			Args:      true,
 			ArgsUsage: " [mr_id, mr_id, ...]",
 			Action:    Evaluate,
 			Flags: []cli.Flag{
 				&cli.BoolFlag{
-					Name:  FlagUpdatePipeline,
-					Usage: "Update the CI pipeline status with progress",
-					Value: true,
-					EnvVars: []string{
-						"SCM_ENGINE_UPDATE_PIPELINE",
-					},
+					Name:    FlagUpdatePipeline,
+					Usage:   "Update the CI pipeline status with progress",
+					Value:   true,
+					Sources: cli.EnvVars("SCM_ENGINE_UPDATE_PIPELINE"),
 				},
 				&cli.StringFlag{
-					Name:  FlagUpdatePipelineURL,
-					Usage: "(Optional) URL to where logs can be found for the pipeline",
-					EnvVars: []string{
-						"SCM_ENGINE_UPDATE_PIPELINE_URL",
-					},
+					Name:    FlagUpdatePipelineURL,
+					Usage:   "(Optional) URL to where logs can be found for the pipeline",
+					Sources: cli.EnvVars("SCM_ENGINE_UPDATE_PIPELINE_URL"),
 				},
 				&cli.StringFlag{
 					Name:  FlagSCMProject,
 					Usage: "GitLab project (example: 'gitlab-org/gitlab')",
-					EnvVars: []string{
+					Sources: cli.EnvVars(
 						"GITLAB_PROJECT",
 						"CI_PROJECT_PATH", // GitLab CI
-					},
+					),
 				},
 				&cli.StringFlag{
 					Name:  FlagMergeRequestID,
 					Usage: "The Merge Request ID to process, if not provided as a CLI flag",
-					EnvVars: []string{
+					Sources: cli.EnvVars(
 						"CI_MERGE_REQUEST_IID", // GitLab CI
-					},
+					),
 				},
 				&cli.StringFlag{
 					Name:  FlagCommitSHA,
 					Usage: "The git commit sha",
-					EnvVars: []string{
+					Sources: cli.EnvVars(
 						"CI_COMMIT_SHA", // GitLab CI
-					},
+					),
 				},
 				StringFlagBackstageURL,
 				StringFlagBackstageToken,
@@ -113,87 +106,67 @@ var GitLab = &cli.Command{
 			Action: Server,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
-					Name:  FlagWebhookSecret,
-					Usage: "Used to validate received payloads. Sent with the request in the X-Gitlab-Token HTTP header",
-					EnvVars: []string{
-						"SCM_ENGINE_WEBHOOK_SECRET",
-					},
+					Name:    FlagWebhookSecret,
+					Usage:   "Used to validate received payloads. Sent with the request in the X-Gitlab-Token HTTP header",
+					Sources: cli.EnvVars("SCM_ENGINE_WEBHOOK_SECRET"),
 				},
 				&cli.StringFlag{
-					Name:  FlagServerListenHost,
-					Usage: "IP that the HTTP server should listen on",
-					Value: "0.0.0.0",
-					EnvVars: []string{
-						"SCM_ENGINE_LISTEN_ADDR",
-					},
+					Name:    FlagServerListenHost,
+					Usage:   "IP that the HTTP server should listen on",
+					Value:   "0.0.0.0",
+					Sources: cli.EnvVars("SCM_ENGINE_LISTEN_ADDR"),
 				},
 				&cli.IntFlag{
 					Name:  FlagServerListenPort,
 					Usage: "Port that the HTTP server should listen on",
 					Value: 3000,
-					EnvVars: []string{
+					Sources: cli.EnvVars(
 						"SCM_ENGINE_LISTEN_PORT",
 						"PORT",
-					},
+					),
 				},
 				&cli.DurationFlag{
-					Name:  FlagServerTimeout,
-					Usage: "Timeout for webhook requests",
-					Value: 5 * time.Second,
-					EnvVars: []string{
-						"SCM_ENGINE_TIMEOUT",
-					},
+					Name:    FlagServerTimeout,
+					Usage:   "Timeout for webhook requests",
+					Value:   5 * time.Second,
+					Sources: cli.EnvVars("SCM_ENGINE_TIMEOUT"),
 				},
 				&cli.BoolFlag{
-					Name:  FlagUpdatePipeline,
-					Usage: "Update the CI pipeline status with progress",
-					Value: true,
-					EnvVars: []string{
-						"SCM_ENGINE_UPDATE_PIPELINE",
-					},
+					Name:    FlagUpdatePipeline,
+					Usage:   "Update the CI pipeline status with progress",
+					Value:   true,
+					Sources: cli.EnvVars("SCM_ENGINE_UPDATE_PIPELINE"),
 				},
 				&cli.StringFlag{
-					Name:  FlagUpdatePipelineURL,
-					Usage: "(Optional) URL to where logs can be found for the pipeline",
-					EnvVars: []string{
-						"SCM_ENGINE_UPDATE_PIPELINE_URL",
-					},
+					Name:    FlagUpdatePipelineURL,
+					Usage:   "(Optional) URL to where logs can be found for the pipeline",
+					Sources: cli.EnvVars("SCM_ENGINE_UPDATE_PIPELINE_URL"),
 				},
 				&cli.DurationFlag{
-					Name:  FlagPeriodicEvaluationInterval,
-					Usage: "(Optional) Frequency of which to evaluate all Merge Requests regardless of user activity",
-					EnvVars: []string{
-						"SCM_ENGINE_PERIODIC_EVALUATION_INTERVAL",
-					},
+					Name:    FlagPeriodicEvaluationInterval,
+					Usage:   "(Optional) Frequency of which to evaluate all Merge Requests regardless of user activity",
+					Sources: cli.EnvVars("SCM_ENGINE_PERIODIC_EVALUATION_INTERVAL"),
 				},
 				&cli.StringSliceFlag{
-					Name:  FlagPeriodicEvaluationIgnoreMergeRequestsWithLabel,
-					Usage: "(Optional) Ignore MR with these labels",
-					EnvVars: []string{
-						"SCM_ENGINE_PERIODIC_EVALUATION_IGNORE_MR_WITH_LABELS",
-					},
+					Name:    FlagPeriodicEvaluationIgnoreMergeRequestsWithLabel,
+					Usage:   "(Optional) Ignore MR with these labels",
+					Sources: cli.EnvVars("SCM_ENGINE_PERIODIC_EVALUATION_IGNORE_MR_WITH_LABELS"),
 				},
 				&cli.StringSliceFlag{
-					Name:  FlagPeriodicEvaluationRequireMergeRequestsWithLabel,
-					Usage: "(Optional) Only process MR with these labels",
-					EnvVars: []string{
-						"SCM_ENGINE_PERIODIC_EVALUATION_REQUIRE_MR_WITH_LABELS",
-					},
+					Name:    FlagPeriodicEvaluationRequireMergeRequestsWithLabel,
+					Usage:   "(Optional) Only process MR with these labels",
+					Sources: cli.EnvVars("SCM_ENGINE_PERIODIC_EVALUATION_REQUIRE_MR_WITH_LABELS"),
 				},
 				&cli.StringSliceFlag{
-					Name:  FlagPeriodicEvaluationOnlyProjectsWithTopics,
-					Usage: "(Optional) Only evaluate projects with these topics",
-					EnvVars: []string{
-						"SCM_ENGINE_PERIODIC_EVALUATION_REQUIRE_PROJECT_TOPICS",
-					},
+					Name:    FlagPeriodicEvaluationOnlyProjectsWithTopics,
+					Usage:   "(Optional) Only evaluate projects with these topics",
+					Sources: cli.EnvVars("SCM_ENGINE_PERIODIC_EVALUATION_REQUIRE_PROJECT_TOPICS"),
 				},
 				&cli.BoolFlag{
-					Name:  FlagPeriodicEvaluationOnlyProjectsWithMembership,
-					Usage: "(Optional) Only evaluate projects with membership",
-					Value: true,
-					EnvVars: []string{
-						"SCM_ENGINE_PERIODIC_EVALUATION_ONLY_PROJECTS_WITH_MEMBERSHIP",
-					},
+					Name:    FlagPeriodicEvaluationOnlyProjectsWithMembership,
+					Usage:   "(Optional) Only evaluate projects with membership",
+					Value:   true,
+					Sources: cli.EnvVars("SCM_ENGINE_PERIODIC_EVALUATION_ONLY_PROJECTS_WITH_MEMBERSHIP"),
 				},
 				StringFlagBackstageURL,
 				StringFlagBackstageToken,

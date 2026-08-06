@@ -1,4 +1,4 @@
-//nolint:testpackage,paralleltest // Lint is driven through the cli package; urfave/cli mutates a package level HelpFlag inside App.Run, so these cannot run in parallel
+//nolint:testpackage,paralleltest // Lint is driven through the cli package; urfave/cli mutates a package level HelpFlag inside Command.Run, so these cannot run in parallel
 package cmd
 
 import (
@@ -7,14 +7,14 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 // runLint invokes the lint command exactly as the CLI does, against a config
 // file written for the test.
 //
 // These tests deliberately do not call t.Parallel: urfave/cli mutates its
-// package level HelpFlag inside App.Run, so running several apps concurrently
+// package level HelpFlag inside Command.Run, so running several apps concurrently
 // is a data race in the library rather than in scm-engine.
 func runLint(t *testing.T, contents string) error {
 	t.Helper()
@@ -22,7 +22,7 @@ func runLint(t *testing.T, contents string) error {
 	path := filepath.Join(t.TempDir(), ".scm-engine.yml")
 	require.NoError(t, os.WriteFile(path, []byte(contents), 0o600))
 
-	app := &cli.App{
+	app := &cli.Command{
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: FlagConfigFile, Value: path},
 			&cli.StringFlag{Name: "schema", Value: "embed://"},
@@ -30,7 +30,7 @@ func runLint(t *testing.T, contents string) error {
 		Action: Lint,
 	}
 
-	return app.Run([]string{"scm-engine"})
+	return app.Run(t.Context(), []string{"scm-engine"})
 }
 
 func TestLint_acceptsAValidConfig(t *testing.T) {
@@ -53,7 +53,7 @@ func TestLint_acceptsAnEmptyConfig(t *testing.T) {
 }
 
 func TestLint_rejectsAMissingFile(t *testing.T) {
-	app := &cli.App{
+	app := &cli.Command{
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: FlagConfigFile, Value: filepath.Join(t.TempDir(), "does-not-exist.yml")},
 			&cli.StringFlag{Name: "schema", Value: "embed://"},
@@ -61,7 +61,7 @@ func TestLint_rejectsAMissingFile(t *testing.T) {
 		Action: Lint,
 	}
 
-	require.Error(t, app.Run([]string{"scm-engine"}))
+	require.Error(t, app.Run(t.Context(), []string{"scm-engine"}))
 }
 
 func TestLint_rejectsMalformedYAML(t *testing.T) {
