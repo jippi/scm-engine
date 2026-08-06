@@ -10,7 +10,7 @@ import (
 	"github.com/hasura/go-graphql-client"
 	"github.com/jippi/scm-engine/pkg/scm"
 	"github.com/jippi/scm-engine/pkg/state"
-	go_gitlab "gitlab.com/gitlab-org/api/client-go"
+	go_gitlab "gitlab.com/gitlab-org/api/client-go/v2"
 	"golang.org/x/oauth2"
 )
 

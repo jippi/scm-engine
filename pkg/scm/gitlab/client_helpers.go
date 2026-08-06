@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/jippi/scm-engine/pkg/scm"
-	go_gitlab "gitlab.com/gitlab-org/api/client-go"
+	go_gitlab "gitlab.com/gitlab-org/api/client-go/v2"
 )
 
 // Helper function to accept and format both the project ID or name as project
@@ -57,7 +57,7 @@ func convertResponse(upstream *go_gitlab.Response) *scm.Response {
 		// TotalPages:   upstream.TotalPages,
 		// ItemsPerPage: upstream.ItemsPerPage,
 		// CurrentPage:  upstream.CurrentPage,
-		NextPage: upstream.NextPage,
+		NextPage: int(upstream.NextPage),
 		// PreviousPage: upstream.PreviousPage,
 
 		// Fields used for keyset-based pagination.

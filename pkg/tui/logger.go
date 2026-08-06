@@ -43,7 +43,7 @@ func logHandler(out io.Writer) slog.Handler {
 	}
 
 	if _, ok := os.LookupEnv("CI"); ok {
-		return tint.NewHandler(
+		return tint.NewTextHandler(
 			out,
 			&tint.Options{
 				Level:     logLevel,

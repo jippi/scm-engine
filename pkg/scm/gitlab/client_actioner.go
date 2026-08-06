@@ -15,7 +15,7 @@ import (
 	"github.com/jippi/scm-engine/pkg/state"
 	"github.com/jippi/scm-engine/pkg/stdlib"
 	slogctx "github.com/veqryn/slog-context"
-	"gitlab.com/gitlab-org/api/client-go"
+	"gitlab.com/gitlab-org/api/client-go/v2"
 )
 
 func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, update *scm.UpdateMergeRequestOptions, step scm.ActionStep) error {
@@ -136,7 +136,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return nil
 		}
 
-		_, _, err := c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.ApproveMergeRequestOptions{})
+		_, _, err := c.wrapped.MergeRequestApprovals.ApproveMergeRequest(state.ProjectID(ctx), int64(state.MergeRequestIDInt(ctx)), &gitlab.ApproveMergeRequestOptions{})
 
 		return err
 
@@ -147,7 +147,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return nil
 		}
 
-		_, err := c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectID(ctx), state.MergeRequestIDInt(ctx))
+		_, err := c.wrapped.MergeRequestApprovals.UnapproveMergeRequest(state.ProjectID(ctx), int64(state.MergeRequestIDInt(ctx)))
 
 		return err
 
@@ -170,7 +170,7 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return nil
 		}
 
-		_, _, err = c.wrapped.Notes.CreateMergeRequestNote(state.ProjectID(ctx), state.MergeRequestIDInt(ctx), &gitlab.CreateMergeRequestNoteOptions{
+		_, _, err = c.wrapped.Notes.CreateMergeRequestNote(state.ProjectID(ctx), int64(state.MergeRequestIDInt(ctx)), &gitlab.CreateMergeRequestNoteOptions{
 			Body: scm.Ptr(message),
 		})
 
