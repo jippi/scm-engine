@@ -35,7 +35,10 @@ require (
 	gotest.tools/v3 v3.5.1
 )
 
-require github.com/google/go-cmp v0.7.0 // indirect
+require (
+	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
+)
 
 require (
 	github.com/agnivade/levenshtein v1.2.1 // indirect
@@ -59,7 +62,7 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mailru/easyjson v0.9.2 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
-	github.com/mattn/go-runewidth v0.0.16 // indirect
+	github.com/mattn/go-runewidth v0.0.27 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
