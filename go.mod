@@ -3,7 +3,7 @@ module github.com/jippi/scm-engine
 go 1.26.5
 
 require (
-	github.com/99designs/gqlgen v0.17.73
+	github.com/99designs/gqlgen v0.17.94
 	github.com/aquilax/truncate v1.0.1
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/davecgh/go-spew v1.1.1
@@ -24,7 +24,7 @@ require (
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/urfave/cli/v2 v2.27.6
-	github.com/vektah/gqlparser/v2 v2.5.26
+	github.com/vektah/gqlparser/v2 v2.5.36
 	github.com/veqryn/slog-context v0.8.0
 	github.com/veqryn/slog-dedup v0.6.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
@@ -37,7 +37,9 @@ require (
 
 require (
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
+	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/urfave/cli/v3 v3.10.1 // indirect
 )
 
 require (
@@ -67,16 +69,16 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/samber/lo v1.50.0 // indirect
-	github.com/sosodev/duration v1.3.1 // indirect
+	github.com/sosodev/duration v1.4.0 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
-	golang.org/x/mod v0.37.0 // indirect
-	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/sys v0.46.0 // indirect
-	golang.org/x/text v0.39.0 // indirect
+	golang.org/x/mod v0.38.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
-	golang.org/x/tools v0.47.0 // indirect
+	golang.org/x/tools v0.48.0 // indirect
 	gopkg.in/dnaeon/go-vcr.v4 v4.0.2
 	modernc.org/b/v2 v2.1.2 // indirect
 )
