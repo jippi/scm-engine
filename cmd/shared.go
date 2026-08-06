@@ -30,7 +30,7 @@ func getClient(ctx context.Context) (scm.Client, error) {
 
 	switch state.Provider(ctx) {
 	case "github":
-		return github.NewClient(ctx), nil
+		return github.NewClient(ctx)
 
 	case "gitlab":
 		return gitlab.NewClient(ctx, backstageClient)

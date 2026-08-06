@@ -85,8 +85,8 @@ func (client *LabelClient) Create(ctx context.Context, opt *scm.CreateLabelOptio
 
 	owner, repo := ownerAndRepo(ctx)
 
-	label, resp, err := client.client.wrapped.Issues.CreateLabel(ctx, owner, repo, &go_github.Label{
-		Name:        opt.Name,
+	label, resp, err := client.client.wrapped.Issues.CreateLabel(ctx, owner, repo, go_github.CreateIssueLabelRequest{
+		Name:        *opt.Name,
 		Description: opt.Description,
 		Color:       scm.Ptr(strings.TrimPrefix(*opt.Color, "#")),
 	})
@@ -100,12 +100,12 @@ func (client *LabelClient) Update(ctx context.Context, opt *scm.UpdateLabelOptio
 
 	owner, repo := ownerAndRepo(ctx)
 
-	updateLabel := &go_github.Label{}
-	updateLabel.Name = opt.Name
-	updateLabel.Color = scm.Ptr(strings.TrimPrefix(*opt.Color, "#"))
-	updateLabel.Description = opt.Description
+	updateLabel := go_github.UpdateIssueLabelRequest{
+		Color:       scm.Ptr(strings.TrimPrefix(*opt.Color, "#")),
+		Description: opt.Description,
+	}
 
-	label, resp, err := client.client.wrapped.Issues.EditLabel(ctx, owner, repo, *opt.Name, updateLabel)
+	label, resp, err := client.client.wrapped.Issues.UpdateLabel(ctx, owner, repo, *opt.Name, updateLabel)
 
 	return convertLabel(label), convertResponse(resp), err
 }
@@ -116,8 +116,8 @@ func convertLabel(label *go_github.Label) *scm.Label {
 	}
 
 	return &scm.Label{
-		Name:        *label.Name,
-		Description: *label.Description,
-		Color:       *label.Color,
+		Name:        label.Name,
+		Description: label.GetDescription(),
+		Color:       label.Color,
 	}
 }

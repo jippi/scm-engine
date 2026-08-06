@@ -21,10 +21,13 @@ type Client struct {
 }
 
 // NewClient creates a new GitLab client
-func NewClient(ctx context.Context) *Client {
-	client := go_github.NewClient(nil).WithAuthToken(state.Token(ctx))
+func NewClient(ctx context.Context) (*Client, error) {
+	client, err := go_github.NewClient(go_github.WithAuthToken(state.Token(ctx)))
+	if err != nil {
+		return nil, err
+	}
 
-	return &Client{wrapped: client}
+	return &Client{wrapped: client}, nil
 }
 
 // Labels returns a client target at managing labels/tags
