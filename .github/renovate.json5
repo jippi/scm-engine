@@ -32,9 +32,14 @@
       groupName: "go",
     },
     {
+      description: [
+        "Don't raise PRs for indirect go.mod deps - they get bumped by 'go mod tidy'",
+        "whenever a direct dep needs it. Security updates still come through, because",
+        "the 'vulnerabilityAlerts' config is applied last and re-enables them.",
+      ],
       matchManagers: ["gomod"],
       matchDepTypes: ["indirect"],
-      enabled: true,
+      enabled: false,
     },
     {
       matchDepTypes: ["golang-version"],
