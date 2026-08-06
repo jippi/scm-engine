@@ -18,10 +18,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          # 'task docs:deploy' runs 'mkdocs gh-deploy', which pushes to the
-          # gh-pages branch using the credentials left behind by this step.
-          # actions/checkout defaults this to 'false' since v6.
-          persist-credentials: true
 
       - uses: arduino/setup-task@v2
         with:
@@ -39,5 +35,14 @@ jobs:
       - name: generate
         run: task docs:generate
 
+      # 'task docs:deploy' runs 'mkdocs gh-deploy' inside a container that only
+      # has the repository bind-mounted, so it can't see the credentials
+      # actions/checkout keeps outside the work tree (in $RUNNER_TEMP, wired up
+      # via 'includeIf.gitdir' since checkout v6). Put the token on the remote
+      # URL instead - that lives in .git/config, which is mounted.
       - name: deploy
-        run: task docs:deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          task docs:deploy
