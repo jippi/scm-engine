@@ -10,7 +10,7 @@ require (
 	github.com/expr-lang/expr v1.17.8
 	github.com/fatih/structtag v1.2.0
 	github.com/golang-cz/devslog v0.0.13
-	github.com/google/go-github/v72 v72.0.0
+	github.com/google/go-github/v90 v90.0.0
 	github.com/guregu/null/v6 v6.0.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hasura/go-graphql-client v0.14.0
@@ -56,7 +56,7 @@ require (
 	github.com/datolabs-io/go-backstage/v3 v3.0.0
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
