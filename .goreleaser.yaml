@@ -284,15 +284,17 @@ snapcrafts:
 sboms:
   - artifacts: archive
 
+# cosign v3 defaults to the Sigstore bundle format, which carries both the
+# signature and the certificate in a single file and ignores the old
+# '--output-signature' / '--output-certificate' flags.
 signs:
   - cmd: cosign
-    certificate: "${artifact}.pem"
+    signature: "${artifact}.bundle"
     output: true
     artifacts: checksum
     args:
       - sign-blob
-      - "--output-certificate=${certificate}"
-      - "--output-signature=${signature}"
+      - "--bundle=${signature}"
       - "${artifact}"
       - --yes
 
