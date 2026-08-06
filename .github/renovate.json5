@@ -3,7 +3,10 @@
     "config:recommended",
     ":pinDevDependencies",
     ":separateMultipleMajorReleases",
-    "default:pinDigestsDisabled",
+    // Keep '.github/workflows' on 'uses: owner/repo@<sha> # vX.Y.Z' and let
+    // Renovate maintain both the digest and the version comment. Digest
+    // pinning stays off everywhere else (Renovate's default).
+    "helpers:pinGitHubActionDigests",
   ],
   schedule: [
     "* */1 * * *", // every 1 hour
