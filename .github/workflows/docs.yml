@@ -18,6 +18,10 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          # 'task docs:deploy' runs 'mkdocs gh-deploy', which pushes to the
+          # gh-pages branch using the credentials left behind by this step.
+          # actions/checkout defaults this to 'false' since v6.
+          persist-credentials: true
 
       - uses: arduino/setup-task@v2
         with:
