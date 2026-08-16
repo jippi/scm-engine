@@ -24,7 +24,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
-	github.com/urfave/cli/v3 v3.10.1
+	github.com/urfave/cli/v3 v3.11.0
 	github.com/vektah/gqlparser/v2 v2.5.36
 	github.com/veqryn/slog-context v0.9.0
 	github.com/veqryn/slog-dedup v0.6.0
