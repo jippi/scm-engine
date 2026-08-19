@@ -21,7 +21,7 @@ require (
 	github.com/pb33f/ordered-map/v2 v2.3.1
 	github.com/samber/slog-multi v1.8.0
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
-	github.com/stretchr/testify v1.12.0
+	github.com/stretchr/testify v1.12.1
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/urfave/cli/v3 v3.11.0
@@ -40,6 +40,7 @@ require (
 	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/samber/slog-common v0.21.0 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.6 // indirect
 )
 
