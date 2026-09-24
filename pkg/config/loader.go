@@ -40,7 +40,7 @@ func ParseFileString(in string) (*Config, error) {
 	config := &Config{}
 
 	buf := new(bytes.Buffer)
-	if _, err := buf.ReadFrom(strings.NewReader((in))); err != nil {
+	if _, err := buf.ReadFrom(strings.NewReader(in)); err != nil {
 		return nil, err
 	}
 
