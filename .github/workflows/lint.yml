@@ -46,6 +46,7 @@ jobs:
         with:
           # renovate: datasource=github-releases depName=golangci/golangci-lint
           version: v2.12.2
+          install-mode: goinstall
           args: --timeout=5m
 
   # ------------------------------
