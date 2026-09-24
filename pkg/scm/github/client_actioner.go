@@ -103,8 +103,8 @@ func (c *Client) ApplyStep(ctx context.Context, evalContext scm.EvalContext, upd
 			return nil
 		}
 
-		_, _, err = c.wrapped.PullRequests.CreateComment(ctx, owner, repo, state.MergeRequestIDInt(ctx), &go_github.PullRequestComment{
-			Body: scm.Ptr(msg),
+		_, _, err = c.wrapped.Issues.CreateComment(ctx, owner, repo, state.MergeRequestIDInt(ctx), go_github.IssueCommentRequest{
+			Body: msg,
 		})
 
 		return err
