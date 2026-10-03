@@ -26,7 +26,7 @@ require (
 	github.com/teacat/noire v1.1.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/urfave/cli/v3 v3.14.0
-	github.com/vektah/gqlparser/v2 v2.5.59
+	github.com/vektah/gqlparser/v2 v2.5.60
 	github.com/veqryn/slog-context v0.9.0
 	github.com/veqryn/slog-dedup v0.6.0
 	github.com/xhit/go-str2duration/v2 v2.2.0
