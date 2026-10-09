@@ -30,7 +30,7 @@ require (
 	github.com/veqryn/slog-context v0.9.0
 	github.com/veqryn/slog-dedup v0.6.0
 	github.com/xhit/go-str2duration/v2 v2.2.0
-	gitlab.com/gitlab-org/api/client-go/v3 v3.16.0
+	gitlab.com/gitlab-org/api/client-go/v3 v3.17.0
 	golang.org/x/oauth2 v0.37.0
 	gopkg.in/dnaeon/go-vcr.v4 v4.0.7
 	gopkg.in/yaml.v3 v3.0.1

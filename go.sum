@@ -136,8 +136,8 @@ github.com/xhit/go-str2duration/v2 v2.2.0 h1:SofrD1D+8IuhhkP+OiG1ij4Zq+FiiYSEY/s
 github.com/xhit/go-str2duration/v2 v2.2.0/go.mod h1:ohY8p+0f07DiV6Em5LKB0s2YpLtXVyJfNt1+BlmyAsU=
 github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e h1:JVG44RsyaB9T2KIHavMF/ppJZNG9ZpyihvCd0w101no=
 github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e/go.mod h1:RbqR21r5mrJuqunuUZ/Dhy/avygyECGrLceyNeo4LiM=
-gitlab.com/gitlab-org/api/client-go/v3 v3.16.0 h1:LyxbaO5Pep+gREHptHoYDmYPs4dw9EzGTx6B29+kB7I=
-gitlab.com/gitlab-org/api/client-go/v3 v3.16.0/go.mod h1:975X4id//8WM4sQyh9kqODM3fHPHdIRb4Uag2+3GAo8=
+gitlab.com/gitlab-org/api/client-go/v3 v3.17.0 h1:xSU3AC8MaqNd9QYjctUe2FgM0pAwrxs8tOPM4a6fTqU=
+gitlab.com/gitlab-org/api/client-go/v3 v3.17.0/go.mod h1:UQl7jIdE6nbYNDtc4XWXeiam0V4MJx459e637POlpnQ=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
 go.yaml.in/yaml/v3 v3.0.5/go.mod h1:HVTZu1O7/Vkt2N+BFy8Zza+lnLsABggaTM2ZpNIGuKg=
 go.yaml.in/yaml/v4 v4.0.0-rc.6 h1:1h7H1ohdUh93/FyE4YaDa1Zh64K6VVbjF4K6WUxMtH4=
