@@ -20,7 +20,7 @@ require (
 	github.com/lmittmann/tint v1.2.1
 	github.com/muesli/termenv v0.16.0
 	github.com/pb33f/ordered-map/v2 v2.3.2
-	github.com/samber/slog-multi v1.8.0
+	github.com/samber/slog-multi v1.9.0
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	github.com/stretchr/testify v1.12.1
 	github.com/teacat/noire v1.1.0
@@ -63,7 +63,7 @@ require (
 	github.com/pb33f/go-yaml v0.1.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/samber/lo v1.53.0 // indirect
-	github.com/samber/slog-common v0.21.0 // indirect
+	github.com/samber/slog-common v0.22.0 // indirect
 	github.com/sosodev/duration v1.4.0 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
